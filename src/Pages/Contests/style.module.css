@@ -1,0 +1,253 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 10px;
+  
+}
+
+.grid-container-detail {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 10px;
+  gap:20px;
+
+}
+
+.grid-item-detail {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  height:270px;
+  width:270px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 50px 0 0 0;
+  position: relative;
+}
+
+.grid-item {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  height:480px;
+  width:300px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+}
+
+.image{
+  height:70%;
+  border-radius: 20px;
+}
+
+.image img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.content{
+  margin: 20px;
+  text-align: center;
+} 
+
+.tab-Section{
+    position: relative;
+    display: flex ;
+    gap:  30px  ;
+    justify-content:  center  ;
+    min-height:  70px  ;
+    align-items:  center  ;
+    flex-wrap: wrap;
+
+}
+
+.right-corner {
+  position: absolute;
+  
+  right: 10px;
+}
+
+.left-corner {
+  position: absolute;
+  left: 10px;
+
+}
+
+.contest-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.contest-button:hover {
+  background-color: #0056b3;
+}
+
+.section{
+ position:relative ;
+ cursor: pointer;
+}
+
+.section img{
+  width:120px;
+  height: 50px;
+}
+.center-alligned{
+ position:absolute; 
+ top: 50%  ;
+ left: 50%  ; 
+ transform:translate(-50%,-50%) ;
+ color:white;
+}
+
+.unselected-item{
+  position:absolute; 
+  top: 50%  ;
+  left: 50%  ; 
+  transform:translate(-50%,-50%) ;
+  color:transparent;
+  background: linear-gradient(89.82deg, rgba(224, 39, 128, 0.9) 0.16%, rgba(250, 78, 118, 0.9) 0.17%, rgba(167, 132, 234, 0.9) 38.04%, rgba(236, 167, 92, 0.9) 62.96%, rgba(247, 141, 109, 0.9) 83.4%, rgba(207, 102, 198, 0.9) 99.85%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+}
+
+
+
+.detail-header {
+  min-height: 100px;
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.detail-header .MuiTypography-root {
+  margin: 0 auto;  
+  text-align: center;
+}
+
+.button-container {
+  display: flex;
+  gap: 10px; /* Add space between buttons */
+}
+.entries-image {
+  height: 85%;
+  position: relative;
+}
+
+.entries-image img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.check-box{
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  z-index: 1;
+  background-color: white;
+}
+
+.avatar-detail{
+  position:relative;
+  display: flex;
+}
+
+/* Align form to the center of the page */
+.contestContainer {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f9f9f9; /* Optional: Adds a subtle background color */
+  font-family: Arial, sans-serif; /* Optional: Sets a clean font */
+}
+
+
+
+.uploadIMGcontainer {
+  padding:10px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background-color: white;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+  width: 70%;
+}
+
+.IMGcard {
+  border-radius: 10px;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+  background-color: #ffffff;
+  padding: 10px 30px 40px;
+}
+
+.dropBox{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 3px dotted #a3a3a3;
+  padding: 30px;
+  margin: 10px 0;
+}
+
+.IMGbtn {
+  text-decoration: none;
+  background-color: #005af0;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  outline: none;
+  transition: 0.3s;
+}
+
+.IMGbtn:hover{
+  text-decoration: none;
+  background-color: #ffffff;
+  color: #005af0;
+  padding: 10px 20px;
+  border: none;
+  outline: 1px solid #010101;
+}
+
+.form input {
+  margin: 10px 0;
+  width: 100%;
+  background-color: #e2e2e2;
+  border: none;
+  outline: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+}
+
+.createForm{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.formGroup{
+  display: flex;
+  padding:5px;
+}
+
+.grp{
+  display: flex;
+  padding:5px;
+}
+
+.catBtn{
+  background-color: blue;
+  color: white;
+}
