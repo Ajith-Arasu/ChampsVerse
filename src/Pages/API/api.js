@@ -1,6 +1,5 @@
 const apiCall = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL
-  console.log("BASE_URL==>",BASE_URL)
   const currentDate = new Date();
 
 const currentMonth = currentDate.getMonth() + 1; // Months are zero-indexed (0-11), so add 1 to get 1-12
@@ -165,10 +164,10 @@ const currentYear = currentDate.getFullYear()
   }
 
 
-  const getContestList = async(tab,pageKey)=>{
-    console.log("pageKey",pageKey)
+  const getContestList = async(tab,pageKey,type)=>{
+    
     const response = await fetch(
-      `${BASE_URL}/api/v1/contests?state=${tab}&count=10&page=${pageKey}`,
+      `${BASE_URL}/api/v1/contests?state=${tab}&count=10&page=${pageKey}&contest_type=${type}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -285,6 +284,22 @@ const currentYear = currentDate.getFullYear()
     return result;
   }
 
+  const updateContestStatus = async(contestId,type)=>{
+    const response = await fetch(`${BASE_URL}/api/v1/contest/${contestId}?contest_type=${type}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          state: "ongoing",
+        })
+      }
+    )
+    const result = await response.json();
+    return result;
+  }
+
   return {
     data,
     getPost,
@@ -302,7 +317,8 @@ const currentYear = currentDate.getFullYear()
     announceContestResult,
     bookPublic,
     createContest,
-    getUrlContestImage,uploadIMG
+    getUrlContestImage,uploadIMG,
+    updateContestStatus
   };
 };
 

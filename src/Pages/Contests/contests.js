@@ -18,8 +18,13 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Contests = () => {
   const [selectedTab, setSelectedTab] = useState("ongoing");
-  const { getContestList, createContest, getUrlContestImage, uploadIMG } =
-    apiCall();
+  const {
+    getContestList,
+    createContest,
+    getUrlContestImage,
+    uploadIMG,
+    updateContestStatus,
+  } = apiCall();
   const [nextPage, setNextPage] = useState(1);
   const [pageKey, setPageKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -29,15 +34,16 @@ const Contests = () => {
   const navigate = useNavigate();
   const compress = new Compress();
   const [contestCreation, setContestCreation] = useState(false);
+  const [selectedType, setSelectedType] = useState("CONTEST");
+  const [TypeSwitch, setTypeSwitch] = useState("false");
 
   const getContests = async () => {
     if (isLoading || pageKey === null) return;
     setIsLoading(true);
     try {
       if (pageKey !== null) {
-        console.log("tab 000", selectedTab);
-        const result = await getContestList(selectedTab, pageKey);
-        console.log("resulttttt", result);
+        const result = await getContestList(selectedTab, pageKey, selectedType);
+
         if (result?.page) {
           setPageKey(result?.page);
         } else {
@@ -55,7 +61,8 @@ const Contests = () => {
       getContests();
     }
     setTabSwitch(false);
-  }, [nextPage, tabSwitch]);
+    setTypeSwitch(false);
+  }, [nextPage, tabSwitch, TypeSwitch]);
 
   const handleClick = (tab) => {
     setSelectedTab(tab);
@@ -137,8 +144,6 @@ const Contests = () => {
         inputElement.addEventListener("change", handleFileChange);
       }
 
-      console.log("fileName:", fileName); // This will now log correctly.
-
       return () => {
         if (inputElement) {
           inputElement.removeEventListener("change", handleFileChange);
@@ -167,7 +172,7 @@ const Contests = () => {
       const { name, value } = e.target;
       setFormData((prev) => {
         const updatedFormData = { ...prev, [name]: value };
-        console.log("Updated Form Data:", updatedFormData);
+
         return updatedFormData;
       });
     };
@@ -181,106 +186,127 @@ const Contests = () => {
       }));
     };
 
-
-const handleSubmit = async () => {
-  try {
-    console.log("Form Data:", formData);
-   
-    const data = {
-      ...formData,
-      from: `${String(formData.from)}T00:00:00.000Z`,
-      to: `${String(formData.to)}T00:00:00.000Z`,
-      work_type: formData.work_type.toUpperCase(),
-      winning_points: parseInt(formData.winning_points, 10),
-      contest_entry_categories: formData.contest_entry_categories.map(
-        (category) => ({
-          ...category,
-          score: parseInt(category.score, 10) || 0,
-        })
-      ),
+    const addCategory = () => {
+      setFormData((prev) => ({
+        ...prev,
+        contest_entry_categories: [
+          ...prev.contest_entry_categories,
+          { title: "", display: "", score: 0 },
+        ],
+      }));
     };
-    
-   
-    console.log("Updated data:", data.type);
 
-    const [name, extension] = fileName.split(".");
-   
-    const result = await createContest(data);
-    const imageURl = await getUrlContestImage(
-      extension,
-      name,
-      result.data.contest_id,
-      `${data.type}S`,
-      data.type,
-     
-    );
+    const removeCategory = (index) => {
+      setFormData((prev) => ({
+        ...prev,
+        contest_entry_categories: prev.contest_entry_categories.filter(
+          (_, idx) => idx !== index
+        ),
+      }));
+    };
 
-    console.log("Pre-signed URLs:", imageURl);
+    const handleSubmit = async () => {
+      try {
+        const data = {
+          ...formData,
+          from: `${String(formData.from)}T00:00:00.000Z`,
+          to: `${String(formData.to)}T00:00:00.000Z`,
+          work_type: formData.work_type.toUpperCase(),
+          winning_points: parseInt(formData.winning_points, 10),
+          contest_entry_categories: formData.contest_entry_categories.map(
+            (category) => ({
+              ...category,
+              score: parseInt(category.score, 10) || 0,
+            })
+          ),
+        };
 
-    const formats = [
-      { label: "preSignedUrlThumb", quality: 30, width: 240, height: 320 },
-      {
-        label: "preSignedUrlMedium",
-        quality: 50,
-        width: 720,
-        height: 1080,
-      },
-      { label: "preSignedUrlRaw", quality: 80, width: 1920, height: 1080 },
-    ];
+        const [name, extension] = fileName.split(".");
 
-    const processAndUploadImage = async ({ label, quality, width, height }) => {
-      const fileFormat = file.type.split("/")[1];
-      const resizedBlob = await fromBlob(
-        file,
-        quality,
-        width,
-        height,
-        fileFormat
-      );
+        const result = await createContest(data);
+        const imageURl = await getUrlContestImage(
+          extension,
+          name,
+          result.data.contest_id,
+          `${data.type}S`,
+          data.type
+        );
 
-      console.log(`${label} - Resized blob`, resizedBlob);
+        const formats = [
+          { label: "preSignedUrlThumb", quality: 30, width: 240, height: 320 },
+          {
+            label: "preSignedUrlMedium",
+            quality: 50,
+            width: 720,
+            height: 1080,
+          },
+          { label: "preSignedUrlRaw", quality: 80, width: 1920, height: 1080 },
+        ];
 
-      const uploadUrl = imageURl.data[label];
-      const response = await fetch(uploadUrl, {
-        method: "PUT",
-        body: resizedBlob,
-        headers: {
-          "Content-Type": resizedBlob.type,
-        },
-      });
+        const processAndUploadImage = async ({
+          label,
+          quality,
+          width,
+          height,
+        }) => {
+          const fileFormat = file.type.split("/")[1];
+          const resizedBlob = await fromBlob(
+            file,
+            quality,
+            width,
+            height,
+            fileFormat
+          );
 
-      if (response.ok) {
-        console.log(`${label} uploaded successfully`);
-      } else {
-        throw new Error(`Failed to upload ${label}: ${response.statusText}`);
+          const uploadUrl = imageURl.data[label];
+          const response = await fetch(uploadUrl, {
+            method: "PUT",
+            body: resizedBlob,
+            headers: {
+              "Content-Type": resizedBlob.type,
+            },
+          });
+
+          if (response.ok) {
+            console.log(`${label} uploaded successfully`);
+          } else {
+            throw new Error(
+              `Failed to upload ${label}: ${response.statusText}`
+            );
+          }
+        };
+
+        for (const format of formats) {
+          await processAndUploadImage(format);
+        }
+
+        console.log("All files uploaded successfully!");
+      } catch (error) {
+        console.error("Error during submission:", error);
+      } finally {
+        setContestCreation(false);
+        handleClick("ongoing");
       }
     };
 
-    for (const format of formats) {
-      await processAndUploadImage(format);
-    }
-
-    console.log("All files uploaded successfully!");
- 
-    
-  } catch (error) {
-    console.error("Error during submission:", error);
-  } finally {
-
-    setContestCreation(false);
-    handleClick("ongoing");
-  }
-};
-
-const handleBack = ()=>{
-  handleClick("ongoing")
-}
+    const handleBack = () => {
+      handleClick("ongoing");
+    };
 
     return (
       <div>
         <div>
-        <Button onClick={() => handleBack()}>Back</Button>
-        <Typography  style={{textAlign:"center", padding:"20px" , fontWeight:"bold" , fontSize:"2rem"}}>Create Contest / Micro Challenge</Typography>
+          <Button onClick={() => handleBack()}>Back</Button>
+          <Typography
+            style={{
+              textAlign: "center",
+              padding: "20px",
+              fontWeight: "bold",
+              fontSize: "2rem",
+            }}
+          >
+            Create Contest / Micro Challenge
+          </Typography>
         </div>
         <div
           style={{
@@ -502,6 +528,9 @@ const handleBack = ()=>{
                         style={{ width: "100%", padding: "5px" }}
                       />
                     </div>
+                    <div>
+                      <Button>Add more categories</Button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -530,20 +559,46 @@ const handleBack = ()=>{
     );
   };
 
+  const changeContestType = (event) => {
+    setSelectedType(event.target.value);
+    setTypeSwitch(true);
+    setPageKey("");
+    setData([]);
+  };
+
+  const statusUpdate = async (contestId) => {
+    console.log("clickedddddddd");
+    const res = await updateContestStatus(contestId, selectedType);
+    console.log("res", res);
+    if(res.success){
+      
+    }
+  };
+
+  console.log("selectedType", selectedType);
   return (
     <>
       {isLoading && <Loader />}
       {!contestCreation && (
-
         <div className={style["tab-Section"]}>
           <div className={style["left-corner"]}>
             <label>
-            <input type="radio"></input>
-            Contest
+              <input
+                type="radio"
+                onChange={changeContestType}
+                value="CONTEST"
+                checked={selectedType === "CONTEST"}
+              ></input>
+              Contest
             </label>
-            <label style={{paddingLeft:"10px"}}>
-            <input type="radio"></input>
-            Micro Contest
+            <label style={{ paddingLeft: "10px" }}>
+              <input
+                type="radio"
+                onChange={changeContestType}
+                value="MICRO_CONTEST"
+                checked={selectedType === "MICRO_CONTEST"}
+              ></input>
+              Micro Contest
             </label>
           </div>
           <div
@@ -612,7 +667,7 @@ const handleBack = ()=>{
               Upcoming
             </Typography>
           </div>
-       
+
           <div className={style["right-corner"]}>
             <button
               className={style["contest-button"]}
@@ -624,12 +679,17 @@ const handleBack = ()=>{
         </div>
       )}
 
-      {console.log("selectedTab", selectedTab)}
       {contestCreation && <CreateContest />}
       {selectedTab !== "new" && (
         <div className={style["grid-container"]}>
           {data.map((item) => {
-            {console.log("item",item)}
+            {
+              console.log(
+                "image",
+                `https://dcp5pbxslacdh.cloudfront.net/${selectedType}S/${item.contest_id}/IMAGES/medium/${item.ct_banner}`
+              );
+            }
+
             return (
               <div
                 className={style["grid-item"]}
@@ -637,7 +697,7 @@ const handleBack = ()=>{
               >
                 <div className={style["image"]}>
                   <img
-                    src={`https://dcp5pbxslacdh.cloudfront.net/CONTESTS/${item.contest_id}/IMAGES/medium/${item.ct_banner}`}
+                    src={`https://dcp5pbxslacdh.cloudfront.net/${selectedType}S/${item.contest_id}/IMAGES/medium/${item.ct_banner}`}
                   ></img>
                 </div>
                 <div className={style["content"]}>
@@ -648,11 +708,20 @@ const handleBack = ()=>{
                       lineHeight: "1.2",
                     }}
                   >
-                   {item.title}
+                    {item.title}
                   </Typography>
                   <Typography sx={{ fontSize: "1rem", padding: "16px" }}>
                     Due:2 days left
                   </Typography>
+
+                  {selectedTab === "upcoming" && (
+                    <Button
+                      style={{ color: "white", backgroundColor: "#007bff" }}
+                      onClick={() => statusUpdate(item.contest_id)}
+                    >
+                      Move to Ongoing
+                    </Button>
+                  )}
                 </div>
               </div>
             );
