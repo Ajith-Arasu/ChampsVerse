@@ -22,7 +22,8 @@ import Loader from  "../Loader/loader";
 const ContestDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { contestId, title, categories } = location.state || {};
+  const { contestId, title, categories,selectedType } = location.state || {};
+  console.log("location.state",location.state)
   const {
     getContestEntries,
     getPost,
@@ -44,6 +45,8 @@ const ContestDetail = () => {
   const [loader, setLoader] = useState(true);
   const CDN_URL = process.env.REACT_APP_CDN_URL;
 
+
+  console.log("0000001type",selectedType)
   const handleClick = () => {
     if (checkedItems.length > 0) {
       setOpen(true);
@@ -63,7 +66,7 @@ const ContestDetail = () => {
   };
 
   const handleAnnounce = () => {
-    announceContestResult(contestId);
+    announceContestResult(contestId,selectedType);
     setopenConfirmation(false);
     navigate("/contests");
   };
@@ -143,7 +146,7 @@ const ContestDetail = () => {
       })),
     };
     try {
-      let result = await addWinnersCategory(contestId, formattedBody);
+      let result = await addWinnersCategory(contestId, formattedBody,selectedType);
       if (result.statusCode === 200) {
         setSuccess(true);
         setData([]);

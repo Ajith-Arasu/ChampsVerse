@@ -99,13 +99,16 @@ const Contests = () => {
     setOpen(false);
   };
 
-  const handleClickToDetail = (contestId, title) => {
+ 
+  const handleClickToDetail = (contestId, title,categories) => {
+    console.log("categories",categories)
     selectedTab === "ongoing" &&
       navigate("/contestdetail", {
         state: {
           contestId,
           title,
-          categories: data[0].contest_entry_categories,
+          categories,
+          selectedType,
         },
       });
   };
@@ -693,7 +696,7 @@ const Contests = () => {
             return (
               <div
                 className={style["grid-item"]}
-                onClick={() => handleClickToDetail(item.contest_id, item.title)}
+                onClick={() => handleClickToDetail(item.contest_id, item.title,item.contest_entry_categories)}
               >
                 <div className={style["image"]}>
                   <img

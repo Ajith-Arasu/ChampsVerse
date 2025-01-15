@@ -61,7 +61,7 @@ const currentYear = currentDate.getFullYear()
 
   const getBadges = async (requestBody) => {
     const response = await fetch(
-      `${BASE_URL}/api/v1/user/post/counts`,
+      `${BASE_URL}/api/v1/user/post/counters`,
       {
         method: "POST",
         headers: {
@@ -192,9 +192,9 @@ const currentYear = currentDate.getFullYear()
   }
 
 
-  const addWinnersCategory=async (contestId,body)=>{
+  const addWinnersCategory=async (contestId,body,type)=>{
     const response = await fetch(
-      `${BASE_URL}/api/v1/contest/${contestId}/winners/assign`,
+      `${BASE_URL}/api/v1/contest/${contestId}/winners/assign?contest_type=${type}`,
       {
         method: "PATCH",
         headers: {
@@ -208,9 +208,9 @@ const currentYear = currentDate.getFullYear()
   }
 
 
-  const announceContestResult = async (contestId) => {
+  const announceContestResult = async (contestId,type) => {
     const response = await fetch(
-      `${BASE_URL}/api/v1/contest/${contestId}/result/announce`,
+      `${BASE_URL}/api/v1/contest/${contestId}/result/announce?contest_type=${type}`,
       {
         method: "PATCH",
         headers: {

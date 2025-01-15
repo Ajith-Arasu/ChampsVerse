@@ -75,7 +75,7 @@ const Work = ({ setUserDetails, setProfilePic }) => {
 
   const transformedData = (data) => {
     const transformed = {
-      targetIds: data.map((item) => {
+      ids: data.map((item) => {
         return {
           user_id: item.user_id,
           post_id: item.post_id,
@@ -90,7 +90,6 @@ const Work = ({ setUserDetails, setProfilePic }) => {
   }, [nextPage]);
 
   const handleScroll = () => {
-    console.log("scrollllllll")
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.offsetHeight;
