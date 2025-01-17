@@ -11,6 +11,7 @@ import {
   DialogActions,
   DialogContent,
 } from "@mui/material";
+import Loader from "../Loader/loader";
 
 const DeletedPost = () => {
   const { getDeletedPost, getUserDetails, deleteS3Post, deletePostJson } =
@@ -29,6 +30,7 @@ const DeletedPost = () => {
   const [openAlertForS3, setOpenAlertForS3] = useState(false);
   const [disabledS3, setDisabledS3] = useState(false);
   const [disabledJson, setDisabledJson] = useState(false);
+  const [selectionAlert,setSelectionAlert]=useState(false);
 
   const handleClick = (type) => {
     if (checkedItems.length === 0) {
@@ -52,7 +54,6 @@ const DeletedPost = () => {
         });
       }
       const result = checkFilesDeleted(data, checkedItems);
-
       if (result) {
         const res = await deletePostJson(ids);
         window.location.reload();
@@ -69,6 +70,7 @@ const DeletedPost = () => {
     setOpenAlert(false);
     setOpenConfirmation(false);
     setOpenAlertForS3(false);
+    setSelectionAlert(false);
   };
 
   const transformedData = async (posts, users) => {
@@ -124,16 +126,23 @@ const DeletedPost = () => {
     getPost();
   }, [nextPage]);
 
-  const handleSelect = (workId, userId) => (event) => {
-    setCheckedItems((prevCheckedItems) => {
-      if (event.target.checked) {
-        return [...prevCheckedItems, { workId, userId }];
-      } else {
-        return prevCheckedItems.filter(
-          (item) => item.workId !== workId || item.userId !== userId
-        );
-      }
-    });
+  const handleSelect = (workId, userId,deleted_at) => (event) => {
+    if(deleted_at > 30){
+      setCheckedItems((prevCheckedItems) => {
+        if (event.target.checked) {
+          return [...prevCheckedItems, { workId, userId }];
+        } else {
+          return prevCheckedItems.filter(
+            (item) => item.workId !== workId || item.userId !== userId
+          );
+        }
+      });
+    }
+    else{
+      setSelectionAlert(true);
+      setOpenAlert(true);
+    }
+ 
   };
 
   const handleScroll = () => {
@@ -156,9 +165,9 @@ const DeletedPost = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  //{https://www.bing.com/images/search?view=detailV2&ccid=kgfkdioy&id=8D09552356EC404814A41F461D23215FB53F5915&thid=OIP.kgfkdioyvqIrLPdA5bXckAHaE8&mediaurl=https%3a%2f%2fhesolutions.com.pk%2fwp-content%2fuploads%2f2019%2f01%2fpicture-not-available.jpg&exph=600&expw=900&q=default+img+when+image+is+not+found&simid=607996194181687466&FORM=IRPRST&ck=1795007B95E6E255B27A3E6D46AE21A0&selectedIndex=19&itb=0}
   return (
     <>
+    {isLoading && <Loader />}  
       <div
         style={{ display: "flex", justifyContent: "flex-end", padding: "10px" }}
       >
@@ -191,30 +200,6 @@ const DeletedPost = () => {
           </Button>
         </div>
       </div>
-
-      {/* <div className={style["grid-container"]}>
-        {data.map((item) => {
-          return(
-          <div className={style["grid-container-detail"]}>
-            <div className={style["grid-image"]}>
-              <img
-                src={`${CDN_URL}/${item.user_id}/WORKS/IMAGES/medium/${item.files[0].name}`}
-              />
-              <div
-                style={{
-                  marginLeft: "10px",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <Avatar sx={{ height: 40, width: 40 }}> </Avatar>
-                <Typography sx={{ padding: "5px" }}> Good</Typography>
-              </div>
-            </div>
-          </div>)
-        })}
-      </div> */}
-
       <div className={style["grid-container-detail"]}>
         {data.map((item) => {
           return (
@@ -228,7 +213,7 @@ const DeletedPost = () => {
                         checkedItem.workId === item.post_id &&
                         checkedItem.userId === item.user_id
                     )}
-                    onChange={handleSelect(item.post_id, item.user_id)}
+                    onChange={handleSelect(item.post_id, item.user_id,item.deleted_at)}
                   />
                 </div>
               }
@@ -335,7 +320,7 @@ const DeletedPost = () => {
 
       <Dialog maxWidth={"sm"} open={openAlert} fullWidth={"70px"}>
         <DialogContent>
-          <Typography>Please select atleast one item </Typography>
+          <Typography>{selectionAlert?`Only posts older than 30 days can be deleted. Please adjust your selection.`:`Please select atleast one item`}</Typography>
         </DialogContent>
         <DialogActions>
           {" "}

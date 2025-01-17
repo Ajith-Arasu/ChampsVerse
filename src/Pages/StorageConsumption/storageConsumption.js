@@ -42,7 +42,7 @@ const StorageConsumption = () => {
       const userDetail = userData.find((user) => user.uid === item.user_id);
       return {
         username: userDetail?.firstname || "Unknown",
-        storage: item ? (item.size_in_bytes / (1024 * 1024)).toFixed(2) : 0,
+        storage: item ? item.size_in_mb : 0,
       };
     });
   };
