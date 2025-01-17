@@ -300,6 +300,49 @@ const currentYear = currentDate.getFullYear()
     return result;
   }
 
+  const getDeletedPost = async(pageKey)=>{
+    const response = await fetch(`${BASE_URL}/api/v1/posts/deleted?count=20&page=${pageKey}`,
+      {
+ 
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    const result = await response.json();
+    return result;
+  }
+
+
+  const deleteS3Post = async(ids)=>{
+    const response = await fetch(`${BASE_URL}/api/v1/posts/delete?ids=${ids}&delete_files=true`,
+      {
+ 
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "DELETE"
+      }
+    )
+    const result = await response.json();
+    return result;
+  }
+
+
+  const deletePostJson = async(ids)=>{
+    const response = await fetch(`${BASE_URL}/api/v1/posts/delete?ids=${ids}`,
+      {
+ 
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "DELETE"
+      }
+    )
+    const result = await response.json();
+    return result;
+  }
+
   return {
     data,
     getPost,
@@ -318,7 +361,10 @@ const currentYear = currentDate.getFullYear()
     bookPublic,
     createContest,
     getUrlContestImage,uploadIMG,
-    updateContestStatus
+    updateContestStatus,
+    getDeletedPost,
+    deleteS3Post,
+    deletePostJson
   };
 };
 

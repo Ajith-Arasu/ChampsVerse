@@ -1,0 +1,56 @@
+.grid-container-detail {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 10px;
+  gap:20px;
+
+}
+
+.grid-item-detail {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  height:300px;
+  width:320px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 50px 0 0 0;
+  position: relative;
+}
+
+
+.check-box{
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  z-index: 1;
+  background-color: white;
+}
+
+.entries-image {
+  height: 85%;
+  position: relative;
+}
+
+.entries-image img {
+  height: 100%;
+  width: 100%;
+  object-fit: fill;
+}
+
+.avatar-detail{
+  position:relative;
+  display: flex;
+}
+
+.contest-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+}
+
+.contest-button:hover {
+  background-color: #0056b3;
+}

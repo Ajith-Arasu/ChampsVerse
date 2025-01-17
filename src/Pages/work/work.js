@@ -145,12 +145,14 @@ const Work = ({ setUserDetails, setProfilePic }) => {
       setData(updatedData)
     }
   };
+
   const handleClickProfile = async(userId)=>{
     let userDetails= await getUserDetails(userId);
     setUserDetails(userDetails);
     setProfilePic(userDetails[0].avatar);
     navigate("/profile",{state:{userId}})
   }
+  
   return (
     <>{console.log("data11",data)}
     {isLoading && <Loader/>}

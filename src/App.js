@@ -10,6 +10,7 @@ import StorageConsumption from "./Pages/StorageConsumption/storageConsumption"
 import Contests from "./Pages/Contests/contests"
 import ContestDetail from "./Pages/Contests/contestDetail"
 import { useState } from "react";
+import DeletedPost from "./Pages/DeletedPost/deletedPost"
 
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
             <Route path="/storage-consumption" element={<StorageConsumption/>}/>
             <Route path="/contests" element={<Contests/>}/>
             <Route path="/contestdetail" element={<ContestDetail/>}/>
+            <Route path="/deleted-post" element={<DeletedPost/>}/>
           </Routes>
         </>
       </Router>

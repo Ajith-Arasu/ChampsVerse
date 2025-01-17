@@ -72,6 +72,18 @@ const Header = ({ userDetails }) => {
             ></img>
             <div class={style["centered"]}>Storage</div>
           </div>
+          <div className={style["tab-Section"]} style={{ marginLeft: "2px" }} onClick={() => handleClick("deleted-post")}>
+            <img
+              src={
+                location.pathname === "/deleted-post"
+                  ? "/backGroundTab.png"
+                  : "/emptySection.png"
+              }
+              alt="Snow"
+              style={{ width: "85%" }}
+            ></img>
+            <div class={style["centered"]}>Deleted Post</div>
+          </div>
           <Box sx={{ flexGrow: 1 }} />
           {isProfilePage && (
             <Box
