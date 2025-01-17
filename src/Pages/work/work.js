@@ -119,7 +119,7 @@ const Work = ({ setUserDetails, setProfilePic }) => {
     );
     if(resultBD.statusCode === 200){
       let requestbody ={
-        "targetIds": [
+        "ids": [
             {
                 "user_id": data[index].user_id,
                 "post_id": data[index].post_id
