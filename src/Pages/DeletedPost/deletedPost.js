@@ -228,7 +228,7 @@ const DeletedPost = () => {
                       }}
                     >
                       <img
-                        src="https://www.bing.com/images/search?view=detailV2&ccid=kgfkdioy&id=8D09552356EC404814A41F461D23215FB53F5915&thid=OIP.kgfkdioyvqIrLPdA5bXckAHaE8&mediaurl=https%3a%2f%2fhesolutions.com.pk%2fwp-content%2fuploads%2f2019%2f01%2fpicture-not-available.jpg&exph=600&expw=900&q=default+img+when+image+is+not+found&simid=607996194181687466&FORM=IRPRST&ck=1795007B95E6E255B27A3E6D46AE21A0&selectedIndex=19&itb=0"
+                        src="https://hesolutions.com.pk/wp-content/uploads/2019/01/picture-not-available.jpg"
                         alt="Default Image"
                         style={{
                           width: "100%",
@@ -244,7 +244,7 @@ const DeletedPost = () => {
                           transform: "translate(-50%, -50%)",
                           color: "black",
                           backgroundColor: "white",
-
+                          padding:"10px",
                           borderRadius: "5px",
                           boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.1)",
                           width: "100%",
@@ -323,7 +323,6 @@ const DeletedPost = () => {
           <Typography>{selectionAlert?`Only posts older than 30 days can be deleted. Please adjust your selection.`:`Please select atleast one item`}</Typography>
         </DialogContent>
         <DialogActions>
-          {" "}
           <Button onClick={handleClose} variant="outlined">
             Close
           </Button>
@@ -333,7 +332,7 @@ const DeletedPost = () => {
       <Dialog maxWidth={"xs"} open={openConfirmation} fullWidth={"70px"}>
         <DialogContent sx={{ textAlign: "center" }}>
           <Typography> Are you sure?</Typography>
-          <Typography>you want to announce the result</Typography>
+          <Typography>you want to delete the post</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDelete} variant="contained">
@@ -352,7 +351,6 @@ const DeletedPost = () => {
           <Typography> Try Again</Typography>
         </DialogContent>
         <DialogActions>
-          {" "}
           <Button onClick={handleClose} variant="outlined">
             OK
           </Button>
