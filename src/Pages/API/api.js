@@ -343,6 +343,31 @@ const currentYear = currentDate.getFullYear()
     return result;
   }
 
+  const getDeletedUser = async(pageKey)=>{
+    const response = await fetch(`${BASE_URL}/api/v1/users/deleted?count=20&page=${pageKey}`,
+      {
+ 
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    const result = await response.json();
+    return result;
+  }
+
+  const getDeletedUserPost = async(pageKey,userId,action)=>{
+    const response = await fetch(`${BASE_URL}/api/v1/user/actions/${action}?userId=${userId}&page=${pageKey}&count=20`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    const result = await response.json();
+    return result;
+  }
+
   return {
     data,
     getPost,
@@ -364,7 +389,9 @@ const currentYear = currentDate.getFullYear()
     updateContestStatus,
     getDeletedPost,
     deleteS3Post,
-    deletePostJson
+    deletePostJson,
+    getDeletedUser,
+    getDeletedUserPost
   };
 };
 

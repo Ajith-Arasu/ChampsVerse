@@ -13,8 +13,8 @@ import {
 } from "@mui/material";
 import Loader from "../Loader/loader";
 
-const DeletedPost = () => {
-  const { getDeletedPost, getUserDetails, deleteS3Post, deletePostJson } =
+const DeletedPost = (userDeletedData) => {
+  const { getDeletedPost, getUseDetails, deleteS3Post, deletePostJson } =
     apiCall();
   const [data, setData] = useState([]);
   const CDN_URL = process.env.REACT_APP_CDN_URL;
@@ -106,7 +106,7 @@ const DeletedPost = () => {
       if (pageKey !== null) {
         const postsData = await getDeletedPost(pageKey);
         const userIds = postsData.data.map((item) => item.user_id).join(",");
-        const userData = await getUserDetails(userIds);
+        const userData =userIds && await getUserDetails(userIds);
         const transData = await transformedData(postsData.data, userData);
         setData((prev) => [...prev, ...transData]);
         if (postsData?.page) {
@@ -123,7 +123,13 @@ const DeletedPost = () => {
   };
 
   useEffect(() => {
+    if(userDeletedData.length === 0){
     getPost();
+    console.log("ost - iffff")
+  }
+    else{
+      setData(userDeletedData)
+    }
   }, [nextPage]);
 
   const handleSelect = (workId, userId,deleted_at) => (event) => {
@@ -165,6 +171,8 @@ const DeletedPost = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  console.log("rubashree==>",data)
   return (
     <>
     {isLoading && <Loader />}  
@@ -279,7 +287,7 @@ const DeletedPost = () => {
                         ? `${CDN_URL}/APP/UserAvatars/${item.avatar}`
                         : `${CDN_URL}/${item.user_id}/PROFILE/IMAGES/filetype/${item.avatar}`
                     }
-                    sx={{ height: 40, width: 40 }}
+                    sx={{ height: 30, width: 30 }}
                   ></Avatar>
                 </div>
 
@@ -299,18 +307,31 @@ const DeletedPost = () => {
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       padding: "5px",
+                      fontSize:"14px",
+                      fontWeight:"600"
                     }}
                   >
                     {item.firstname}
                   </Typography>
-
+                  <div style={{display:"flex"}}>
                   <Typography
                     style={{
                       padding: "5px",
+                      fontSize:"10px",
+                      opacity:"60%"
                     }}
                   >
-                    {`Deleted At : ${item.deleted_at} days ago`}
+                    {`Deleted at `}
                   </Typography>
+                  <Typography
+                    style={{
+                      padding: "5px",
+                      fontSize:"10px",
+                    }}
+                  >
+                    {`${item.deleted_at} days ago`}
+                  </Typography>
+                  </div>
                 </div>
               </div>
             </div>

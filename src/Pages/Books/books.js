@@ -125,14 +125,14 @@ const Books = () => {
           <Typography>{item.category}</Typography>
         </div>
       </div>
-      <div className={style["author"]}>
+      {/* <div className={style["author"]}>
         <div className={style["title"]}>
           <Typography>Pages</Typography>
         </div>
         <div className={style["value"]}>
           <Typography>{item.pages.length}</Typography>
         </div>
-      </div>
+      </div> */}
       <div className={style["author"]}>
         <div className={style["title"]}>
           <Typography>Status</Typography>

@@ -8,12 +8,13 @@
 
 .grid-item-detail {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-  height:300px;
-  width:320px;
+  height:250px;
+  width:280px;
   display: flex;
   flex-direction: column;
   border-radius: 50px 0 0 0;
   position: relative;
+  border-radius: 10px;
 }
 
 
@@ -34,11 +35,13 @@
   height: 100%;
   width: 100%;
   object-fit: fill;
+  border-radius: 10px;
 }
 
 .avatar-detail{
   position:relative;
   display: flex;
+  padding: 5px;
 }
 
 .contest-button {
@@ -53,4 +56,8 @@
 
 .contest-button:hover {
   background-color: #0056b3;
+}
+
+.avatar-img{
+  padding:"10px"
 }

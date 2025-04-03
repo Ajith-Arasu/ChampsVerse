@@ -1,0 +1,65 @@
+.grid-container{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 20px;
+  display: flex;
+  grid-gap: 20px;
+}
+
+.grid-item{
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  height:250px;
+  width:250px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+
+.tab-Section{
+  position: relative;
+  display: flex ;
+  gap:  30px  ;
+  justify-content:  center  ;
+  min-height:  70px  ;
+  align-items:  center  ;
+  flex-wrap: wrap;
+}
+
+.section{
+  position:relative ;
+  cursor: pointer;
+ }
+ 
+ .section img{
+   width:120px;
+   height: 50px;
+ }
+
+ .center-alligned{
+  position:absolute; 
+  top: 50%  ;
+  left: 50%  ; 
+  transform:translate(-50%,-50%) ;
+  color:white;
+ }
+ 
+ .unselected-item{
+   position:absolute; 
+   top: 50%  ;
+   left: 50%  ; 
+   transform:translate(-50%,-50%) ;
+   color:transparent;
+   background: linear-gradient(89.82deg, rgba(224, 39, 128, 0.9) 0.16%, rgba(250, 78, 118, 0.9) 0.17%, rgba(167, 132, 234, 0.9) 38.04%, rgba(236, 167, 92, 0.9) 62.96%, rgba(247, 141, 109, 0.9) 83.4%, rgba(207, 102, 198, 0.9) 99.85%);
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
+ }
+
+ .check-box{
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  z-index: 1;
+  background-color: white;
+}

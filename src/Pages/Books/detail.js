@@ -141,7 +141,7 @@ const Detail = () => {
             </div>
           )}
         </div>
-        <div className={style["grid-container-detail"]}>
+        {/* <div className={style["grid-container-detail"]}>
           <div className={style["grid-item-detail"]}>
             <div className={style["cover-image"]}>
               <img
@@ -172,7 +172,72 @@ const Detail = () => {
                 </div>
               );
             })}
-        </div>
+        </div> */}
+        {/* <div style={{height:"100%",width:"100%",display:"flex",justifyContent:"center",padding:"20px"}}>
+          <div style={{height:"600px",width:"60%",boxShadow:" 2px 2px 5px rgba(0, 0, 0, 0.5)",color:"blue",borderRadius:"20px"}}></div>
+        </div> */}
+         <div
+        style={{
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "20px",
+          position: "relative",
+        }}
+      >
+        {/* Left Swipe Button */}
+        <button
+          
+          style={{
+            position: "absolute",
+            left: "10%",
+            top: "50%",
+            transform: "translateY(-50%)",
+            padding: "10px 20px",
+            backgroundColor: "#ff6b6b",
+            border: "none",
+            borderRadius: "5px",
+            color: "white",
+            cursor: "pointer",
+            fontWeight: "bold",
+          }}
+        >
+          {`<`}
+        </button>
+
+        {/* Main Box */}
+        <div
+          style={{
+            height: "600px",
+            width: "60%",
+            boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.5)",
+            color: "blue",
+            borderRadius: "20px",
+          }}
+        ></div>
+
+        {/* Right Swipe Button */}
+        <button
+          
+          style={{
+            position: "absolute",
+            right: "10%",
+            top: "50%",
+            transform: "translateY(-50%)",
+            padding: "10px 20px",
+            backgroundColor: "#4caf50",
+            border: "none",
+            borderRadius: "5px",
+            color: "white",
+            cursor: "pointer",
+            fontWeight: "bold",
+          }}
+        >
+          {`>`}
+        </button>
+      </div>
       </>
     );
   }

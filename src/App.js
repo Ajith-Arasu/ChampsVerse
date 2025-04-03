@@ -11,6 +11,9 @@ import Contests from "./Pages/Contests/contests"
 import ContestDetail from "./Pages/Contests/contestDetail"
 import { useState } from "react";
 import DeletedPost from "./Pages/DeletedPost/deletedPost"
+import DeletedUser from "./Pages/DeletedUser/index"
+import DeletedUserDetail from "./Pages/DeletedUser/deletedUserDetail";
+import DeletedUserWorks from "./Pages/DeletedUser/deletedUserWorks";
 
 
 export default function App() {
@@ -31,6 +34,9 @@ export default function App() {
             <Route path="/contests" element={<Contests/>}/>
             <Route path="/contestdetail" element={<ContestDetail/>}/>
             <Route path="/deleted-post" element={<DeletedPost/>}/>
+            <Route path="/deleted-user" element={<DeletedUser/>}/>
+            <Route path="/deleted-user/:userId" element={<DeletedUserDetail/>}/>
+            <Route path="/deleted-user/:userId/works" element={<DeletedUserWorks/>}/>
           </Routes>
         </>
       </Router>

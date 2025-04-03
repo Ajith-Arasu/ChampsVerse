@@ -20,7 +20,7 @@ const Contests = () => {
   const [selectedTab, setSelectedTab] = useState("ongoing");
   const {
     getContestList,
-    createContest,
+    createContest,  
     getUrlContestImage,
     uploadIMG,
     updateContestStatus,
@@ -590,7 +590,7 @@ const Contests = () => {
                 type="radio"
                 onChange={changeContestType}
                 value="CONTEST"
-                checked={selectedType === "CONTEST"}
+                checked={selectedType === "CONTEST"}  
               ></input>
               Contest
             </label>

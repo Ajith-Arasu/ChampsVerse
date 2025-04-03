@@ -7,7 +7,6 @@ const Card = ({ data, handleClick, handleClickProfile }) => {
   const location = useLocation();
   const isProfilePage = location.pathname === "/profile";
   const CDN_URL=process.env.REACT_APP_CDN_URL;
-  console.log("data",data)
 
   return (
     <>
