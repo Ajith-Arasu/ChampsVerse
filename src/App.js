@@ -14,7 +14,6 @@ import DeletedPost from "./Pages/DeletedPost/deletedPost"
 import DeletedUser from "./Pages/DeletedUser/index"
 import DeletedUserDetail from "./Pages/DeletedUser/deletedUserDetail";
 import DeletedUserWorks from "./Pages/DeletedUser/deletedUserWorks";
-import Quests from "./Pages/Quests/index";
 import QuestDetail from "./Pages/Quests/questDetail";
 
 export default function App() {
@@ -38,7 +37,6 @@ export default function App() {
             <Route path="/deleted-user" element={<DeletedUser/>}/>
             <Route path="/deleted-user/:userId" element={<DeletedUserDetail/>}/>
             <Route path="/deleted-user/:userId/works" element={<DeletedUserWorks/>}/>
-            <Route path="/quests" element={<Quests/>}/>
             <Route path="/quests-Works" element={<QuestDetail/>}/>
           </Routes>
         </>
