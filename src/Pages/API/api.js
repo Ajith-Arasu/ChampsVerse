@@ -178,9 +178,9 @@ const currentYear = currentDate.getFullYear()
     return result;
   }
 
-  const getContestEntries = async(contestId,pageKey)=>{
+  const getContestEntries = async(contestId,pageKey,type)=>{
     const response = await fetch(
-      `${BASE_URL}/api/v1/contest/${contestId}/entries?count=&page=${pageKey}`,
+      `${BASE_URL}/api/v1/contest/${contestId}/entries?count=&page=${pageKey}&contest_type=${type}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -368,6 +368,22 @@ const currentYear = currentDate.getFullYear()
     return result;
   }
 
+
+  const getQuestList = async(pageKey)=>{
+    const response = await fetch(`${BASE_URL}/api/v1/contests?contest_type=MICRO_CONTEST`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    const result = await response.json();
+    return result;
+  }
+
+
+  
+
   return {
     data,
     getPost,
@@ -391,7 +407,8 @@ const currentYear = currentDate.getFullYear()
     deleteS3Post,
     deletePostJson,
     getDeletedUser,
-    getDeletedUserPost
+    getDeletedUserPost,
+    getQuestList
   };
 };
 

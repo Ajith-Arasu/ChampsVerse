@@ -116,18 +116,18 @@ const Header = ({ userDetails }) => {
         <div
           className={style["tab-Section"]}
           style={{ marginLeft: "2px" }}
-          onClick={() => handleClick("deleted-post")}
+          onClick={() => handleClick("quests")}
         >
           <img
             src={
-              location.pathname === "/deleted-post"
+              location.pathname === "/quests"
                 ? "/backGroundTab.png"
                 : "/emptySection.png"
             }
             alt="Deleted Post"
             style={{ width: "85%" }}
           />
-          <div className={style["centered"]}>Deleted Post</div>
+          <div className={style["centered"]}>Quest</div>
         </div>
 
         <Box sx={{ flexGrow: 1 }} />
@@ -154,14 +154,12 @@ const Header = ({ userDetails }) => {
           </Box>
         )}
 
-        {/* Menu Button */}
         <Box sx={{ marginLeft: "auto" }}>
           <Button onClick={handleOpenMenu}>
             <img src={menu} alt="Menu" style={{ height: "35px" }} />
           </Button>
         </Box>
 
-        {/* Menu anchored to the menu button */}
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
@@ -173,6 +171,9 @@ const Header = ({ userDetails }) => {
         >
           <MenuItem onClick={() => handleClick("deleted-user")}>
             Deleted User
+          </MenuItem>
+          <MenuItem onClick={() => handleClick("deleted-post")}>
+            Deleted Post
           </MenuItem>
         </Menu>
       </Toolbar>

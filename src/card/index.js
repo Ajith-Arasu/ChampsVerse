@@ -4,9 +4,11 @@ import { useLocation } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 
 const Card = ({ data, handleClick, handleClickProfile }) => {
+  console.log('card================>')
   const location = useLocation();
   const isProfilePage = location.pathname === "/profile";
   const CDN_URL=process.env.REACT_APP_CDN_URL;
+  console.log('data--card', data);
 
   return (
     <>
@@ -19,7 +21,7 @@ const Card = ({ data, handleClick, handleClickProfile }) => {
               <div className={style["workCard-top"]}>
                 <div className={style["workCard-left"]}>
                   <img
-                    src={`${CDN_URL}/${item.user_id}/WORKS/IMAGES/medium/${item.files[0].name}`}
+                    src={`${CDN_URL}/${item.user_id?item.user_id:item.userID}/WORKS/IMAGES/medium/${item.files[0].name?item.files[0].name:item.filename}`}
                   />
                 </div>
                 <div className={style["workCard-right"]}>
