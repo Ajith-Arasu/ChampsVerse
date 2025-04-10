@@ -1,3 +1,5 @@
+////olddddddd
+
 import style from "../DeletedPost/style.module.css";
 import apiCall from "../API/api";
 import { useEffect, useState } from "react";
@@ -12,10 +14,17 @@ import {
   DialogContent,
 } from "@mui/material";
 import Loader from "../Loader/loader";
+import { useParams, useLocation } from "react-router-dom";
 
-const DeletedPost = (userDeletedData) => {
-  const { getDeletedPost, getUserDetails, deleteS3Post, deletePostJson } =
-    apiCall();
+const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
+  const {
+    getDeletedPost,
+    getUserDetails,
+    deleteS3Post,
+    deletePostJson,
+    deletedUserS3Post,
+    deletedUserPostJson
+  } = apiCall();
   const [data, setData] = useState([]);
   const CDN_URL = process.env.REACT_APP_CDN_URL;
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
@@ -31,6 +40,8 @@ const DeletedPost = (userDeletedData) => {
   const [disabledS3, setDisabledS3] = useState(false);
   const [disabledJson, setDisabledJson] = useState(false);
   const [selectionAlert, setSelectionAlert] = useState(false);
+  const location = useLocation();
+  const isDeletedPost = location.pathname === "/deleted-post";
 
   const handleClick = (type) => {
     if (checkedItems.length === 0) {
@@ -44,7 +55,11 @@ const DeletedPost = (userDeletedData) => {
   const handleDelete = async () => {
     const ids = checkedItems.map((item) => item.workId).join(",");
     if (deleteType === "S3") {
-      const res = await deleteS3Post(ids);
+      if (isDeletedPost) {
+        const res = await deleteS3Post(ids);
+      } else {
+        const res = await deletedUserS3Post(userId, selectedTab, ids);
+      }
       window.location.reload();
     } else {
       function checkFilesDeleted(data, checkeditems) {
@@ -55,7 +70,12 @@ const DeletedPost = (userDeletedData) => {
       }
       const result = checkFilesDeleted(data, checkedItems);
       if (result) {
-        const res = await deletePostJson(ids);
+        if (isDeletedPost) {
+        const res = await deletePostJson(ids);}
+        else{
+          const res = await deletedUserPostJson(userId, selectedTab, ids)
+
+        }
         window.location.reload();
       } else {
         setOpenAlertForS3(true);
@@ -124,16 +144,31 @@ const DeletedPost = (userDeletedData) => {
   };
   console.log("userDeletedData", userDeletedData);
   useEffect(() => {
-    if (userDeletedData.length === undefined) {
+    if (location.pathname === "/deleted-post") {
       getPost();
-      console.log("ost - iffff");
     } else {
       setData(userDeletedData);
+      setPageKey(null);
     }
-  }, [nextPage]);
+  }, [userDeletedData]);
 
   const handleSelect = (workId, userId, deleted_at) => (event) => {
-    if (deleted_at > 30) {
+    if (isDeletedPost) {
+      if (deleted_at > 30) {
+        setCheckedItems((prevCheckedItems) => {
+          if (event.target.checked) {
+            return [...prevCheckedItems, { workId, userId }];
+          } else {
+            return prevCheckedItems.filter(
+              (item) => item.workId !== workId || item.userId !== userId
+            );
+          }
+        });
+      } else {
+        setSelectionAlert(true);
+        setOpenAlert(true);
+      }
+    } else {
       setCheckedItems((prevCheckedItems) => {
         if (event.target.checked) {
           return [...prevCheckedItems, { workId, userId }];
@@ -143,9 +178,6 @@ const DeletedPost = (userDeletedData) => {
           );
         }
       });
-    } else {
-      setSelectionAlert(true);
-      setOpenAlert(true);
     }
   };
 
@@ -270,7 +302,13 @@ const DeletedPost = (userDeletedData) => {
                   </>
                 ) : (
                   <img
-                    src={`${CDN_URL}/${item.user_id}/WORKS/IMAGES/medium/${item.filename}`}
+                    src={
+                      selectedTab === "book"
+                        ? `${CDN_URL}/${item.user_id}/BOOKS/IMAGES/medium/${item.cover[0].name}`
+                        : `${CDN_URL}/${item.user_id}/WORKS/IMAGES/medium/${
+                            item.filename ? item.filename : item.files[0].name
+                          }`
+                    }
                     alt={item.filename}
                     style={{
                       width: "100%",

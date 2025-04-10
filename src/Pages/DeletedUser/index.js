@@ -17,9 +17,7 @@ const DeletedUser = () => {
 
     setIsLoading(true);
     try {
-      const user = await getDeletedUser(pageKey);
-      console.log("user==>Ruba", user);
-      
+      const user = await getDeletedUser(pageKey);      
       setData((prevData) => [...prevData, ...user.data]); 
       
       if (user?.page) {

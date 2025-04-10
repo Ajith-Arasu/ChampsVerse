@@ -17,8 +17,8 @@ const DeletedUserDetail = () => {
   const handleClick = (tab) => {
     if (selectedTab !== tab) {
       setSelectedTab(tab);
-      setPageKey(""); // Reset pagination on tab change
-      setData([]); // Clear old data
+      setPageKey("");
+      setData([]); 
     }
   };
 
@@ -30,19 +30,17 @@ const DeletedUserDetail = () => {
         const result = await getDeletedUserPost(pageKey, userId, selectedTab);
         console.log("result==>Ruba", result);
 
-        if (result?.data?.length > 0) {
-          const ids = result.data.map((item) => item.post_id).join(",");
-          let res = await getPost(ids);
-          console.log("res", res);
+       
+          
 
-          setData((prev) => [...prev, ...res.data]);
+          setData((prev) => [...prev, ...result.data]);
 
           if (result?.page) {
             setPageKey(result?.page);
           } else {
             setPageKey(null);
           }
-        }
+        
       }
     } finally {
       setIsLoading(false);
@@ -74,20 +72,20 @@ const DeletedUserDetail = () => {
         </Typography>
       </div>
 
-      <div className={style["section"]} onClick={() => handleClick("books")}>
+      <div className={style["section"]} onClick={() => handleClick("book")}>
         <img
-          src={selectedTab === "books" ? "/button-normal.png" : "/emptySection.png"}
+          src={selectedTab === "book" ? "/button-normal.png" : "/emptySection.png"}
           alt="Books Icon"
         />
         <Typography
           variant="h6"
-          className={selectedTab === "books" ? style["center-alligned"] : style["unselected-item"]}
+          className={selectedTab === "book" ? style["center-alligned"] : style["unselected-item"]}
         >
           Books
         </Typography>
       </div>
 
-      <div className={style["section"]} onClick={() => handleClick("Achievement")}>
+      {/* <div className={style["section"]} onClick={() => handleClick("achievement")}>
         <img
           src={selectedTab === "Achievement" ? "/button-normal.png" : "/emptySection.png"}
           alt="Achievement Icon"
@@ -98,11 +96,11 @@ const DeletedUserDetail = () => {
         >
           Achievement
         </Typography>
-      </div>
+      </div> */}
 
     </div>
-    {selectedTab === "post" && <DeletedPost  userId={userId} userDeletedData={data} />}
-
+    {selectedTab === "post"   && <DeletedPost  userId={userId} userDeletedData={data} selectedTab={selectedTab}/>}
+    {selectedTab === "book"   && <DeletedPost  userId={userId} userDeletedData={data} selectedTab={selectedTab}/>}
     </>
   );
 };

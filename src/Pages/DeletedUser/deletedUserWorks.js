@@ -26,7 +26,7 @@ const DeletedUserWorks = ({ userId, data }) => {
       {data && data.length > 0 ? (
         data.map((item) => (
           <div key={item.post_id} className={style["grid-item"]}>
-            
+
             <img
               style={{ height: "100%", width: "100%" }}
               src={`${CDN_URL}/${item.user_id}/WORKS/IMAGES/medium/${item.files[0].name}`}
