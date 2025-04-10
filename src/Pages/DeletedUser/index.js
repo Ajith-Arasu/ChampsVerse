@@ -14,7 +14,6 @@ const DeletedUser = () => {
 
   const deletedUser = async () => {
     if (isLoading || pageKey === null) return;
-
     setIsLoading(true);
     try {
       const user = await getDeletedUser(pageKey);      

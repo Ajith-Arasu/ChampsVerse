@@ -10,7 +10,7 @@ const DeletedUserDetail = () => {
   const { getDeletedUserPost, getPost } = apiCall();
   const [selectedTab, setSelectedTab] = useState("post");
   const { userId } = useParams();
-  const [pageKey, setPageKey] = useState(""); // Controls pagination
+  const [pageKey, setPageKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
@@ -28,19 +28,12 @@ const DeletedUserDetail = () => {
     try {
       if (pageKey !== null) {
         const result = await getDeletedUserPost(pageKey, userId, selectedTab);
-        console.log("result==>Ruba", result);
-
-       
-          
-
           setData((prev) => [...prev, ...result.data]);
-
           if (result?.page) {
             setPageKey(result?.page);
           } else {
             setPageKey(null);
           }
-        
       }
     } finally {
       setIsLoading(false);

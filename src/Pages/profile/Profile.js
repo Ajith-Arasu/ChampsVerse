@@ -43,7 +43,7 @@ const Profile =()=>{
 
   const transformedData = (data) => {
     const transformed = {
-      targetIds: data.map((item) => {
+      ids: data.map((item) => {
         return {
           user_id: item.user_id,
           post_id: item.post_id,
@@ -98,7 +98,7 @@ const Profile =()=>{
     );
     if(resultBD.statusCode === 200){
       let requestbody ={
-        "targetIds": [
+        "ids": [
             {
                 "user_id": data[index].user_id,
                 "post_id": data[index].post_id

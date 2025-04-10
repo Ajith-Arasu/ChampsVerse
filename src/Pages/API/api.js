@@ -303,7 +303,7 @@ const apiCall = () => {
 
   const deleteS3Post = async (ids, workType) => {
     const response = await fetch(
-      `${BASE_URL}/api/v1/posts/delete?ids=${ids}&delete_files=true/post`,
+      `${BASE_URL}/api/v1/posts/delete?ids=${ids}&delete_files=true`,
       {
         headers: {
           "Content-Type": "application/json",

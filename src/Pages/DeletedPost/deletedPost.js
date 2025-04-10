@@ -23,7 +23,7 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
     deleteS3Post,
     deletePostJson,
     deletedUserS3Post,
-    deletedUserPostJson
+    deletedUserPostJson,
   } = apiCall();
   const [data, setData] = useState([]);
   const CDN_URL = process.env.REACT_APP_CDN_URL;
@@ -65,10 +65,12 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
       function checkFilesDeleted(data, checkeditems) {
         return checkeditems.every((item) => {
           const matchedData = data.find((d) => d.post_id === item.workId);
-          return matchedData ? matchedData.deletedFiles === true : false;
+          return matchedData ? matchedData.files_deleted === true : false;
         });
       }
+
       const result = checkFilesDeleted(data, checkedItems);
+      
       if (result) {
         if (isDeletedPost) {
         const res = await deletePostJson(ids);}
@@ -113,7 +115,7 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
         defaultAvatar: matchedItem.defaultAvatar,
         firstname: matchedItem.firstname,
         avatar: matchedItem.avatar,
-        deletedFiles: item.files_deleted,
+        files_deleted: item.files_deleted,
       };
     });
     return transformed;
@@ -260,7 +262,7 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
                 </div>
               }
               <div className={style["entries-image"]}>
-                {item.deletedFiles ? (
+                {item.files_deleted ? (
                   <>
                     <div
                       style={{
