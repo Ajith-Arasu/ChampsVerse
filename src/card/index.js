@@ -3,13 +3,12 @@ import style from "../card/style.module.css";
 import { useLocation } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 
-const Card = ({ data, handleClick, handleClickProfile }) => {
-  console.log('card================>')
+const Card = ({ data, handleClick, handleClickProfile,botWorks }) => {
   const location = useLocation();
   const isProfilePage = location.pathname === "/profile";
   const CDN_URL=process.env.REACT_APP_CDN_URL;
-  console.log('data--card', data);
 
+  console.log("Bot---->",botWorks)
   return (
     <>
     { data.length?
@@ -24,7 +23,7 @@ const Card = ({ data, handleClick, handleClickProfile }) => {
                     src={`${CDN_URL}/${item.user_id?item.user_id:item.userID}/WORKS/IMAGES/medium/${item.files[0].name?item.files[0].name:item.filename}`}
                   />
                 </div>
-                <div className={style["workCard-right"]}>
+                {!botWorks && <div className={style["workCard-right"]}>
                   <div className={style["valub1"]}>
                     <div className={style["image"]}>
                       <img
@@ -91,7 +90,7 @@ const Card = ({ data, handleClick, handleClickProfile }) => {
                       <span style={{ fontWeight: "bold" }}>Silver</span>
                     </div>
                   </div>
-                </div>
+                </div>}
               </div>
               <div className={style["workCard-bottom"]}>
                 <div className={style["workCard-bottomImage1"]}>
@@ -163,8 +162,8 @@ const Card = ({ data, handleClick, handleClickProfile }) => {
        display: "flex",
        justifyContent: "center",
        alignItems: "center",
-       height: "100vh", // Full viewport height
-       width: "100vw", // Full viewport width
+       height: "100vh", 
+       width: "100vw",
      }}
    >
      <CircularProgress />

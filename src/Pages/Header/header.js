@@ -175,6 +175,9 @@ const Header = ({ userDetails }) => {
           <MenuItem onClick={() => handleClick("deleted-post")}>
             Deleted Post
           </MenuItem>
+          <MenuItem onClick={() => handleClick("bot-works")}>
+            Bot Works
+          </MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

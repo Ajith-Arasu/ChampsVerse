@@ -1,0 +1,254 @@
+import { useEffect, useState } from "react";
+import apiCall from "../API/api";
+import { useNavigate } from "react-router-dom";
+import Loader from "../Loader/loader";
+import { Box, Avatar, Rating } from "@mui/material";
+import style from "../Bot Wroks/style.module.css";
+
+const Work = ({ setUserDetails, setProfilePic }) => {
+  const navigate = useNavigate();
+  const CDN_URL = "https://dcp5pbxslacdh.cloudfront.net";
+  const [data, setData] = useState([]);
+  const [nextPage, setNextPage] = useState(1);
+  const [pageKey, setPageKey] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [reactions, setReactions] = useState({});
+  const [value, setValue] = useState(0);
+  const {
+    data: feedData,
+    getPost,
+    addBadges,
+    getBadges,
+    getUserDetails,
+    sendRating,
+  } = apiCall();
+  const [count, setCount] = useState(20);
+  const [refresh, setRefreshPage] = useState(false);
+  const [ratings, setRatings] = useState({});
+
+  const handleRating = async (value, workid) => {
+    setRatings((prev) => ({ ...prev, [workid]: value })); // Update local rating optimistically
+
+    const body = {
+      ids: [
+        {
+          work_id: workid,
+          work_type: "POST",
+          star_rating: value,
+        },
+      ],
+    };
+
+    const response = await sendRating(body);
+
+    if (response.statusCode === 200) {
+      fetchData(); // Refresh data from server if needed
+    } else {
+      // Optional: rollback rating on failure
+      console.error("Failed to submit rating");
+    }
+  };
+
+  const fetchData = async () => {
+    if (isLoading || pageKey === null) return;
+    setIsLoading(true);
+
+    try {
+      if (pageKey !== null) {
+        let result = await feedData(pageKey, count);
+        const ids = result.data.map((item) => item.post_id).join(",");
+        const userIds = result.data.map((item) => item.user_id).join(",");
+        const userData = await getUserDetails(userIds);
+        if (result?.page) {
+          setPageKey(result?.page);
+        } else {
+          setPageKey(null);
+        }
+        let res = await getPost(ids);
+        const formatData = transformedData(result.data);
+        const badgesData = await getBadges(formatData);
+        const updatedPosts = appendBadgesToPosts(
+          res.data,
+          badgesData.data,
+          userData
+        );
+        const reorderedPostData = result.data
+          .map((feedItem) =>
+            updatedPosts.find((post) => post.post_id === feedItem.post_id)
+          )
+          .filter((post) => post !== undefined);
+        setData((prev) => [...prev, ...reorderedPostData]);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const Card = ({ data, handleClick, handleClickProfile, botWorks }) => {
+    console.log("card -called");
+    console.log("data====>111", data);
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "10px",
+          margin: "2% 2%",
+        }}
+      >
+        {data.map((item, index) => {
+          const workId = item.post_id;
+          const currentRating = ratings[workId] ?? item.bot_stars;
+          return (
+            <div
+              key={index}
+              style={{
+                flex: "1 1 calc(100% / 5 - 21px)",
+                maxWidth: "calc(100% / 5 - 16px)",
+                textAlign: "center",
+                height: "250px",
+                width: "300px",
+                border: "2px solid black",
+                boxShadow: "0 6px 10px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <img
+                style={{ height: "80%", width: "100%", objectFit: "cover" }}
+                src={`${CDN_URL}/${
+                  item.user_id ? item.user_id : item.userID
+                }/WORKS/IMAGES/medium/${
+                  item.files[0].name ? item.files[0].name : item.filename
+                }`}
+              ></img>
+              <Rating
+                name="simple-controlled"
+                value={currentRating}
+                onChange={(event, newValue) => {
+                  handleRating(newValue, item.post_id);
+                }}
+              />
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const appendBadgesToPosts = (posts, badges, userData) => {
+    return posts.map((post) => {
+      const matchedBadge = badges.find(
+        (badge) => badge.post_id === post.post_id
+      );
+      if (matchedBadge) {
+        if (matchedBadge.badge) {
+          post.badge = matchedBadge.badge;
+        } else {
+          post.badge = null;
+        }
+      }
+      const foundItem = userData.find((item) => item.uid === post.user_id);
+      if (foundItem) {
+        post.avatar = foundItem.avatar;
+        post.defaultAvatar = foundItem.defaultAvatar;
+      }
+
+      return post;
+    });
+  };
+
+  const transformedData = (data) => {
+    const transformed = {
+      ids: data.map((item) => {
+        return {
+          user_id: item.user_id,
+          post_id: item.post_id,
+        };
+      }),
+    };
+    return transformed;
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [nextPage, value]);
+
+  const handleScroll = () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.offsetHeight;
+
+    if (
+      scrollTop + windowHeight >= documentHeight - 5 &&
+      !isLoading &&
+      pageKey !== null
+    ) {
+      setNextPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const handleClick = async (index, type) => {
+    const resultBD = await addBadges(
+      data[index].user_id,
+      data[index].post_id,
+      type,
+      data[index].files[0].isPortrait
+    );
+    if (resultBD.statusCode === 200) {
+      let requestbody = {
+        ids: [
+          {
+            user_id: data[index].user_id,
+            post_id: data[index].post_id,
+          },
+        ],
+      };
+      let singleItemBadge = await getBadges(requestbody);
+      const badgeMap = singleItemBadge.data.reduce((acc, item) => {
+        acc[item.post_id] = item.badge;
+        return acc;
+      }, {});
+
+      const updatedData = data.map((item) => {
+        if (badgeMap[item.post_id]) {
+          return {
+            ...item,
+            badge: badgeMap[item.post_id],
+          };
+        }
+        return item;
+      });
+      setData(updatedData);
+    }
+  };
+
+  const handleClickProfile = async (userId) => {
+    let userDetails = await getUserDetails(userId);
+    setUserDetails(userDetails);
+    setProfilePic(userDetails[0].avatar);
+    navigate("/profile", { state: { userId } });
+  };
+
+  return (
+    <>
+      {console.log("data11", data)}
+      {isLoading && <Loader />}
+      <Card
+        data={data}
+        handleClick={handleClick}
+        handleClickProfile={handleClickProfile}
+      />
+    </>
+  );
+};
+
+export default Work;

@@ -395,6 +395,21 @@ const apiCall = () => {
     return result;
   };
 
+  const sendRating = async (requestBody)=>{
+    
+    const response = await fetch(
+      `${BASE_URL}/api/v1/trigger/bots/process`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(requestBody),
+      }
+    );
+    const result = await response.json();
+    return result;
+  }
   return {
     data,
     getPost,
@@ -422,7 +437,8 @@ const apiCall = () => {
     getDeletedUserPost,
     getQuestList,
     deletedUserS3Post,
-    deletedUserPostJson
+    deletedUserPostJson,
+    sendRating
   };
 };
 

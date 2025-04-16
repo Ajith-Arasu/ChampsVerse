@@ -160,6 +160,7 @@ const Work = ({ setUserDetails, setProfilePic }) => {
     data={data}
     handleClick={handleClick}
     handleClickProfile={handleClickProfile}
+    botWorks={false}
     />
     </>
   );
