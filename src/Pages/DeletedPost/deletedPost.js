@@ -1,5 +1,3 @@
-////olddddddd
-
 import style from "../DeletedPost/style.module.css";
 import apiCall from "../API/api";
 import { useEffect, useState } from "react";

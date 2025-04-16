@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import apiCall from "../API/api";
-import { useNavigate }  from "react-router-dom"
-import Card from "../../card/index"
-import Loader from  "../Loader/loader";
+import { useLocation, useNavigate } from "react-router-dom";
+import Card from "../../card/index";
+import Loader from "../Loader/loader";
 
-const Work = ({ setUserDetails, setProfilePic }) => {
+const Work = ({ setUserDetails, setProfilePic, entriesData }) => {
+  console.log("entriesData======99999", entriesData);
   const navigate = useNavigate();
   const CDN_URL = "https://dcp5pbxslacdh.cloudfront.net";
   const [data, setData] = useState([]);
@@ -12,14 +13,23 @@ const Work = ({ setUserDetails, setProfilePic }) => {
   const [pageKey, setPageKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [reactions, setReactions] = useState({});
-  const { data: feedData, getPost, addBadges, getBadges,getUserDetails } = apiCall();
+  const {
+    data: feedData,
+    getPost,
+    addBadges,
+    getBadges,
+    getUserDetails,
+  } = apiCall();
   const [count, setCount] = useState(20);
   const [refresh, setRefreshPage] = useState(false);
+  const location = useLocation();
+  const [entry, setEntry] = useState([]);
+  const isQuestPage = location.pathname === "/quests-Works";
 
   const fetchData = async () => {
     if (isLoading || pageKey === null) return;
     setIsLoading(true);
-
+    console.log("fetchData callledddd");
     try {
       if (pageKey !== null) {
         let result = await feedData(pageKey, count);
@@ -34,12 +44,17 @@ const Work = ({ setUserDetails, setProfilePic }) => {
         let res = await getPost(ids);
         const formatData = transformedData(result.data);
         const badgesData = await getBadges(formatData);
-        const updatedPosts = appendBadgesToPosts(res.data, badgesData.data,userData);
+        const updatedPosts = appendBadgesToPosts(
+          res.data,
+          badgesData.data,
+          userData
+        );
         const reorderedPostData = result.data
-        .map(feedItem => updatedPosts.find(post => post.post_id === feedItem.post_id))
-        .filter(post => post !== undefined);
+          .map((feedItem) =>
+            updatedPosts.find((post) => post.post_id === feedItem.post_id)
+          )
+          .filter((post) => post !== undefined);
         setData((prev) => [...prev, ...reorderedPostData]);
-
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -47,10 +62,8 @@ const Work = ({ setUserDetails, setProfilePic }) => {
       setIsLoading(false);
     }
   };
- 
 
-  const appendBadgesToPosts = (posts, badges,userData) => {
-
+  const appendBadgesToPosts = (posts, badges, userData) => {
     return posts.map((post) => {
       const matchedBadge = badges.find(
         (badge) => badge.post_id === post.post_id
@@ -60,7 +73,6 @@ const Work = ({ setUserDetails, setProfilePic }) => {
           post.badge = matchedBadge.badge;
         } else {
           post.badge = null;
-        
         }
       }
       const foundItem = userData.find((item) => item.uid === post.user_id);
@@ -86,8 +98,13 @@ const Work = ({ setUserDetails, setProfilePic }) => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [nextPage]);
+    if (location.pathname === "/quests-Works") {
+      console.log("Setting entries data");
+      setData(entriesData);
+    } else {
+      fetchData();
+    }
+  }, [location.pathname, nextPage, entriesData]);
 
   const handleScroll = () => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -112,56 +129,60 @@ const Work = ({ setUserDetails, setProfilePic }) => {
 
   const handleClick = async (index, type) => {
     const resultBD = await addBadges(
-      data[index].user_id,
-      data[index].post_id,
+      isQuestPage ? data[index].userID : data[index].user_id,
+      isQuestPage ? data[index].postId : data[index].post_id,
       type,
-      data[index].files[0].isPortrait
+      isQuestPage ? data[index].isPortrait : data[index].files[0].isPortrait
     );
-    if(resultBD.statusCode === 200){
-      let requestbody ={
-        "ids": [
-            {
-                "user_id": data[index].user_id,
-                "post_id": data[index].post_id
-            }
-        ]
-    }
-      let singleItemBadge=await getBadges(requestbody)
+    if (resultBD.statusCode === 200) {
+      let requestbody = {
+        ids: [
+          {
+            user_id: isQuestPage ? data[index].userID : data[index].user_id,
+            post_id: isQuestPage ? data[index].postId : data[index].post_id,
+          },
+        ],
+      };
+      let singleItemBadge = await getBadges(requestbody);
+      console.log("singleItemBadge");
       const badgeMap = singleItemBadge.data.reduce((acc, item) => {
         acc[item.post_id] = item.badge;
+        console.log("bagemap called");
         return acc;
       }, {});
-      
-      
-       const updatedData = data.map(item => {
-        if (badgeMap[item.post_id]) {
+
+      console.log("badgeMap", badgeMap);
+      const updatedData = data.map((item) => {
+        if (badgeMap[isQuestPage ? item.postId : item.post_id]) {
           return {
             ...item,
-            badge: badgeMap[item.post_id]
+            badge: badgeMap[isQuestPage ? item.postId : item.post_id],
           };
         }
         return item;
       });
-      setData(updatedData)
+      console.log("updatedData",updatedData)
+      setData(updatedData);
     }
   };
 
-  const handleClickProfile = async(userId)=>{
-    let userDetails= await getUserDetails(userId);
+  const handleClickProfile = async (userId) => {
+    let userDetails = await getUserDetails(userId);
     setUserDetails(userDetails);
     setProfilePic(userDetails[0].avatar);
-    navigate("/profile",{state:{userId}})
-  }
-  
+    navigate("/profile", { state: { userId } });
+  };
+
+  console.log("data888888888888", data);
   return (
-    <>{console.log("data11",data)}
-    {isLoading && <Loader/>}
-    <Card
-    data={data}
-    handleClick={handleClick}
-    handleClickProfile={handleClickProfile}
-    botWorks={false}
-    />
+    <>
+      {isLoading && <Loader />}
+      <Card
+        data={data}
+        handleClick={handleClick}
+        handleClickProfile={handleClickProfile}
+        botWorks={false}
+      />
     </>
   );
 };

@@ -15,7 +15,8 @@ import DeletedUser from "./Pages/DeletedUser/index"
 import DeletedUserDetail from "./Pages/DeletedUser/deletedUserDetail";
 import DeletedUserWorks from "./Pages/DeletedUser/deletedUserWorks";
 import QuestDetail from "./Pages/Quests/questDetail";
-import BotWorks from "./Pages/Bot Wroks/work"
+import BotWorks from "./Pages/Bot Wroks/work";
+import Quests from "./Pages/Quests/index"
 
 export default function App() {
   const [userDetails, setUserDetails] = useState([]);
@@ -40,6 +41,7 @@ export default function App() {
             <Route path="/deleted-user/:userId/works" element={<DeletedUserWorks/>}/>
             <Route path="/quests-Works" element={<QuestDetail/>}/>
             <Route path="/bot-works" element={<BotWorks/>}/>
+            <Route path="quests" element={<Quests/>}/>
           </Routes>
         </>
       </Router>

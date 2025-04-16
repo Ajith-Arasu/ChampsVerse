@@ -3,59 +3,20 @@ import { useState, useEffect } from "react";
 import apiCall from "../API/api";
 import { useLocation } from "react-router-dom";
 import style from "./style.module.css";
+import Works from "../../Pages/work/work"
 
 const QuestDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const isMobile = useMediaQuery("(max-width:600px)");
   const [pageKey, setPageKey] = useState("");
-  const { getContestEntries, getUserDetails, getPost, addBadges, getBadges, } = apiCall();
+  const { getContestEntries, getUserDetails, getPost, addBadges, getBadges } =
+    apiCall();
   const [entriesData, setEntriesData] = useState([]);
   const location = useLocation();
-  const { contestId } = location.state || {};
+  const { contestId, title } = location.state || {};
   const isProfilePage = location.pathname === "/profile";
 
-  // const handleClick = async (index, type) => {
-  //   const resultBD = await addBadges(
-  //     data[index].user_id,
-  //     data[index].post_id,
-  //     type,
-  //     data[index].files[0].isPortrait
-  //   );
-  //   if (resultBD.statusCode === 200) {
-  //     let requestbody = {
-  //       ids: [
-  //         {
-  //           user_id: data[index].user_id,
-  //           post_id: data[index].post_id,
-  //         },
-  //       ],
-  //     };
-  //     let singleItemBadge = await getBadges(requestbody);
-  //     const badgeMap = singleItemBadge.data.reduce((acc, item) => {
-  //       acc[item.post_id] = item.badge;
-  //       return acc;
-  //     }, {});
-
-  //     const updatedData = data.map((item) => {
-  //       if (badgeMap[item.post_id]) {
-  //         return {
-  //           ...item,
-  //           badge: badgeMap[item.post_id],
-  //         };
-  //       }
-  //       return item;
-  //     });
-  //     setData(updatedData);
-  //   }
-  // };
-
-  // const handleClickProfile = async (userId) => {
-  //   let userDetails = await getUserDetails(userId);
-  //   setUserDetails(userDetails);
-  //   setProfilePic(userDetails[0].avatar);
-  //   navigate("/profile", { state: { userId } });
-  // };
-
+  console.log("contestId===>", title);
   const transformedData = async (post, userData, result) => {
     const data = post.map((post) => {
       const user = userData.find((user) => user.uid === post.user_id);
@@ -69,6 +30,8 @@ const QuestDetail = () => {
         avatar: user.avatar,
         firstname: user.firstname,
         title: entry.title.split("_").pop(),
+        isPortrait: post?.files[0]?.isPortrait
+
       };
     });
     return data;
@@ -110,17 +73,31 @@ const QuestDetail = () => {
 
   return (
     <div>
-      Quest Detail
-      <Box>
+      <Typography
+        style={{
+          fontFamily: "Baloo2",
+          color: "black",
+          fontSize: isMobile ? "16px" : "29px",
+          fontWeight: "800",
+          textAlign: "center",
+          padding: "15px 0 0 0",
+        }}
+      >
+        {title}
+      </Typography>
+      {/* <Box>
         <div className={style["grid-container"]}>
           {entriesData.map((item, index) => {
-            console.log("imagesss",`${process.env.REACT_APP_CDN_URL}/${contestId}/MICRO_CONTESTS/IMAGES/medium/${item.filename}`)
+            console.log(
+              "imagesss",
+              `${process.env.REACT_APP_CDN_URL}/${contestId}/MICRO_CONTESTS/IMAGES/medium/${item.filename}`
+            );
             return (
               <div className={style["grid-item"]} key={index}>
                 <div className={style["workCard-top"]}>
                   <div className={style["workCard-left"]}>
                     <img
-                      src={`${process.env.REACT_APP_CDN_URL}/${contestId}/MICRO_CONTESTS/IMAGES/medium/${item.filename}`}
+                      src={`${process.env.REACT_APP_CDN_URL}/${item.userID}/WORKS/IMAGES/medium/${item.filename}`}
                     />
                   </div>
                   <div className={style["workCard-right"]}>
@@ -128,7 +105,6 @@ const QuestDetail = () => {
                       <div className={style["image"]}>
                         <img
                           src="\Diamond.png"
-    
                           style={{
                             cursor: "pointer",
                             opacity:
@@ -149,7 +125,6 @@ const QuestDetail = () => {
                       <div className={style["image"]}>
                         <img
                           src="\Ruby.png"
-                          
                           style={{
                             cursor: "pointer",
                             opacity: item.badge === "rby" ? 1.0 : 0.2,
@@ -252,7 +227,8 @@ const QuestDetail = () => {
             );
           })}
         </div>
-      </Box>
+      </Box> */}
+      <Works entriesData={entriesData}/>
     </div>
   );
 };

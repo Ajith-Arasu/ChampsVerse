@@ -1,0 +1,238 @@
+import { Typography, useMediaQuery } from "@mui/material";
+import React from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Easy from "../../asserts/easy.png";
+import Expert from "../../asserts/hard.png";
+import Advanced from '../../asserts/complex.png';
+import Moderate from "../../asserts/moderate.png";
+import apiCall from "../API/api";
+import { useEffect, useState } from "react";
+
+const Quests = () => {
+  const location = useLocation();
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const [nextPage, setNextPage] = useState(1);
+  const [pageKey, setPageKey] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { getQuestList } = apiCall();
+  const [quest, setQuest] = useState([])
+  const difficultyLabels = ['Easy', 'Moderate', 'Advanced', 'Expert'];
+  const difficultyBg = [Easy, Moderate, Advanced, Expert];
+  const navigate = useNavigate()
+
+
+  const handleClick = (contestId, title) => {
+    console.log('title',title)
+    navigate('/quests-Works', { state: { contestId, title } });
+  };
+
+  const getPost = async () => {
+    if (isLoading || pageKey === null) return;
+    setIsLoading(true);
+    try {
+      if (pageKey !== null) {
+        const questData = await getQuestList(pageKey);
+        console.log("questData",questData)
+        setQuest(questData.data)
+        // const userIds = postsData.data.map((item) => item.user_id).join(",");
+        // const userData = userIds && (await getUserDetails(userIds));
+        // const transData = await transformedData(postsData.data, userData);
+        // console.log("transData", transData);
+        // setData((prev) => [...prev, ...transData]);
+        // if (postsData?.page) {
+        //   setPageKey(postsData?.page);
+        // } else {
+        //   setPageKey(null);
+        // }
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    getPost();
+  }, []);
+
+  console.log("quest", quest);
+  return (
+    <div>
+      <Typography
+        style={{
+          fontFamily: "Baloo2",
+          fontSize: isMobile ? "24px" : "48px",
+          fontWeight: 800,
+          color: "white",
+          textAlign: "center",
+          paddingBottom: "40px",
+        }}
+      >
+        ALL QUESTS
+      </Typography>
+
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: isMobile ? "28px" : "25px",
+          margin: isMobile ? "0 10%" : "0 5%",
+        }}
+      >
+        {quest.map((item, index) => (
+          <div
+            key={index} 
+            style={{
+              flex: isMobile
+                ? "flex: 1 1 calc(100% / 2 - 10px) "
+                : "1 1 calc(100% / 4 - 21px)",
+              maxWidth: isMobile
+                ? "calc(100% / 2 - 16px)"
+                : "calc(100% / 4 - 16px)",
+              textAlign: "center",
+              height: isMobile ? "250px" : "440px",
+              width: isMobile ? "400px" : "200px",
+            }}
+          >
+            <div
+              style={{
+                position: "relative",
+                height: "60%",
+                borderRadius: "14px 14px 0 0",
+                cursor: "pointer",
+              }}
+              
+              onClick={() => handleClick(item.contest_id,item.title)}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  backgroundImage:
+                    "linear-gradient(to bottom, rgb(0,0,0,0.9), transparent)",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  display: "flex",
+                  gap: "5px",
+                  height: "20%",
+                  width: "100%",
+                  borderRadius: "14px 14px 0 0",
+                }}
+              >
+                {/* <img
+                  alt={"score-icon"}
+                  style={{
+                    height: isMobile ? "20px" : "auto",
+                    width: isMobile ? "20px" : "auto",
+                    left: isMobile ? "10%" : 0,
+                    top: isMobile ? 2 : 5,
+                  }}
+                  src={scoreIcon}
+                ></img> */}
+                <Typography
+                  sx={{
+                    fontFamily: "Baloo2",
+                    fontWeight: 800,
+                    fontSize: isMobile ? "14px" : "21px",
+                    color: "white",
+                  }}
+                >{`${item.winning_points} Points`}</Typography>
+              </div>
+              <img
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  borderRadius: "14px 14px 0 0",
+                }}
+                src={`${process.env.REACT_APP_CDN_URL}/MICRO_CONTESTS/${item.contest_id}/IMAGES/medium/${item.ct_banner}`}
+                alt="Quest"
+              />
+
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "-15px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  borderRadius: "8px",
+                  textTransform: "uppercase",
+                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                  padding: "5px 12px",
+                }}
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    background: "rgba(255, 255, 255, 0.8)",
+                    filter: "blur(1px)",
+                    borderRadius: "8px",
+                  }}
+                ></div>
+
+                <Typography
+                  style={{
+                    position: "relative",
+                    color: "black",
+                    fontSize: isMobile ? "12px" : "22px",
+                    fontWeight: "500",
+                    textAlign: "center",
+                    fontFamily: "Baloo2",
+                  }}
+                >
+                  {difficultyLabels[item.difficulty_level - 1] || "Hard"}
+                </Typography>
+              </div>
+            </div>
+
+            <div style={{ height: "40%" }}>
+              <div
+                style={{
+                  background: `url(${
+                    difficultyBg[item.difficulty_level - 1] || Expert
+                  })`,
+                  backgroundSize: "100% 100%",
+                  height: "100%",
+                }}
+              >
+                <Typography
+                  style={{
+                    fontFamily: "Baloo2",
+                    color: "white",
+                    fontSize: isMobile ? "16px" : "29px",
+                    fontWeight: "800",
+                    textAlign: "center",
+                    padding: "15px 0 0 0",
+                  }}
+                >
+                  {item.title.length > 14
+                    ? item.title.slice(0, 14) + "..."
+                    : item.title}
+                </Typography>
+
+                <Typography
+                  style={{
+                    fontFamily: "Baloo2",
+                    color: "white",
+                    fontSize: isMobile ? "8px" : "14px",
+                    fontWeight: "500",
+                    textAlign: "center",
+                    padding: "5px",
+                    whiteSpace: "normal",
+                  }}
+                >
+                  {item.description.length > 140
+                    ? item.description.slice(0, 140) + "..."
+                    : item.description}
+                </Typography>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+export default Quests;

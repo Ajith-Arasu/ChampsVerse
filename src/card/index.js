@@ -6,21 +6,23 @@ import CircularProgress from '@mui/material/CircularProgress';
 const Card = ({ data, handleClick, handleClickProfile,botWorks }) => {
   const location = useLocation();
   const isProfilePage = location.pathname === "/profile";
+  const isQuestPage =location.pathname === '/quests-Works';
   const CDN_URL=process.env.REACT_APP_CDN_URL;
-
-  console.log("Bot---->",botWorks)
+  console.log("card callleedddd")
+  console.log("Bot---->",data)
   return (
     <>
     { data.length?
       <Box>
       <div className={style["grid-container"]}>
         {data.map((item, index) => {
+          console.log('data of data',item)
           return (
             <div className={style["grid-item"]} key={index}>
               <div className={style["workCard-top"]}>
                 <div className={style["workCard-left"]}>
                   <img
-                    src={`${CDN_URL}/${item.user_id?item.user_id:item.userID}/WORKS/IMAGES/medium/${item.files[0].name?item.files[0].name:item.filename}`}
+                    src={`${CDN_URL}/${!isQuestPage?item.user_id:item.userID}/WORKS/IMAGES/medium/${!isQuestPage?item.files[0].name:item.filename}`}
                   />
                 </div>
                 {!botWorks && <div className={style["workCard-right"]}>
