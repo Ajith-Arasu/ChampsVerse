@@ -4,8 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Card from "../../card/index";
 import Loader from "../Loader/loader";
 
-const Work = ({ setUserDetails, setProfilePic, entriesData }) => {
-  console.log("entriesData======99999", entriesData);
+const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
   const navigate = useNavigate();
   const CDN_URL = "https://dcp5pbxslacdh.cloudfront.net";
   const [data, setData] = useState([]);
@@ -19,6 +18,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData }) => {
     addBadges,
     getBadges,
     getUserDetails,
+    addWinnersCategory
   } = apiCall();
   const [count, setCount] = useState(20);
   const [refresh, setRefreshPage] = useState(false);
@@ -29,7 +29,6 @@ const Work = ({ setUserDetails, setProfilePic, entriesData }) => {
   const fetchData = async () => {
     if (isLoading || pageKey === null) return;
     setIsLoading(true);
-    console.log("fetchData callledddd");
     try {
       if (pageKey !== null) {
         let result = await feedData(pageKey, count);
@@ -62,6 +61,21 @@ const Work = ({ setUserDetails, setProfilePic, entriesData }) => {
       setIsLoading(false);
     }
   };
+
+  const handleQuestPost =async(work_id,user_id,status)=>{
+    
+    const type = 'MICRO_CONTEST'
+    const body={
+      "entries": [
+        {
+            "work_id": work_id,
+            "work_type": "POST",
+            "user_id": user_id,
+            "entry_status": status
+        }]
+    }
+    const response = await addWinnersCategory(contestId, body, type)
+  }
 
   const appendBadgesToPosts = (posts, badges, userData) => {
     return posts.map((post) => {
@@ -99,7 +113,6 @@ const Work = ({ setUserDetails, setProfilePic, entriesData }) => {
 
   useEffect(() => {
     if (location.pathname === "/quests-Works") {
-      console.log("Setting entries data");
       setData(entriesData);
     } else {
       fetchData();
@@ -132,7 +145,9 @@ const Work = ({ setUserDetails, setProfilePic, entriesData }) => {
       isQuestPage ? data[index].userID : data[index].user_id,
       isQuestPage ? data[index].postId : data[index].post_id,
       type,
-      isQuestPage ? data[index].isPortrait : data[index].files[0].isPortrait
+      isQuestPage ? data[index].isPortrait : data[index].files[0].isPortrait,
+      isQuestPage,
+      contestId
     );
     if (resultBD.statusCode === 200) {
       let requestbody = {
@@ -144,14 +159,11 @@ const Work = ({ setUserDetails, setProfilePic, entriesData }) => {
         ],
       };
       let singleItemBadge = await getBadges(requestbody);
-      console.log("singleItemBadge");
       const badgeMap = singleItemBadge.data.reduce((acc, item) => {
         acc[item.post_id] = item.badge;
-        console.log("bagemap called");
         return acc;
       }, {});
 
-      console.log("badgeMap", badgeMap);
       const updatedData = data.map((item) => {
         if (badgeMap[isQuestPage ? item.postId : item.post_id]) {
           return {
@@ -161,7 +173,6 @@ const Work = ({ setUserDetails, setProfilePic, entriesData }) => {
         }
         return item;
       });
-      console.log("updatedData",updatedData)
       setData(updatedData);
     }
   };
@@ -173,7 +184,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData }) => {
     navigate("/profile", { state: { userId } });
   };
 
-  console.log("data888888888888", data);
+
   return (
     <>
       {isLoading && <Loader />}
@@ -182,6 +193,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData }) => {
         handleClick={handleClick}
         handleClickProfile={handleClickProfile}
         botWorks={false}
+        handleQuestPost={handleQuestPost}
       />
     </>
   );

@@ -43,7 +43,6 @@ const Detail = () => {
           },
         ],
       });
-      console.log("result of detail==>", result.data[0]);
       setData(result.data[0]);
     } catch {
     } finally {

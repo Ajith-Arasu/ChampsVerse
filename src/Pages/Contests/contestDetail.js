@@ -23,7 +23,6 @@ const ContestDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { contestId, title, categories,selectedType } = location.state || {};
-  console.log("location.state",location.state)
   const {
     getContestEntries,
     getPost,
@@ -46,7 +45,6 @@ const ContestDetail = () => {
   const CDN_URL = process.env.REACT_APP_CDN_URL;
 
 
-  console.log("0000001type",selectedType)
   const handleClick = () => {
     if (checkedItems.length > 0) {
       setOpen(true);
@@ -143,6 +141,8 @@ const ContestDetail = () => {
         title: category,
         work_id: item.workId,
         user_id: item.userId,
+        work_type: 'POST',
+        type: "Winner",
       })),
     };
     try {

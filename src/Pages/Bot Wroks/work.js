@@ -42,9 +42,8 @@ const Work = ({ setUserDetails, setProfilePic }) => {
     const response = await sendRating(body);
 
     if (response.statusCode === 200) {
-      fetchData(); // Refresh data from server if needed
+      fetchData(); 
     } else {
-      // Optional: rollback rating on failure
       console.error("Failed to submit rating");
     }
   };
@@ -87,8 +86,7 @@ const Work = ({ setUserDetails, setProfilePic }) => {
   };
 
   const Card = ({ data, handleClick, handleClickProfile, botWorks }) => {
-    console.log("card -called");
-    console.log("data====>111", data);
+   
 
     return (
       <div
@@ -240,7 +238,6 @@ const Work = ({ setUserDetails, setProfilePic }) => {
 
   return (
     <>
-      {console.log("data11", data)}
       {isLoading && <Loader />}
       <Card
         data={data}

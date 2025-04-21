@@ -101,7 +101,6 @@ const Contests = () => {
 
  
   const handleClickToDetail = (contestId, title,categories) => {
-    console.log("categories",categories)
     selectedTab === "ongoing" &&
       navigate("/contestdetail", {
         state: {
@@ -167,8 +166,7 @@ const Contests = () => {
       description: "",
       from: "",
       to: "",
-      winning_points: "",
-      contest_entry_categories: [{ title: "", display: "", score: "" }],
+    
     });
 
     const handleInputChange = (e) => {
@@ -180,14 +178,14 @@ const Contests = () => {
       });
     };
 
-    const handleCategoryChange = (index, field, value) => {
-      const updatedCategories = [...formData.contest_entry_categories];
-      updatedCategories[index][field] = value;
-      setFormData((prev) => ({
-        ...prev,
-        contest_entry_categories: updatedCategories,
-      }));
-    };
+    // const handleCategoryChange = (index, field, value) => {
+    //   const updatedCategories = [...formData.contest_entry_categories];
+    //   updatedCategories[index][field] = value;
+    //   setFormData((prev) => ({
+    //     ...prev,
+    //     contest_entry_categories: updatedCategories,
+    //   }));
+    // };
 
     const addCategory = () => {
       setFormData((prev) => ({
@@ -208,59 +206,147 @@ const Contests = () => {
       }));
     };
 
+    // const handleSubmit = async () => {
+    //   try {
+    //     const data = {
+    //       ...formData,
+    //       from: `${String(formData.from)}T00:00:00.000Z`,
+    //       to: `${String(formData.to)}T00:00:00.000Z`,
+    //       work_type: formData.work_type.toUpperCase(),
+    //       winning_points: parseInt(formData.winning_points, 10),
+    //       contest_entry_categories: formData.contest_entry_categories.map(
+    //         (category) => ({
+    //           ...category,
+    //           score: parseInt(category.score, 10) || 0,
+    //         })
+    //       ),
+    //     };
+
+    //     const [name, extension] = fileName.split(".");
+
+    //     const result = await createContest(data);
+    //     const imageURl = await getUrlContestImage(
+    //       extension,
+    //       name,
+    //       result.data.contest_id,
+    //       `${data.type}S`,
+    //       data.type
+    //     );
+
+    //     const formats = [
+    //       { label: "preSignedUrlThumb", quality: 30, width: 240, height: 320 },
+    //       {
+    //         label: "preSignedUrlMedium",
+    //         quality: 50,
+    //         width: 720,
+    //         height: 1080,
+    //       },
+    //       { label: "preSignedUrlRaw", quality: 80, width: 1920, height: 1080 },
+    //     ];
+
+    //     const processAndUploadImage = async ({
+    //       label,
+    //       quality,
+    //       width,
+    //       height,
+    //     }) => {
+    //       const fileFormat = file.type.split("/")[1];
+    //       const resizedBlob = await fromBlob(
+    //         file,
+    //         quality,
+    //         width,
+    //         height,
+    //         fileFormat
+    //       );
+
+    //       const uploadUrl = imageURl.data[label];
+    //       const response = await fetch(uploadUrl, {
+    //         method: "PUT",
+    //         body: resizedBlob,
+    //         headers: {
+    //           "Content-Type": resizedBlob.type,
+    //         },
+    //       });
+
+    //       if (response.ok) {
+    //         console.log(`${label} uploaded successfully`);
+    //       } else {
+    //         throw new Error(
+    //           `Failed to upload ${label}: ${response.statusText}`
+    //         );
+    //       }
+    //     };
+
+    //     for (const format of formats) {
+    //       await processAndUploadImage(format);
+    //     }
+
+    //     console.log("All files uploaded successfully!");
+    //   } catch (error) {
+    //     console.error("Error during submission:", error);
+    //   } finally {
+    //     setContestCreation(false);
+    //     handleClick("ongoing");
+    //   }
+    // };
+
     const handleSubmit = async () => {
       try {
-        const data = {
+        let processedForm = {
           ...formData,
           from: `${String(formData.from)}T00:00:00.000Z`,
           to: `${String(formData.to)}T00:00:00.000Z`,
           work_type: formData.work_type.toUpperCase(),
-          winning_points: parseInt(formData.winning_points, 10),
-          contest_entry_categories: formData.contest_entry_categories.map(
-            (category) => ({
-              ...category,
-              score: parseInt(category.score, 10) || 0,
-            })
-          ),
+          
         };
-
+    
+        if (formData.type === "MICRO_CONTEST") {
+          processedForm = {
+            ...processedForm,
+            difficulty_level: parseInt(formData.difficulty_level, 10), 
+          };
+    
+          // Pick only the required fields
+          const allowedFields = [
+            "title",
+            "description",
+            "difficulty_level",
+            "winning_points",
+            "work_type",
+            "type",
+          ];
+          processedForm = Object.fromEntries(
+            Object.entries(processedForm).filter(([key]) =>
+              allowedFields.includes(key)
+            )
+          );
+        } else {
+          // CONTEST: handle categories
+          processedForm = {
+            ...processedForm,
+           
+          };
+        }
+    
         const [name, extension] = fileName.split(".");
-
-        const result = await createContest(data);
+        const result = await createContest(processedForm);
         const imageURl = await getUrlContestImage(
           extension,
           name,
           result.data.contest_id,
-          `${data.type}S`,
-          data.type
+          `${processedForm.type}S`,
+          processedForm.type
         );
-
+    
         const formats = [
           { label: "preSignedUrlThumb", quality: 30, width: 240, height: 320 },
-          {
-            label: "preSignedUrlMedium",
-            quality: 50,
-            width: 720,
-            height: 1080,
-          },
+          { label: "preSignedUrlMedium", quality: 50, width: 720, height: 1080 },
           { label: "preSignedUrlRaw", quality: 80, width: 1920, height: 1080 },
         ];
-
-        const processAndUploadImage = async ({
-          label,
-          quality,
-          width,
-          height,
-        }) => {
+    
+        const processAndUploadImage = async ({ label, quality, width, height }) => {
           const fileFormat = file.type.split("/")[1];
-          const resizedBlob = await fromBlob(
-            file,
-            quality,
-            width,
-            height,
-            fileFormat
-          );
-
+          const resizedBlob = await fromBlob(file, quality, width, height, fileFormat);
           const uploadUrl = imageURl.data[label];
           const response = await fetch(uploadUrl, {
             method: "PUT",
@@ -269,20 +355,16 @@ const Contests = () => {
               "Content-Type": resizedBlob.type,
             },
           });
-
-          if (response.ok) {
-            console.log(`${label} uploaded successfully`);
-          } else {
-            throw new Error(
-              `Failed to upload ${label}: ${response.statusText}`
-            );
+    
+          if (!response.ok) {
+            throw new Error(`Failed to upload ${label}: ${response.statusText}`);
           }
         };
-
+    
         for (const format of formats) {
           await processAndUploadImage(format);
         }
-
+    
         console.log("All files uploaded successfully!");
       } catch (error) {
         console.error("Error during submission:", error);
@@ -291,7 +373,7 @@ const Contests = () => {
         handleClick("ongoing");
       }
     };
-
+    
     const handleBack = () => {
       handleClick("ongoing");
     };
@@ -380,6 +462,8 @@ const Contests = () => {
                 </div>
               </div>
 
+              
+
               {/* Work Type */}
               <div className={style.formGroup}>
                 <Typography variant="h5" sx={{ paddingBottom: "10px" }}>
@@ -389,6 +473,19 @@ const Contests = () => {
                   type="text"
                   name="work_type"
                   value={formData.work_type}
+                  onChange={handleInputChange}
+                  style={{ width: "100%", padding: "5px" }}
+                />
+              </div>
+
+              <div className={style.formGroup}>
+                <Typography variant="h5" sx={{ paddingBottom: "10px" }}>
+                  Difficulty Level:
+                </Typography>
+                <input
+                  type="text"
+                  name="difficulty_level"
+                  value={formData.difficulty_level}
                   onChange={handleInputChange}
                   style={{ width: "100%", padding: "5px" }}
                 />
@@ -475,7 +572,7 @@ const Contests = () => {
               </div>
 
               {/* Contest Entry Categories */}
-              <div className={style.formGroup}>
+              {/* <div className={style.formGroup}>
                 <Typography variant="h5" sx={{ paddingBottom: "10px" }}>
                   Contest Entry Categories:
                 </Typography>
@@ -536,7 +633,7 @@ const Contests = () => {
                     </div>
                   </div>
                 ))}
-              </div>
+              </div> */}
 
               {/* Submit Button */}
               <div style={{ alignItems: "center", justifyContent: "center" }}>
@@ -570,15 +667,12 @@ const Contests = () => {
   };
 
   const statusUpdate = async (contestId) => {
-    console.log("clickedddddddd");
     const res = await updateContestStatus(contestId, selectedType);
-    console.log("res", res);
     if(res.success){
       
     }
   };
 
-  console.log("selectedType", selectedType);
   return (
     <>
       {isLoading && <Loader />}

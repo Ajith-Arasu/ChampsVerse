@@ -128,7 +128,6 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
         const userIds = postsData.data.map((item) => item.user_id).join(",");
         const userData = userIds && (await getUserDetails(userIds));
         const transData = await transformedData(postsData.data, userData);
-        console.log("transData", transData);
         setData((prev) => [...prev, ...transData]);
         if (postsData?.page) {
           setPageKey(postsData?.page);
@@ -142,7 +141,6 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
       setIsLoading(false);
     }
   };
-  console.log("userDeletedData", userDeletedData);
   useEffect(() => {
     if (location.pathname === "/deleted-post") {
       getPost();
@@ -202,7 +200,6 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
     };
   }, []);
 
-  console.log("rubashree==>", data);
   return (
     <>
       {isLoading && <Loader />}

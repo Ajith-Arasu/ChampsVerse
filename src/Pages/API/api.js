@@ -30,18 +30,27 @@ const apiCall = () => {
     const result = await response.json();
     return result;
   };
-  const addBadges = async (userId, postId, valuable, portrait) => {
+  const addBadges = async (userId, postId, valuable, portrait,isQuestPage,questId) => {
     let requestBody;
 
     if (valuable === "mp" || valuable === "wnd" || valuable === "hof") {
       requestBody = {
         special_badge: valuable,
         isPortrait: true,
+        
       };
     } else {
       requestBody = {
         valuable: valuable,
         isPortrait: portrait,
+      };
+    }
+
+    if (isQuestPage) {
+      requestBody = {
+        ...requestBody,
+        contest_id: questId, 
+        contest_type: 'MICRO_CONTEST'
       };
     }
 
@@ -410,6 +419,26 @@ const apiCall = () => {
     const result = await response.json();
     return result;
   }
+
+  const triggerActivityApi = async (requestBody)=>{
+    
+    const response = await fetch(
+      `${BASE_URL}/api/v1/trigger/user/activity`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(requestBody),
+      }
+    );
+    const result = await response.json();
+    return result;
+  }
+
+  
+
+
   return {
     data,
     getPost,
@@ -438,7 +467,8 @@ const apiCall = () => {
     getQuestList,
     deletedUserS3Post,
     deletedUserPostJson,
-    sendRating
+    sendRating,
+    triggerActivityApi
   };
 };
 

@@ -18,7 +18,6 @@ const Header = ({ userDetails }) => {
   const isProfilePage = location.pathname === "/profile";
   const navigate = useNavigate();
 
-  // Use anchorEl to anchor the menu to the menu button
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (page) => {
@@ -26,12 +25,10 @@ const Header = ({ userDetails }) => {
     handleCloseMenu();
   };
 
-  // Open menu by setting anchorEl from the event target
   const handleOpenMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  // Close menu by setting anchorEl to null
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };

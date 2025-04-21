@@ -1,12 +1,24 @@
-import { Typography, useMediaQuery } from "@mui/material";
+import {
+  Typography,
+  useMediaQuery,
+  Menu,
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button
+} from "@mui/material";
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Easy from "../../asserts/easy.png";
 import Expert from "../../asserts/hard.png";
-import Advanced from '../../asserts/complex.png';
+import Advanced from "../../asserts/complex.png";
 import Moderate from "../../asserts/moderate.png";
 import apiCall from "../API/api";
 import { useEffect, useState } from "react";
+import threeDotsIcon from "../../asserts/icons8-three-dots-30.png";
 
 const Quests = () => {
   const location = useLocation();
@@ -14,16 +26,35 @@ const Quests = () => {
   const [nextPage, setNextPage] = useState(1);
   const [pageKey, setPageKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { getQuestList } = apiCall();
-  const [quest, setQuest] = useState([])
-  const difficultyLabels = ['Easy', 'Moderate', 'Advanced', 'Expert'];
+  const { getQuestList, triggerActivityApi } = apiCall();
+  const [quest, setQuest] = useState([]);
+  const difficultyLabels = ["Easy", "Moderate", "Advanced", "Expert"];
   const difficultyBg = [Easy, Moderate, Advanced, Expert];
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = React.useState(false);
+  const[contestId, setContestId] = useState('');
 
+  const handleClickOpen = (contest_id) => {
+    setOpen(true);
+    setContestId(contest_id)
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleClick = (contestId, title) => {
-    console.log('title',title)
-    navigate('/quests-Works', { state: { contestId, title } });
+    navigate("/quests-Works", { state: { contestId, title } });
+  };
+
+  const handleTriggerActivity = () => {
+    const body = {
+      activity_type: "micro_contest",
+      activity_id: contestId,
+    };
+    triggerActivityApi(body);
+    setOpen(false);
   };
 
   const getPost = async () => {
@@ -32,18 +63,7 @@ const Quests = () => {
     try {
       if (pageKey !== null) {
         const questData = await getQuestList(pageKey);
-        console.log("questData",questData)
-        setQuest(questData.data)
-        // const userIds = postsData.data.map((item) => item.user_id).join(",");
-        // const userData = userIds && (await getUserDetails(userIds));
-        // const transData = await transformedData(postsData.data, userData);
-        // console.log("transData", transData);
-        // setData((prev) => [...prev, ...transData]);
-        // if (postsData?.page) {
-        //   setPageKey(postsData?.page);
-        // } else {
-        //   setPageKey(null);
-        // }
+        setQuest(questData.data);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -55,7 +75,15 @@ const Quests = () => {
     getPost();
   }, []);
 
-  console.log("quest", quest);
+  const handleOpenMenu = (event) => {
+    console.log("open menu");
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <div>
       <Typography
@@ -81,7 +109,7 @@ const Quests = () => {
       >
         {quest.map((item, index) => (
           <div
-            key={index} 
+            key={index}
             style={{
               flex: isMobile
                 ? "flex: 1 1 calc(100% / 2 - 10px) "
@@ -101,8 +129,7 @@ const Quests = () => {
                 borderRadius: "14px 14px 0 0",
                 cursor: "pointer",
               }}
-              
-              onClick={() => handleClick(item.contest_id,item.title)}
+              onClick={() => handleClick(item.contest_id, item.title)}
             >
               <div
                 style={{
@@ -136,6 +163,33 @@ const Quests = () => {
                     color: "white",
                   }}
                 >{`${item.winning_points} Points`}</Typography>
+
+                <img
+                  onClick={(e) => {
+                    e.stopPropagation(); // ⛔ stop navigation
+                    handleOpenMenu(e);
+                  }}
+                  src={threeDotsIcon}
+                  style={{ position: "absolute", right: "5px" }}
+                ></img>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseMenu}
+                  id="basic-menu"
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                >
+                  <MenuItem
+                    onClick={(e) => {
+                      e.stopPropagation(); // ⛔ stop navigation
+                      handleClickOpen(item.contest_id);
+                    }}
+                  >
+                    Trigger Activity Notification
+                  </MenuItem>
+                </Menu>
               </div>
               <img
                 style={{
@@ -232,6 +286,27 @@ const Quests = () => {
           </div>
         ))}
       </div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Trigger Notication Activity"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure? You Want to Trigger Notification Actitvity
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button  onClick={() => handleTriggerActivity()} autoFocus>
+            ok
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

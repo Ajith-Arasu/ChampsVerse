@@ -3,8 +3,7 @@ import { Checkbox } from "@mui/material";
 import { useState } from "react";
 
 const DeletedUserWorks = ({ userId, data }) => {
-  console.log("userId:", userId);
-  console.log("Data:", data);
+ 
   const CDN_URL=process.env.REACT_APP_CDN_URL;
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   const [checkedItems, setCheckedItems] = useState([]);

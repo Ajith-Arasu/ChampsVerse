@@ -80,8 +80,6 @@ const Books = () => {
   }, []);
 
   const handleClick = async (data,userId,bookId) => {
-    console.log("userId",userId)
-    console.log("bookId",bookId)
     navigate(`/booksdetail/${userId}/${bookId}`,{state:{data,userId:userId,bookId:bookId}})
 
   }

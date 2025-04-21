@@ -46,7 +46,6 @@ const DeletedUserDetail = () => {
     getPostData();
   }, [selectedTab, userId]);
 
-  console.log("honest dataaaaa",data)
 
   return (
     <>
