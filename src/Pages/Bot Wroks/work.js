@@ -7,13 +7,13 @@ import style from "../Bot Wroks/style.module.css";
 
 const Work = ({ setUserDetails, setProfilePic }) => {
   const navigate = useNavigate();
-  const CDN_URL = "https://dcp5pbxslacdh.cloudfront.net";
   const [data, setData] = useState([]);
   const [nextPage, setNextPage] = useState(1);
   const [pageKey, setPageKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [reactions, setReactions] = useState({});
   const [value, setValue] = useState(0);
+  const CDN_URL = process.env.REACT_APP_CDN_URL;
   const {
     data: feedData,
     getPost,

@@ -14,7 +14,9 @@ const Card = ({
   const isProfilePage = location.pathname === "/profile";
   const isQuestPage = location.pathname === "/quests-Works";
   const CDN_URL = process.env.REACT_APP_CDN_URL;
+  
   return (
+
     <>
       {data.length ? (
         <Box>
