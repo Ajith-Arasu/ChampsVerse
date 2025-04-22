@@ -434,9 +434,9 @@ const apiCall = () => {
     return result;
   };
 
-  const getCommentsList = async () => {
+  const getCommentsList = async (type,pageKey) => {
     const response = await fetch(
-      `${BASE_URL}/api/v1/reaction/comments?type=post&count=&is_approved=0&page=`,
+      `${BASE_URL}/api/v1/reaction/comments?type=post&count=20&is_approved=${type}&page=${pageKey}`,
       {
         headers: {
           "Content-Type": "application/json",

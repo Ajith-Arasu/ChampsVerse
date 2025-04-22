@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import apiCall from "../API/api";
 import { Typography, Button, Checkbox } from "@mui/material";
-import Loader from  "../Loader/loader";
-
+import Loader from "../Loader/loader";
 
 const Comments = () => {
   const { getCommentsList, approveComments } = apiCall();
@@ -13,6 +12,7 @@ const Comments = () => {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   const [checkedItems, setCheckedItems] = useState([]);
   const [disable, setDisable] = useState(false);
+  const[selectedType, setSelectedType]= useState('unapproved')
 
   const handleSelect = (commentId) => {
     setCheckedItems((prev) =>
@@ -22,13 +22,13 @@ const Comments = () => {
     );
   };
 
-  console.log("checkedItems", checkedItems);
   const fetchData = async () => {
     if (isLoading || pageKey === null) return;
     setIsLoading(true);
+    const type = selectedType === "unapproved" ? 0 : 1;
     try {
-      let result = await getCommentsList();
-      setData(result.data);
+      let result = await getCommentsList(type,pageKey);
+      setData((prev) => [...prev, ...result.data]);
       if (result?.page) {
         setPageKey(result?.page);
       } else {
@@ -45,8 +45,8 @@ const Comments = () => {
     try {
       setDisable(true);
       const ids = checkedItems.join(",");
-      const type='post'
-      const response = await approveComments(ids, state,type);
+      const type = "post";
+      const response = await approveComments(ids, state, type);
       setCheckedItems([]);
     } catch (error) {
       console.error("Error during approval:", error);
@@ -55,19 +55,55 @@ const Comments = () => {
     }
   };
 
+  const changeCommentType = (event) => {
+    setSelectedType(event.target.value);
+    setData([])
+    setPageKey("")
+  };
+
   useEffect(() => {
     fetchData();
+  }, [nextPage,selectedType]);
+
+  const handleScroll = () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.offsetHeight;
+
+    if (
+      scrollTop + windowHeight >= documentHeight - 5 &&
+      !isLoading &&
+      pageKey !== null
+    ) {
+      setNextPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   return (
     <div>
-      <></>
+      <div style={{marginTop:'3%'}}>
+        <label>
+          <input type="radio" onChange={changeCommentType} value="approved" checked={selectedType === "approved"}  ></input>
+          Approved comments
+        </label>
+        <label style={{ paddingLeft: "10px" }}>
+          <input onChange={changeCommentType} type="radio" value="unapproved" checked={selectedType === "unapproved"}></input>
+          Pending Approval comments
+        </label>
+      </div>
       <Typography
         sx={{ textAlign: "center", fontSize: "52px", color: "black" }}
       >
         Comments
       </Typography>
-      {isLoading && <Loader/>}
+      {isLoading && <Loader />}
       {checkedItems.length > 1 && (
         <div
           style={{
@@ -94,6 +130,7 @@ const Comments = () => {
           </Button>
         </div>
       )}
+
       {data.map((item) => (
         <div
           style={{
@@ -105,12 +142,14 @@ const Comments = () => {
           }}
         >
           <div style={{ display: "flex", gap: "20px" }}>
-            <Checkbox
+           { selectedType === 'unapproved' &&(<Checkbox
               {...label}
               checked={checkedItems.includes(item.comment_id)}
               onChange={() => handleSelect(item.comment_id)}
-            />
-            <Typography style={{overflowWrap: 'break-word'}}>{item.text}</Typography>
+            />)}
+            <Typography style={{ overflowWrap: "break-word" }}>
+              {item.text}
+            </Typography>
           </div>
           {checkedItems.includes(item.comment_id) &&
             checkedItems.length <= 1 && (
