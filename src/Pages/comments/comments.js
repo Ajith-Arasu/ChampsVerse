@@ -12,7 +12,7 @@ const Comments = () => {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   const [checkedItems, setCheckedItems] = useState([]);
   const [disable, setDisable] = useState(false);
-  const[selectedType, setSelectedType]= useState('unapproved')
+  const [selectedType, setSelectedType] = useState("unapproved");
 
   const handleSelect = (commentId) => {
     setCheckedItems((prev) =>
@@ -27,7 +27,7 @@ const Comments = () => {
     setIsLoading(true);
     const type = selectedType === "unapproved" ? 0 : 1;
     try {
-      let result = await getCommentsList(type,pageKey);
+      let result = await getCommentsList(type, pageKey);
       setData((prev) => [...prev, ...result.data]);
       if (result?.page) {
         setPageKey(result?.page);
@@ -57,13 +57,13 @@ const Comments = () => {
 
   const changeCommentType = (event) => {
     setSelectedType(event.target.value);
-    setData([])
-    setPageKey("")
+    setData([]);
+    setPageKey("");
   };
 
   useEffect(() => {
     fetchData();
-  }, [nextPage,selectedType]);
+  }, [nextPage, selectedType]);
 
   const handleScroll = () => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -88,13 +88,23 @@ const Comments = () => {
 
   return (
     <div>
-      <div style={{marginTop:'3%'}}>
+      <div style={{ marginTop: "3%" }}>
         <label>
-          <input type="radio" onChange={changeCommentType} value="approved" checked={selectedType === "approved"}  ></input>
+          <input
+            type="radio"
+            onChange={changeCommentType}
+            value="approved"
+            checked={selectedType === "approved"}
+          ></input>
           Approved comments
         </label>
         <label style={{ paddingLeft: "10px" }}>
-          <input onChange={changeCommentType} type="radio" value="unapproved" checked={selectedType === "unapproved"}></input>
+          <input
+            onChange={changeCommentType}
+            type="radio"
+            value="unapproved"
+            checked={selectedType === "unapproved"}
+          ></input>
           Pending Approval comments
         </label>
       </div>
@@ -130,6 +140,7 @@ const Comments = () => {
           </Button>
         </div>
       )}
+      {data.length === 0 && <Typography sx={{textAlign: "center", marginTop: '10%'}}>No comments to approve</Typography>}
 
       {data.map((item) => (
         <div
@@ -142,11 +153,13 @@ const Comments = () => {
           }}
         >
           <div style={{ display: "flex", gap: "20px" }}>
-           { selectedType === 'unapproved' &&(<Checkbox
-              {...label}
-              checked={checkedItems.includes(item.comment_id)}
-              onChange={() => handleSelect(item.comment_id)}
-            />)}
+            {selectedType === "unapproved" && (
+              <Checkbox
+                {...label}
+                checked={checkedItems.includes(item.comment_id)}
+                onChange={() => handleSelect(item.comment_id)}
+              />
+            )}
             <Typography style={{ overflowWrap: "break-word" }}>
               {item.text}
             </Typography>
