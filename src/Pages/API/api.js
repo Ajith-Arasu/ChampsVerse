@@ -30,14 +30,20 @@ const apiCall = () => {
     const result = await response.json();
     return result;
   };
-  const addBadges = async (userId, postId, valuable, portrait,isQuestPage,questId) => {
+  const addBadges = async (
+    userId,
+    postId,
+    valuable,
+    portrait,
+    isQuestPage,
+    questId
+  ) => {
     let requestBody;
 
     if (valuable === "mp" || valuable === "wnd" || valuable === "hof") {
       requestBody = {
         special_badge: valuable,
         isPortrait: true,
-        
       };
     } else {
       requestBody = {
@@ -49,8 +55,8 @@ const apiCall = () => {
     if (isQuestPage) {
       requestBody = {
         ...requestBody,
-        contest_id: questId, 
-        contest_type: 'MICRO_CONTEST'
+        contest_id: questId,
+        contest_type: "MICRO_CONTEST",
       };
     }
 
@@ -324,7 +330,7 @@ const apiCall = () => {
     return result;
   };
 
-  const deletedUserS3Post = async (userId, type, ids,body) => {
+  const deletedUserS3Post = async (userId, type, ids, body) => {
     const response = await fetch(
       `${BASE_URL}/api/v1/user/${userId}/delete?type=${type}&delete_files=true&ids=${ids}`,
       {
@@ -332,14 +338,14 @@ const apiCall = () => {
           "Content-Type": "application/json",
         },
         method: "DELETE",
-        body: JSON.stringify({body}),
+        body: JSON.stringify({ body }),
       }
     );
     const result = await response.json();
     return result;
   };
 
-  const deletedUserPostJson = async (userId, type, ids,body)=>{
+  const deletedUserPostJson = async (userId, type, ids, body) => {
     const response = await fetch(
       `${BASE_URL}/api/v1/user/${userId}/delete?type=${type}&ids=${ids}`,
       {
@@ -347,12 +353,12 @@ const apiCall = () => {
           "Content-Type": "application/json",
         },
         method: "DELETE",
-        body: JSON.stringify({body}),
+        body: JSON.stringify({ body }),
       }
     );
     const result = await response.json();
     return result;
-  }
+  };
 
   const deletePostJson = async (ids) => {
     const response = await fetch(`${BASE_URL}/api/v1/posts/delete?ids=${ids}`, {
@@ -404,41 +410,56 @@ const apiCall = () => {
     return result;
   };
 
-  const sendRating = async (requestBody)=>{
-    
+  const sendRating = async (requestBody) => {
+    const response = await fetch(`${BASE_URL}/api/v1/trigger/bots/process`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(requestBody),
+    });
+    const result = await response.json();
+    return result;
+  };
+
+  const triggerActivityApi = async (requestBody) => {
+    const response = await fetch(`${BASE_URL}/api/v1/trigger/user/activity`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(requestBody),
+    });
+    const result = await response.json();
+    return result;
+  };
+
+  const getCommentsList = async () => {
     const response = await fetch(
-      `${BASE_URL}/api/v1/trigger/bots/process`,
+      `${BASE_URL}/api/v1/reaction/comments?type=post&count=&is_approved=0&page=`,
       {
         headers: {
           "Content-Type": "application/json",
         },
-        method: "POST",
-        body: JSON.stringify(requestBody),
       }
     );
     const result = await response.json();
     return result;
-  }
+  };
 
-  const triggerActivityApi = async (requestBody)=>{
-    
+  const approveComments = async (ids,state,type) => {
     const response = await fetch(
-      `${BASE_URL}/api/v1/trigger/user/activity`,
+      `${BASE_URL}/api/v1/reaction/comments/approve?ids=${ids}&approve=${state}&type=${type}`,
       {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        method: "POST",
-        body: JSON.stringify(requestBody),
       }
     );
     const result = await response.json();
     return result;
-  }
-
-  
-
-
+  };
   return {
     data,
     getPost,
@@ -468,7 +489,9 @@ const apiCall = () => {
     deletedUserS3Post,
     deletedUserPostJson,
     sendRating,
-    triggerActivityApi
+    triggerActivityApi,
+    getCommentsList,
+    approveComments
   };
 };
 

@@ -175,6 +175,9 @@ const Header = ({ userDetails }) => {
           <MenuItem onClick={() => handleClick("bot-works")}>
             Bot Works
           </MenuItem>
+          <MenuItem onClick={() => handleClick("comments")}>
+            Comments
+          </MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

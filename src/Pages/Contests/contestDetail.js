@@ -229,13 +229,12 @@ const ContestDetail = () => {
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      width: "100%", // Ensure proper alignment within the parent container
+                      width: "100%", 
                     }}
                   >
-                    {/* Truncate `firstname` */}
                     <Typography
                       style={{
-                        maxWidth: "100px", // Adjust width as needed
+                        maxWidth: "100px",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -244,7 +243,6 @@ const ContestDetail = () => {
                       {item.firstname}
                     </Typography>
 
-                    {/* Title aligned to the right */}
                     {item.title !== "None" && (
                       <Typography
                         style={{
@@ -254,8 +252,8 @@ const ContestDetail = () => {
                           padding: "4px 7px",
                           borderRadius: "12px",
                           textAlign: "right",
-                          marginLeft: "auto", // Push the title to the far right
-                          whiteSpace: "nowrap", // Prevent wrapping
+                          marginLeft: "auto", 
+                          whiteSpace: "nowrap", 
                         }}
                       >
                         {item.title}
