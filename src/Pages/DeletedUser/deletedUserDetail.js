@@ -1,5 +1,5 @@
 import style from "../DeletedUser/style.module.css";
-import { Typography } from "@mui/material";
+import { Typography,Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import DeletedUserWorks from "../DeletedUser/deletedUserWorks";
