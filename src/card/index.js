@@ -1,4 +1,4 @@
-import { Box, Avatar, Button, Typography } from "@mui/material";
+import { Box, Avatar, Button, Typography, useMediaQuery } from "@mui/material";
 import style from "../card/style.module.css";
 import { useLocation } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -14,17 +14,18 @@ const Card = ({
   const isProfilePage = location.pathname === "/profile";
   const isQuestPage = location.pathname === "/quests-Works";
   const CDN_URL = process.env.REACT_APP_CDN_URL;
+  const isMobile = useMediaQuery('(max-width:600px)');
   
   return (
 
     <>
       {data.length ? (
         <Box>
-          <div className={style["grid-container"]}>
+          <div className={style[isMobile? "grid-container-mob" :"grid-container"]}>
             {data.map((item, index) => {
               return (
                 <div style={{ display: "flex", flexDirection: "column" }}>
-                  <div className={style["grid-item"]} key={index}>
+                  <div className={style[isMobile?"grid-item-mob":"grid-item"]} key={index}>
                     <div className={style["workCard-top"]}>
                       <div className={style["workCard-left"]}>
                         <img
@@ -54,7 +55,7 @@ const Card = ({
                                 }}
                               />
                             </div>
-                            <div className={style["text"]}>
+                            <div className={style[isMobile? 'text-mob':"text"]}>
                               <span>Diamond</span>
                             </div>
                           </div>
@@ -118,7 +119,7 @@ const Card = ({
                             }}
                           />
                         </div>
-                        <div className={style["text"]}>
+                        <div className={style[isMobile? 'text-mob':"text"]}>
                           <span>MasterPiece</span>
                         </div>
                       </div>
@@ -133,7 +134,7 @@ const Card = ({
                             }}
                           />
                         </div>
-                        <div className={style["text"]}>
+                        <div className={style[isMobile? 'text-mob':"text"]}>
                           <span>Treasure</span>
                         </div>
                       </div>
@@ -148,7 +149,7 @@ const Card = ({
                             }}
                           />
                         </div>
-                        <div className={style["text"]}>
+                        <div className={style[isMobile? 'text-mob':"text"]}>
                           <span>HOF</span>
                         </div>
                       </div>
@@ -162,7 +163,7 @@ const Card = ({
                                   : `${CDN_URL}/${item.user_id}/PROFILE/IMAGES/filetype/${item.avatar}`
                               }
                               onClick={() => handleClickProfile(item.user_id)}
-                              sx={{ height: 40, width: 40 }}
+                              sx={{ height: isMobile? 30:40, width:isMobile? 30: 40 }}
                             />
                           )}
                         </div>

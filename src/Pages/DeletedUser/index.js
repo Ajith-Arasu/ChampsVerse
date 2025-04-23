@@ -57,11 +57,16 @@ const DeletedUser = () => {
   }, []); // Runs only once on mount
 
   const handleDetail = (userId) => {
-    navigate(`/deleted-user/${userId}`);
+    navigate(`/deleted-user/${userId}`,{state:{
+      userData:data
+    },});
   };
 
   return (
+    <>
+    <Typography style={{textAlign: 'center', fontSize: '32px', fontWeight: 'bold', marginTop: '3%'}}>Deleted User</Typography>
     <div className={style["grid-container"]}>
+
       {data.map((item) => (
         <div
           key={item.user_id}
@@ -80,6 +85,7 @@ const DeletedUser = () => {
         </div>
       ))}
     </div>
+    </>
   );
 };
 

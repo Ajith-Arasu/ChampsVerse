@@ -6,6 +6,14 @@
   
 }
 
+.grid-container-mob {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 10px;
+  
+}
+
 .grid-item {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   height:250px;
@@ -14,6 +22,17 @@
   flex-direction: column;
   border-radius: 50px 0 0 0;
 }
+
+
+.grid-item-mob {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  height:180px;
+  width:180px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 30px 0 0 0;
+}
+
 .box-overlay {
   position: absolute;
   top: 10px; /* Adjust based on where you want the box */
@@ -81,6 +100,12 @@
 .text{
   text-align: center;
   font-size: 65%;
+  font-Weight:bold;
+}
+
+.text-mob{
+  text-align: center;
+  font-size: 50%;
   font-Weight:bold;
 }
 

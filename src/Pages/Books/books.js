@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Typography,useMediaQuery } from "@mui/material";
 import style from "../Books/style.module.css";
 import { useEffect, useState } from "react";
 import apiCall from "../API/api";
@@ -14,7 +14,8 @@ const Books = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pageKey, setPageKey] = useState("");
   const [data, setData] = useState([]);
-  const CDN_URL=process.env.REACT_APP_CDN_URL
+  const CDN_URL=process.env.REACT_APP_CDN_URL;
+   const isMobile = useMediaQuery('(max-width:600px)');
   
   const getBooks =async()=>{
     if (isLoading || pageKey === null) return;
@@ -87,40 +88,40 @@ const Books = () => {
   return (
     <>
     {isLoading && <Loader/>}
-    {data?<div className={style["grid-container"]}>
+    {data?<div className={style[isMobile ? 'grid-container-mob':"grid-container"]}>
     {data.map((item) => {
       
-     return( <div class={style["grid-item"]}>
+     return( <div class={style[isMobile? 'grid-item-mob':"grid-item"]}>
       <div className={style["book-image"]}
       onClick={()=>handleClick(item,item.user_id,item.book_id)}>
         <img src={`${CDN_URL}/${item.user_id}/BOOKS/IMAGES/medium/${item.cover[0].name}`}></img>
         <div className={style["title-card"]}>
-          <Typography className={style["book-title"]} >{item.title} </Typography>
+          <Typography className={style[isMobile?'book-title-mob':"book-title"]} >{item.title} </Typography>
         </div>
       </div>
       <div className={style["book-details"]}>
       <div className={style["author"]}>
         <div className={style["title"]}>
-          <Typography>Author</Typography>
+          <Typography style={{fontSize: isMobile&&'15px'}}>Author</Typography>
         </div>
         <div className={style["value"]}>
-          <Typography style={{fontSize:"13px"}}>{item.user_id}</Typography>
+          <Typography style={{fontSize:isMobile?'10px':"13px"}}>{item.user_id}</Typography>
         </div>
       </div>
       <div className={style["author"]}>
         <div className={style["title"]}>
-          <Typography>Date of Publication</Typography>
+          <Typography style={{fontSize: isMobile&&'8px'}}>Date of Publication</Typography>
         </div>
         <div className={style["value"]}>
-          <Typography>{item.created_at?.split("T")[0]}</Typography>
+          <Typography style={{fontSize:isMobile?'10px':"13px"}}>{item.created_at?.split("T")[0]}</Typography>
         </div>
       </div>
       <div className={style["author"]}>
         <div className={style["title"]}>
-          <Typography>Genre</Typography>
+          <Typography style={{fontSize: isMobile&&'15px'}}>Genre</Typography>
         </div>
         <div className={style["value"]}>
-          <Typography>{item.category}</Typography>
+          <Typography style={{fontSize:isMobile?'10px':"13px"}}>{item.category}</Typography>
         </div>
       </div>
       {/* <div className={style["author"]}>
@@ -133,10 +134,10 @@ const Books = () => {
       </div> */}
       <div className={style["author"]}>
         <div className={style["title"]}>
-          <Typography>Status</Typography>
+          <Typography style={{fontSize: isMobile&&'15px'}}>Status</Typography>
         </div>
         <div className={style["value"]}>
-          <Typography>{item.status}</Typography>
+          <Typography style={{fontSize:isMobile?'10px':"13px"}}>{item.status}</Typography>
         </div>
       </div>
       </div>

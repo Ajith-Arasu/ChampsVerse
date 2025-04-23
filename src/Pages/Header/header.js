@@ -7,6 +7,7 @@ import {
   Button,
   Menu,
   MenuItem,
+  useMediaQuery
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import style from "../Header/style.module.css";
@@ -17,7 +18,7 @@ const Header = ({ userDetails }) => {
   const location = useLocation();
   const isProfilePage = location.pathname === "/profile";
   const navigate = useNavigate();
-
+  const isMobile = useMediaQuery('(max-width:600px)');
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (page) => {
@@ -42,12 +43,13 @@ const Header = ({ userDetails }) => {
       }}
     >
       <Toolbar>
-        <Typography variant="h6">
-          <img src="/cv.png" alt="CV" />
-        </Typography>
+       
+          <img src="/cv.png" alt="CV" style={{ width: isMobile?'250px': '250px'}} />
+       
 
         {/* Tab Sections */}
-        <div
+        {!isMobile && <>
+          <div
           className={style["tab-Section"]}
           onClick={() => handleClick("work")}
         >
@@ -126,6 +128,7 @@ const Header = ({ userDetails }) => {
           />
           <div className={style["centered"]}>Quest</div>
         </div>
+        </>}
 
         <Box sx={{ flexGrow: 1 }} />
 
@@ -166,6 +169,22 @@ const Header = ({ userDetails }) => {
             "aria-labelledby": "basic-button",
           }}
         >
+          {isMobile && <>
+         <MenuItem onClick={() => handleClick("work")}>
+            Works
+          </MenuItem>
+          <MenuItem onClick={() => handleClick("books")}>
+            Books
+          </MenuItem>
+          <MenuItem onClick={() => handleClick("contests")}>
+            Contests
+          </MenuItem>
+          <MenuItem onClick={() => handleClick("quests")}>
+            Quest
+          </MenuItem>
+          <MenuItem onClick={() => handleClick("storage-consumption")}>
+            Storage consumption
+          </MenuItem> </>}
           <MenuItem onClick={() => handleClick("deleted-user")}>
             Deleted User
           </MenuItem>

@@ -688,15 +688,6 @@ const Contests = () => {
               ></input>
               Contest
             </label>
-            <label style={{ paddingLeft: "10px" }}>
-              <input
-                type="radio"
-                onChange={changeContestType}
-                value="MICRO_CONTEST"
-                checked={selectedType === "MICRO_CONTEST"}
-              ></input>
-              Micro Contest
-            </label>
           </div>
           <div
             className={style["section"]}
