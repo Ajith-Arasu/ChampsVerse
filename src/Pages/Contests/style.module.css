@@ -2,12 +2,26 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   padding: 10px;
-  
+}
+
+.grid-container-mob {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  padding: 10px;
+  align-items: center;
 }
 
 .grid-container-detail {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  padding: 10px;
+  gap:20px;
+
+}
+
+.grid-container-detail-mob {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   padding: 10px;
   gap:20px;
 
@@ -23,6 +37,16 @@
   position: relative;
 }
 
+.grid-item-detail-mob {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  height:180px;
+  width:180px;  
+  display: flex;
+  flex-direction: column;
+  border-radius: 50px 0 0 0;
+  position: relative;
+}
+
 .grid-item {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   height:480px;
@@ -31,6 +55,18 @@
   display: flex;
   flex-direction: column;
   border-radius: 20px;
+}
+
+.grid-item-mob {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  height:400px;
+  width:300px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  margin: 0 10%;
+
 }
 
 .image{
@@ -58,7 +94,17 @@
     min-height:  70px  ;
     align-items:  center  ;
     flex-wrap: wrap;
+}
 
+.tab-Section-mob{
+  position: relative;
+  display: flex ;
+  gap:  10px  ;
+  justify-content:  center  ;
+  min-height:  40px  ;
+  align-items:  center  ;
+  flex-wrap: wrap;
+  padding: 10px;
 }
 
 .right-corner {
@@ -82,6 +128,16 @@
   cursor: pointer;
 }
 
+.contest-button-mob {
+  padding: 5px ;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  
+}
+
 .contest-button:hover {
   background-color: #0056b3;
 }
@@ -95,6 +151,17 @@
   width:120px;
   height: 50px;
 }
+
+
+.section-mob{
+  position:relative ;
+  cursor: pointer;
+}
+
+.section-mob img{
+  width:60px;
+  height: 20px;
+}
 .center-alligned{
  position:absolute; 
  top: 50%  ;
@@ -102,6 +169,8 @@
  transform:translate(-50%,-50%) ;
  color:white;
 }
+
+
 
 .unselected-item{
   position:absolute; 
@@ -133,7 +202,7 @@
 
 .button-container {
   display: flex;
-  gap: 10px; /* Add space between buttons */
+  gap: 10px; 
 }
 .entries-image {
   height: 85%;

@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogTitle,
   DialogActions,
+  useMediaQuery,
 } from "@mui/material";
 import style from "../Contests/style.module.css";
 import { useEffect, useState } from "react";
@@ -18,9 +19,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Contests = () => {
   const [selectedTab, setSelectedTab] = useState("ongoing");
+  const isMobile = useMediaQuery("(max-width:600px)");
   const {
     getContestList,
-    createContest,  
+    createContest,
     getUrlContestImage,
     uploadIMG,
     updateContestStatus,
@@ -99,8 +101,7 @@ const Contests = () => {
     setOpen(false);
   };
 
- 
-  const handleClickToDetail = (contestId, title,categories) => {
+  const handleClickToDetail = (contestId, title, categories) => {
     selectedTab === "ongoing" &&
       navigate("/contestdetail", {
         state: {
@@ -166,7 +167,6 @@ const Contests = () => {
       description: "",
       from: "",
       to: "",
-    
     });
 
     const handleInputChange = (e) => {
@@ -297,15 +297,14 @@ const Contests = () => {
           from: `${String(formData.from)}T00:00:00.000Z`,
           to: `${String(formData.to)}T00:00:00.000Z`,
           work_type: formData.work_type.toUpperCase(),
-          
         };
-    
+
         if (formData.type === "MICRO_CONTEST") {
           processedForm = {
             ...processedForm,
-            difficulty_level: parseInt(formData.difficulty_level, 10), 
+            difficulty_level: parseInt(formData.difficulty_level, 10),
           };
-    
+
           // Pick only the required fields
           const allowedFields = [
             "title",
@@ -324,10 +323,9 @@ const Contests = () => {
           // CONTEST: handle categories
           processedForm = {
             ...processedForm,
-           
           };
         }
-    
+
         const [name, extension] = fileName.split(".");
         const result = await createContest(processedForm);
         const imageURl = await getUrlContestImage(
@@ -337,16 +335,32 @@ const Contests = () => {
           `${processedForm.type}S`,
           processedForm.type
         );
-    
+
         const formats = [
           { label: "preSignedUrlThumb", quality: 30, width: 240, height: 320 },
-          { label: "preSignedUrlMedium", quality: 50, width: 720, height: 1080 },
+          {
+            label: "preSignedUrlMedium",
+            quality: 50,
+            width: 720,
+            height: 1080,
+          },
           { label: "preSignedUrlRaw", quality: 80, width: 1920, height: 1080 },
         ];
-    
-        const processAndUploadImage = async ({ label, quality, width, height }) => {
+
+        const processAndUploadImage = async ({
+          label,
+          quality,
+          width,
+          height,
+        }) => {
           const fileFormat = file.type.split("/")[1];
-          const resizedBlob = await fromBlob(file, quality, width, height, fileFormat);
+          const resizedBlob = await fromBlob(
+            file,
+            quality,
+            width,
+            height,
+            fileFormat
+          );
           const uploadUrl = imageURl.data[label];
           const response = await fetch(uploadUrl, {
             method: "PUT",
@@ -355,16 +369,18 @@ const Contests = () => {
               "Content-Type": resizedBlob.type,
             },
           });
-    
+
           if (!response.ok) {
-            throw new Error(`Failed to upload ${label}: ${response.statusText}`);
+            throw new Error(
+              `Failed to upload ${label}: ${response.statusText}`
+            );
           }
         };
-    
+
         for (const format of formats) {
           await processAndUploadImage(format);
         }
-    
+
         console.log("All files uploaded successfully!");
       } catch (error) {
         console.error("Error during submission:", error);
@@ -373,7 +389,7 @@ const Contests = () => {
         handleClick("ongoing");
       }
     };
-    
+
     const handleBack = () => {
       handleClick("ongoing");
     };
@@ -461,8 +477,6 @@ const Contests = () => {
                   </label>
                 </div>
               </div>
-
-              
 
               {/* Work Type */}
               <div className={style.formGroup}>
@@ -668,29 +682,45 @@ const Contests = () => {
 
   const statusUpdate = async (contestId) => {
     const res = await updateContestStatus(contestId, selectedType);
-    if(res.success){
-      
+    if (res.success) {
     }
   };
 
   return (
     <>
       {isLoading && <Loader />}
+
+      {!contestCreation && isMobile && (
+        <div className={style["right-corner"]} style={{marginTop:'10px'}}>
+          <button
+            className={
+              style["contest-button-mob"]
+            }
+            onClick={() => handleCreation()}
+          >
+            Add Contest / Micro Challenge
+          </button>
+        </div>
+      )}
       {!contestCreation && (
-        <div className={style["tab-Section"]}>
+        <div className={style[isMobile ? "tab-Section-mob" : "tab-Section"]} style={{marginTop:isMobile &&'10%'}}>
           <div className={style["left-corner"]}>
             <label>
               <input
                 type="radio"
                 onChange={changeContestType}
                 value="CONTEST"
-                checked={selectedType === "CONTEST"}  
+                checked={selectedType === "CONTEST"}
               ></input>
               Contest
             </label>
           </div>
           <div
-            className={style["section"]}
+            className={
+              style[
+                isMobile ? "section-mob" : "section"
+              ]
+            }
             onClick={() => handleClick("ongoing")}
           >
             <img
@@ -701,7 +731,6 @@ const Contests = () => {
               }
             ></img>
             <Typography
-              variant="h6"
               className={
                 selectedTab === "ongoing"
                   ? style["center-alligned"]
@@ -712,7 +741,7 @@ const Contests = () => {
             </Typography>
           </div>
           <div
-            className={style["section"]}
+            className={style[isMobile ? "section-mob" : "section"]}
             onClick={() => handleClick("completed")}
           >
             <img
@@ -723,7 +752,7 @@ const Contests = () => {
               }
             ></img>
             <Typography
-              variant="h6"
+              style={{ fontSize: isMobile ? "12px" : "1rem" }}
               className={
                 selectedTab === "completed"
                   ? style["center-alligned"]
@@ -734,7 +763,7 @@ const Contests = () => {
             </Typography>
           </div>
           <div
-            className={style["section"]}
+            className={style[isMobile ? "section-mob" : "section"]}
             onClick={() => handleClick("upcoming")}
           >
             <img
@@ -745,7 +774,7 @@ const Contests = () => {
               }
             ></img>
             <Typography
-              variant="h6"
+              style={{ fontSize: isMobile ? "12px" : "1rem" }}
               className={
                 selectedTab === "upcoming"
                   ? style["center-alligned"]
@@ -756,20 +785,25 @@ const Contests = () => {
             </Typography>
           </div>
 
-          <div className={style["right-corner"]}>
-            <button
-              className={style["contest-button"]}
-              onClick={() => handleCreation()}
-            >
-              Add Contest / Micro Challenge
-            </button>
-          </div>
+          {!isMobile && (
+            <div className={style["right-corner"]}>
+              <button
+                className={
+                  style[isMobile ? "contest-button-mob" : "contest-button"]
+                }
+                onClick={() => handleCreation()}
+              >
+                Add Contest / Micro Challenge
+              </button>
+            </div>
+          )}
         </div>
       )}
 
+     
       {contestCreation && <CreateContest />}
       {selectedTab !== "new" && (
-        <div className={style["grid-container"]}>
+        <div className={style[isMobile? "grid-container-mob":"grid-container"]} style={{marginTop: isMobile &&'20px'}}>
           {data.map((item) => {
             {
               console.log(
@@ -780,8 +814,14 @@ const Contests = () => {
 
             return (
               <div
-                className={style["grid-item"]}
-                onClick={() => handleClickToDetail(item.contest_id, item.title,item.contest_entry_categories)}
+                className={style[isMobile? "grid-item-mob":"grid-item"]}
+                onClick={() =>
+                  handleClickToDetail(
+                    item.contest_id,
+                    item.title,
+                    item.contest_entry_categories
+                  )
+                }
               >
                 <div className={style["image"]}>
                   <img
@@ -791,14 +831,14 @@ const Contests = () => {
                 <div className={style["content"]}>
                   <Typography
                     sx={{
-                      fontSize: "1.5rem",
+                      fontSize: isMobile? '24px':"1.5rem",
                       fontWeight: 600,
                       lineHeight: "1.2",
                     }}
                   >
                     {item.title}
                   </Typography>
-                  <Typography sx={{ fontSize: "1rem", padding: "16px" }}>
+                  <Typography sx={{ fontSize: isMobile? '18px':"1rem", padding: "16px" }}>
                     Due:2 days left
                   </Typography>
 

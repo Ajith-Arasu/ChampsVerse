@@ -12,6 +12,7 @@ import {
   Select,
   MenuItem,
   CircularProgress,
+  useMediaQuery
 } from "@mui/material";
 import style from "../Contests/style.module.css";
 import { useState, useEffect } from "react";
@@ -43,6 +44,7 @@ const ContestDetail = () => {
   const [success, setSuccess] = useState("false");
   const [loader, setLoader] = useState(true);
   const CDN_URL = process.env.REACT_APP_CDN_URL;
+  const isMobile = useMediaQuery("(max-width:600px)");
 
 
   const handleClick = () => {
@@ -164,19 +166,19 @@ const ContestDetail = () => {
     <>
     {isLoading && <Loader/>}
       <div className={style["detail-header"]}>
-        <Typography sx={{ fontWeight: "700", fontSize: "2rem" }}>
+        <Typography sx={{ fontWeight: "700", fontSize: isMobile? '24px':"2rem" }}>
           {title}
         </Typography>
         <div className={style["button-container"]}>
-          <Button variant="contained" onClick={() => handleClick()}>
+          <Button variant="contained" onClick={() => handleClick()}  style={{height:isMobile &&'50px', width:isMobile && '70px'}}>
             Add Winners
           </Button>
-          <Button variant="contained" onClick={() => handleConfirm()}>
+          <Button variant="contained" onClick={() => handleConfirm()} style={{height:isMobile &&'50px', width:isMobile && '90px'}}>
             Announce Result
           </Button>
         </div>
       </div>
-      <div className={style["grid-container-detail"]}>
+      <div className={style[isMobile? "grid-container-detail-mob":"grid-container-detail"]}>
         {loader ? (
           <div
             sx={{
@@ -191,7 +193,7 @@ const ContestDetail = () => {
         ) : (
           data.map((item) => {
             return (
-              <div className={style["grid-item-detail"]}>
+              <div className={style[isMobile? "grid-item-detail-mob":"grid-item-detail"]}>
                 {
                   <div className={style["check-box"]}>
                     <Checkbox
@@ -220,7 +222,7 @@ const ContestDetail = () => {
                           ? `${CDN_URL}/APP/UserAvatars/${item.avatar}`
                           : `${CDN_URL}/${item.userID}/PROFILE/IMAGES/filetype/${item.avatar}`
                       }
-                      sx={{ height: 40, width: 40 }}
+                      sx={{ height:isMobile? 20: 40, width:isMobile? 20: 40 }}
                     ></Avatar>
                   </div>
 
@@ -238,6 +240,7 @@ const ContestDetail = () => {
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
+                        fontSize: isMobile?'10px': '1rem'
                       }}
                     >
                       {item.firstname}
@@ -254,6 +257,7 @@ const ContestDetail = () => {
                           textAlign: "right",
                           marginLeft: "auto", 
                           whiteSpace: "nowrap", 
+                          fontSize: isMobile?'10px': '1rem'
                         }}
                       >
                         {item.title}
