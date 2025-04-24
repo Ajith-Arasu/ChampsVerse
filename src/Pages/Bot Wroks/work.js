@@ -2,8 +2,16 @@ import { useEffect, useState } from "react";
 import apiCall from "../API/api";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Loader/loader";
-import { Box, Avatar, Rating } from "@mui/material";
+import {
+  Box,
+  Avatar,
+  Rating,
+  useMediaQuery,
+  Typography,
+  TextField,
+} from "@mui/material";
 import style from "../Bot Wroks/style.module.css";
+import SearchTextField from "../../component/search";
 
 const Work = ({ setUserDetails, setProfilePic }) => {
   const navigate = useNavigate();
@@ -25,9 +33,12 @@ const Work = ({ setUserDetails, setProfilePic }) => {
   const [count, setCount] = useState(20);
   const [refresh, setRefreshPage] = useState(false);
   const [ratings, setRatings] = useState({});
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const [searchText, setSearchText] = useState("");
+  
 
   const handleRating = async (value, workid) => {
-    setRatings((prev) => ({ ...prev, [workid]: value })); // Update local rating optimistically
+    setRatings((prev) => ({ ...prev, [workid]: value })); 
 
     const body = {
       ids: [
@@ -42,7 +53,7 @@ const Work = ({ setUserDetails, setProfilePic }) => {
     const response = await sendRating(body);
 
     if (response.statusCode === 200) {
-      fetchData(); 
+      fetchData();
     } else {
       console.error("Failed to submit rating");
     }
@@ -85,53 +96,109 @@ const Work = ({ setUserDetails, setProfilePic }) => {
     }
   };
 
-  const Card = ({ data, handleClick, handleClickProfile, botWorks }) => {
-   
+  
+    const handleSearch = async () => {
+      setData([])
+      const post = await getPost(searchText);
+      console.log("post", post);
+      setData(post.data)
+    };
 
+  const Card = ({ data, handleClick, handleClickProfile, botWorks }) => {
     return (
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "10px",
-          margin: "2% 2%",
-        }}
-      >
-        {data.map((item, index) => {
-          const workId = item.post_id;
-          const currentRating = ratings[workId] ?? item.bot_stars;
-          return (
-            <div
-              key={index}
+      <>
+        <Typography
+          style={{
+            fontSize: isMobile ? "24px" : "52px",
+            textAlign: "center",
+            margin: "10px",
+          }}
+        >
+          Bot Works
+        </Typography>
+        <div
+          style={{ display: "flex", justifyContent: isMobile? "center":"flex-end", width: "100%" }}
+        >
+          <div style={{ display: "flex", width: "30%" }}>
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
               style={{
-                flex: "1 1 calc(100% / 5 - 21px)",
-                maxWidth: "calc(100% / 5 - 16px)",
-                textAlign: "center",
-                height: "250px",
-                width: "300px",
-                border: "2px solid black",
-                boxShadow: "0 6px 10px rgba(0, 0, 0, 0.1)",
+                padding: "8px",
+                flex: 1,
+                border: "1px solid #ccc",
+                borderRadius: "4px 0 0 4px",
+              }}
+            />
+            <button
+              style={{
+                padding: "8px 12px",
+                border: "1px solid #ccc",
+                borderLeft: "none",
+                backgroundColor: "#1976d2",
+                color: "white",
+                borderRadius: "0 4px 4px 0",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                handleSearch();
               }}
             >
-              <img
-                style={{ height: "80%", width: "100%", objectFit: "cover" }}
-                src={`${CDN_URL}/${
-                  item.user_id ? item.user_id : item.userID
-                }/WORKS/IMAGES/medium/${
-                  item.files[0].name ? item.files[0].name : item.filename
-                }`}
-              ></img>
-              <Rating
-                name="simple-controlled"
-                value={currentRating}
-                onChange={(event, newValue) => {
-                  handleRating(newValue, item.post_id);
+              Search
+            </button>
+          </div>
+        </div>
+        {isLoading && <Loader />}
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "10px",
+            margin: "2% 2%",
+          }}
+        >
+          {data.map((item, index) => {
+            const workId = item.post_id;
+            const currentRating = ratings[workId] ?? item.bot_stars;
+            return (
+              <div
+                key={index}
+                style={{
+                  flex: isMobile
+                    ? '"1 1 calc(100% / 2 - 21px)'
+                    : "1 1 calc(100% / 5 - 21px)",
+                  maxWidth: isMobile
+                    ? "calc(100% / 2 - 16px)"
+                    : "calc(100% / 5 - 16px)",
+                  textAlign: "center",
+                  height: isMobile ? "150px" : "250px",
+                  width: isMobile ? "180px" : "300px",
+                  border: "2px solid black",
+                  boxShadow: "0 6px 10px rgba(0, 0, 0, 0.1)",
                 }}
-              />
-            </div>
-          );
-        })}
-      </div>
+              >
+                <img
+                  style={{ height: "80%", width: "100%", objectFit: "cover" }}
+                  src={`${CDN_URL}/${
+                    item.user_id ? item.user_id : item.userID
+                  }/WORKS/IMAGES/medium/${
+                    item.files[0].name ? item.files[0].name : item.filename
+                  }`}
+                ></img>
+                <Rating
+                  name="simple-controlled"
+                  value={currentRating}
+                  onChange={(event, newValue) => {
+                    handleRating(newValue, item.post_id);
+                  }}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </>
     );
   };
 
@@ -238,7 +305,6 @@ const Work = ({ setUserDetails, setProfilePic }) => {
 
   return (
     <>
-      {isLoading && <Loader />}
       <Card
         data={data}
         handleClick={handleClick}

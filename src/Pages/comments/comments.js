@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import apiCall from "../API/api";
-import { Typography, Button, Checkbox } from "@mui/material";
+import { Typography, Button, Checkbox ,useMediaQuery} from "@mui/material";
 import Loader from "../Loader/loader";
 
 const Comments = () => {
@@ -13,6 +13,7 @@ const Comments = () => {
   const [checkedItems, setCheckedItems] = useState([]);
   const [disable, setDisable] = useState(false);
   const [selectedType, setSelectedType] = useState("unapproved");
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   const handleSelect = (commentId) => {
     setCheckedItems((prev) =>
@@ -109,7 +110,7 @@ const Comments = () => {
         </label>
       </div>
       <Typography
-        sx={{ textAlign: "center", fontSize: "52px", color: "black" }}
+        sx={{ textAlign: "center", fontSize:isMobile?'24px': "52px", color: "black" }}
       >
         Comments
       </Typography>

@@ -802,7 +802,7 @@ const Contests = () => {
 
      
       {contestCreation && <CreateContest />}
-      {selectedTab !== "new" && (
+      {(selectedTab !== "new" && !contestCreation) && (
         <div className={style[isMobile? "grid-container-mob":"grid-container"]} style={{marginTop: isMobile &&'20px'}}>
           {data.map((item) => {
             {

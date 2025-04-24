@@ -72,7 +72,7 @@ const QuestDetail = () => {
         style={{
           fontFamily: "Baloo2",
           color: "black",
-          fontSize: isMobile ? "16px" : "29px",
+          fontSize: isMobile ? "12px" : "29px",
           fontWeight: "800",
           textAlign: "center",
           padding: "15px 0 0 0",

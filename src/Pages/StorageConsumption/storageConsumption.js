@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Typography,useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import style from "../StorageConsumption/style.module.css";
@@ -12,6 +12,7 @@ const StorageConsumption = () => {
   const [nextPage, setNextPage] = useState(1);
   const [data, setData] = useState([]);
   const maxStorageInBytes = 1024 * 1024 * 1024;
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   const getData = async () => {
     if (isLoading || pageKey === null) return;
@@ -70,7 +71,7 @@ const StorageConsumption = () => {
 
   useEffect(() => {
     getData();
-  }, [nextPage]); // Fetch data when nextPage changes
+  }, [nextPage]); 
 
   useEffect(() => {
     getData();
@@ -88,7 +89,7 @@ const StorageConsumption = () => {
                 color="inherit"
                 value={progressValue}
                 sx={{
-                  height: "52px",
+                  height: isMobile? '40px':"52px",
                   backgroundColor: "#E8D5FF", // unused bar color
                   "& .MuiLinearProgress-bar": {
                     backgroundColor: "#7E31E1", // used bar color
@@ -109,8 +110,8 @@ const StorageConsumption = () => {
                   color: "white",
                 }}
               >
-                <Typography variant="h6">{item.username}</Typography>
-                <Typography variant="h5">{`${item.storage}Mb / 1GB`}</Typography>
+                <Typography style={{fontSize: isMobile? "16px": '22px'}}>{item.username}</Typography>
+                <Typography style={{fontSize: isMobile? "12px": '18px'}}>{`${item.storage}Mb / 1GB`}</Typography>
               </Box>
             </Box>
           </Box>

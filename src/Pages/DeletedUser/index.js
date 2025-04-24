@@ -1,4 +1,4 @@
-import { Avatar, Typography } from "@mui/material";
+import { Avatar, Typography,useMediaQuery } from "@mui/material";
 import style from "../DeletedUser/style.module.css";
 import apiCall from "../API/api";
 import { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ const DeletedUser = () => {
   const [data, setData] = useState([]);
   const CDN_URL = process.env.REACT_APP_CDN_URL;
   const navigate = useNavigate();
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   const deletedUser = async () => {
     if (isLoading || pageKey === null) return;
@@ -65,16 +66,16 @@ const DeletedUser = () => {
   return (
     <>
     <Typography style={{textAlign: 'center', fontSize: '32px', fontWeight: 'bold', marginTop: '3%'}}>Deleted User</Typography>
-    <div className={style["grid-container"]}>
+    <div className={style[isMobile? "grid-container-mob":"grid-container"]}>
 
       {data.map((item) => (
         <div
           key={item.user_id}
-          className={style["grid-item"]}
+          className={style[isMobile?"grid-item-mob":"grid-item"]}
           onClick={() => handleDetail(item.user_id)}
         >
           <Avatar
-            sx={{ height: "80%", width: "80%" }}
+            sx={{ height: isMobile? "60%":"80%", width: isMobile?"60%":"80%" }}
             src={
               item.defaultAvatar
                 ? `${CDN_URL}/APP/UserAvatars/${item.avatar}`

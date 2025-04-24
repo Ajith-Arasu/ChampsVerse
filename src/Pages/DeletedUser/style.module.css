@@ -6,10 +6,28 @@
   grid-gap: 20px;
 }
 
+.grid-container-mob{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 20px;
+  display: flex;
+  grid-gap: 20px;
+}
+
 .grid-item{
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   height:250px;
   width:250px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.grid-item-mob{
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  height:180px;
+  width:180px;
   align-items: center;
   display: flex;
   justify-content: center;

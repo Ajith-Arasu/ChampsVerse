@@ -6,6 +6,14 @@
 
 }
 
+.grid-container-detail-mob {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 10px;
+  gap:20px;
+
+}
+
 .grid-item-detail {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   height:250px;
@@ -17,6 +25,17 @@
   border-radius: 10px;
 }
 
+
+.grid-item-detail-mob {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  height:150px;
+  width:180px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 50px 0 0 0;
+  position: relative;
+  border-radius: 10px;
+}
 
 .check-box{
   position: absolute;
@@ -47,6 +66,12 @@
   position:relative;
   display: flex;
   padding: 5px;
+}
+
+.avatar-detail-mob{
+  position:relative;
+  display: flex;
+  padding: 2px;
 }
 
 .contest-button {

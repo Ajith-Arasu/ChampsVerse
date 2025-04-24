@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogActions,
   DialogContent,
+  useMediaQuery
 } from "@mui/material";
 import Loader from "../Loader/loader";
 import { useParams, useLocation } from "react-router-dom";
@@ -40,6 +41,7 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
   const [selectionAlert, setSelectionAlert] = useState(false);
   const location = useLocation();
   const isDeletedPost = location.pathname === "/deleted-post";
+   const isMobile = useMediaQuery('(max-width:600px)');
 
   const handleClick = (type) => {
     if (checkedItems.length === 0) {
@@ -235,10 +237,10 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
           </Button>
         </div>
       </div>
-      <div className={style["grid-container-detail"]}>
+      <div className={style[isMobile?"grid-container-detail-mob":"grid-container-detail"]}>
         {data.map((item) => {
           return (
-            <div className={style["grid-item-detail"]}>
+            <div className={style[isMobile?"grid-item-detail-mob":"grid-item-detail"]}>
               {
                 <div className={style["check-box"]}>
                   <Checkbox
@@ -316,7 +318,7 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
                 )}
               </div>
 
-              <div className={style["avatar-detail"]}>
+              <div className={style[isMobile? "avatar-detail-mob":"avatar-detail"]}>
                 <div className={style["avatar-img"]}>
                   <Avatar
                     src={
@@ -324,7 +326,7 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
                         ? `${CDN_URL}/APP/UserAvatars/${item.avatar}`
                         : `${CDN_URL}/${item.user_id}/PROFILE/IMAGES/filetype/${item.avatar}`
                     }
-                    sx={{ height: 30, width: 30 }}
+                    sx={{ height: isMobile?20:30, width: isMobile?20:30 }}
                   ></Avatar>
                 </div>
 
@@ -344,7 +346,7 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       padding: "5px",
-                      fontSize: "14px",
+                      fontSize: isMobile? '9px':"14px",
                       fontWeight: "600",
                     }}
                   >
@@ -354,7 +356,7 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
                     <Typography
                       style={{
                         padding: "5px",
-                        fontSize: "10px",
+                        fontSize: isMobile? '7px':"10px",
                         opacity: "60%",
                       }}
                     >
@@ -363,7 +365,7 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
                     <Typography
                       style={{
                         padding: "5px",
-                        fontSize: "10px",
+                        fontSize: isMobile? '7px':"10px",
                       }}
                     >
                       {`${item.deleted_at} days ago`}
