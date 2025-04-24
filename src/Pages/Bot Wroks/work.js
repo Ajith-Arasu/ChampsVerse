@@ -11,7 +11,6 @@ import {
   TextField,
 } from "@mui/material";
 import style from "../Bot Wroks/style.module.css";
-import SearchTextField from "../../component/search";
 
 const Work = ({ setUserDetails, setProfilePic }) => {
   const navigate = useNavigate();
@@ -105,6 +104,8 @@ const Work = ({ setUserDetails, setProfilePic }) => {
     };
 
   const Card = ({ data, handleClick, handleClickProfile, botWorks }) => {
+
+    
     return (
       <>
         <Typography
@@ -162,6 +163,11 @@ const Work = ({ setUserDetails, setProfilePic }) => {
           {data.map((item, index) => {
             const workId = item.post_id;
             const currentRating = ratings[workId] ?? item.bot_stars;
+            console.log("image url",`${CDN_URL}/${
+              item.user_id ? item.user_id : item.userID
+            }/WORKS/IMAGES/medium/${
+              item.files[0].name ? item.files[0].name : item.filename
+            }`)
             return (
               <div
                 key={index}

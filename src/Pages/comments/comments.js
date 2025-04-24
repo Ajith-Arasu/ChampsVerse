@@ -121,8 +121,8 @@ const Comments = () => {
             display: "flex",
             gap: "20px",
             position: "absolute",
-            right: "10%",
-            top: "18%",
+            right: isMobile? '4%':"10%",
+            top: isMobile?"27%":"18%",
           }}
         >
           <Button
@@ -142,18 +142,19 @@ const Comments = () => {
         </div>
       )}
       {data.length === 0 && <Typography sx={{textAlign: "center", marginTop: '10%'}}>No comments to approve</Typography>}
-
+      <div style={{marginTop: isMobile && '12%'}}>
       {data.map((item) => (
         <div
           style={{
-            margin: "0 10% ",
+            margin: isMobile? '0 3%':"0 10% ",
             border: "1px solid rgb(0, 0, 0,0.7)",
             padding: "10px",
             display: "flex",
             justifyContent: "space-between",
+            
           }}
         >
-          <div style={{ display: "flex", gap: "20px" }}>
+          <div style={{ display: "flex", gap: isMobile? '5px':"20px" }}>
             {selectedType === "unapproved" && (
               <Checkbox
                 {...label}
@@ -167,10 +168,11 @@ const Comments = () => {
           </div>
           {checkedItems.includes(item.comment_id) &&
             checkedItems.length <= 1 && (
-              <div style={{ display: "flex", gap: "20px" }}>
+              <div style={{ display: "flex", gap:isMobile? '5px': "20px" }}>
                 <Button
                   variant="outlined"
                   color="success"
+                   size="small"
                   disabled={checkedItems.length === 0}
                   onClick={() => handleApprove(1)}
                 >
@@ -179,6 +181,7 @@ const Comments = () => {
                 <Button
                   variant="outlined"
                   color="error"
+                   size="small"
                   disabled={checkedItems.length === 0}
                   onClick={() => handleApprove(0)}
                 >
@@ -188,6 +191,7 @@ const Comments = () => {
             )}
         </div>
       ))}
+      </div>
     </div>
   );
 };

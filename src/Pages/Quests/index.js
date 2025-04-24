@@ -91,7 +91,7 @@ const Quests = () => {
           fontFamily: "Baloo2",
           fontSize: isMobile ? "24px" : "48px",
           fontWeight: 800,
-          color: "white",
+          color: "black",
           textAlign: "center",
           paddingBottom: "40px",
         }}
