@@ -12,6 +12,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
   const [pageKey, setPageKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [reactions, setReactions] = useState({});
+  const [searchText, setSearchText] = useState("");
   const {
     data: feedData,
     getPost,
@@ -25,6 +26,13 @@ const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
   const location = useLocation();
   const [entry, setEntry] = useState([]);
   const isQuestPage = location.pathname === "/quests-Works";
+
+
+  const handleSearch = async () => {
+    setData([])
+    const post = await getPost(searchText);
+    setData(post.data)
+  };
 
   const fetchData = async () => {
     if (isLoading || pageKey === null) return;
@@ -93,6 +101,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
       if (foundItem) {
         post.avatar = foundItem.avatar;
         post.defaultAvatar = foundItem.defaultAvatar;
+        post.name = foundItem.firstname
       }
 
       return post;
@@ -194,6 +203,9 @@ const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
         handleClickProfile={handleClickProfile}
         botWorks={false}
         handleQuestPost={handleQuestPost}
+        handleSearch={handleSearch}
+        setSearchText={setSearchText}
+        searchText={searchText}
       />
     </>
   );

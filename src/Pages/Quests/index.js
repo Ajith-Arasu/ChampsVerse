@@ -8,7 +8,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  Button
+  Button,
 } from "@mui/material";
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -33,11 +33,11 @@ const Quests = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = React.useState(false);
-  const[contestId, setContestId] = useState('');
+  const [contestId, setContestId] = useState("");
 
   const handleClickOpen = (contest_id) => {
     setOpen(true);
-    setContestId(contest_id)
+    setContestId(contest_id);
   };
 
   const handleClose = () => {
@@ -76,7 +76,6 @@ const Quests = () => {
   }, []);
 
   const handleOpenMenu = (event) => {
-    console.log("open menu");
     setAnchorEl(event.currentTarget);
   };
 
@@ -302,7 +301,7 @@ const Quests = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button  onClick={() => handleTriggerActivity()} autoFocus>
+          <Button onClick={() => handleTriggerActivity()} autoFocus>
             ok
           </Button>
         </DialogActions>

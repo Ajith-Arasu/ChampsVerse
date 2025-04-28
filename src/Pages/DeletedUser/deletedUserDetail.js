@@ -1,5 +1,5 @@
 import style from "../DeletedUser/style.module.css";
-import { Typography,Button } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import DeletedUserWorks from "../DeletedUser/deletedUserWorks";
@@ -15,8 +15,6 @@ const DeletedUserDetail = () => {
   const [data, setData] = useState([]);
   const location = useLocation();
   const { userData = [] } = location.state || {};
-
-  console.log("userData", userData);
 
   const handleClick = (tab) => {
     if (selectedTab !== tab) {

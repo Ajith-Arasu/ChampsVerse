@@ -691,11 +691,9 @@ const Contests = () => {
       {isLoading && <Loader />}
 
       {!contestCreation && isMobile && (
-        <div className={style["right-corner"]} style={{marginTop:'10px'}}>
+        <div className={style["right-corner"]} style={{ marginTop: "10px" }}>
           <button
-            className={
-              style["contest-button-mob"]
-            }
+            className={style["contest-button-mob"]}
             onClick={() => handleCreation()}
           >
             Add Contest / Micro Challenge
@@ -703,7 +701,10 @@ const Contests = () => {
         </div>
       )}
       {!contestCreation && (
-        <div className={style[isMobile ? "tab-Section-mob" : "tab-Section"]} style={{marginTop:isMobile &&'10%'}}>
+        <div
+          className={style[isMobile ? "tab-Section-mob" : "tab-Section"]}
+          style={{ marginTop: isMobile && "10%" }}
+        >
           <div className={style["left-corner"]}>
             <label>
               <input
@@ -716,11 +717,7 @@ const Contests = () => {
             </label>
           </div>
           <div
-            className={
-              style[
-                isMobile ? "section-mob" : "section"
-              ]
-            }
+            className={style[isMobile ? "section-mob" : "section"]}
             onClick={() => handleClick("ongoing")}
           >
             <img
@@ -800,21 +797,16 @@ const Contests = () => {
         </div>
       )}
 
-     
       {contestCreation && <CreateContest />}
-      {(selectedTab !== "new" && !contestCreation) && (
-        <div className={style[isMobile? "grid-container-mob":"grid-container"]} style={{marginTop: isMobile &&'20px'}}>
+      {selectedTab !== "new" && !contestCreation && (
+        <div
+          className={style[isMobile ? "grid-container-mob" : "grid-container"]}
+          style={{ marginTop: isMobile && "20px" }}
+        >
           {data.map((item) => {
-            {
-              console.log(
-                "image",
-                `https://dcp5pbxslacdh.cloudfront.net/${selectedType}S/${item.contest_id}/IMAGES/medium/${item.ct_banner}`
-              );
-            }
-
             return (
               <div
-                className={style[isMobile? "grid-item-mob":"grid-item"]}
+                className={style[isMobile ? "grid-item-mob" : "grid-item"]}
                 onClick={() =>
                   handleClickToDetail(
                     item.contest_id,
@@ -831,14 +823,19 @@ const Contests = () => {
                 <div className={style["content"]}>
                   <Typography
                     sx={{
-                      fontSize: isMobile? '24px':"1.5rem",
+                      fontSize: isMobile ? "24px" : "1.5rem",
                       fontWeight: 600,
                       lineHeight: "1.2",
                     }}
                   >
                     {item.title}
                   </Typography>
-                  <Typography sx={{ fontSize: isMobile? '18px':"1rem", padding: "16px" }}>
+                  <Typography
+                    sx={{
+                      fontSize: isMobile ? "18px" : "1rem",
+                      padding: "16px",
+                    }}
+                  >
                     Due:2 days left
                   </Typography>
 

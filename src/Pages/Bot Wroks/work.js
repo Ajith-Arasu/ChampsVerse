@@ -34,10 +34,9 @@ const Work = ({ setUserDetails, setProfilePic }) => {
   const [ratings, setRatings] = useState({});
   const isMobile = useMediaQuery("(max-width:600px)");
   const [searchText, setSearchText] = useState("");
-  
 
   const handleRating = async (value, workid) => {
-    setRatings((prev) => ({ ...prev, [workid]: value })); 
+    setRatings((prev) => ({ ...prev, [workid]: value }));
 
     const body = {
       ids: [
@@ -95,17 +94,13 @@ const Work = ({ setUserDetails, setProfilePic }) => {
     }
   };
 
-  
-    const handleSearch = async () => {
-      setData([])
-      const post = await getPost(searchText);
-      console.log("post", post);
-      setData(post.data)
-    };
+  const handleSearch = async () => {
+    setData([]);
+    const post = await getPost(searchText);
+    setData(post.data);
+  };
 
   const Card = ({ data, handleClick, handleClickProfile, botWorks }) => {
-
-    
     return (
       <>
         <Typography
@@ -115,10 +110,14 @@ const Work = ({ setUserDetails, setProfilePic }) => {
             margin: "10px",
           }}
         >
-          Bot Works
+          Latest Works
         </Typography>
         <div
-          style={{ display: "flex", justifyContent: isMobile? "center":"flex-end", width: "100%" }}
+          style={{
+            display: "flex",
+            justifyContent: isMobile ? "center" : "flex-end",
+            width: "100%",
+          }}
         >
           <div style={{ display: "flex", width: "30%" }}>
             <input
@@ -163,11 +162,7 @@ const Work = ({ setUserDetails, setProfilePic }) => {
           {data.map((item, index) => {
             const workId = item.post_id;
             const currentRating = ratings[workId] ?? item.bot_stars;
-            console.log("image url",`${CDN_URL}/${
-              item.user_id ? item.user_id : item.userID
-            }/WORKS/IMAGES/medium/${
-              item.files[0].name ? item.files[0].name : item.filename
-            }`)
+
             return (
               <div
                 key={index}
