@@ -195,8 +195,8 @@ const Card = ({
                             Reject
                           </Button>
                         </>
-                      ):<div style={{backgroundColor: item.entry_status === 3?'green':'red', width: '100%', textAlign: 'center',color: 'white' }}>
-                        <Typography>{item.entry_status === 3?'Approved': 'Rejected'}</Typography></div>}
+                      ):<div style={{backgroundColor: item.entry_status === 3?'green':item.entry_status === 5?'orange':'red', width: '100%', textAlign: 'center',color: 'white' }}>
+                        <Typography>{item.entry_status === 3?'Approved':item.entry_status === 5?'Pending For Approval': 'Rejected'}</Typography></div>}
                     </div>
                   )}
                 </div>
