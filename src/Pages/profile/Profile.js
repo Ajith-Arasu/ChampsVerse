@@ -9,6 +9,9 @@ const Profile =()=>{
   const [data, setData] = useState([]);
   const location = useLocation();
   const [nextPage, setNextPage] = useState(1);
+  const {userDetails} = location.state
+
+  console.log("userDetails",userDetails)
 
   const {  getPostByUserId,getPost,getBadges,addBadges,getUserDetails } = apiCall();  
   useEffect(()=>{
@@ -21,14 +24,9 @@ const Profile =()=>{
     setIsLoading(true);
     try {
       if (pageKey !== null) {
-        
-        let postIds = await getPostByUserId(location.state.userId);
-        
+        let postIds = await getPostByUserId(userDetails[0].uid);
         const ids = postIds.map((item) => item.post_id).join(",");
-       
         let res = await getPost(ids);
-    
-        
         const formatData = transformedData(postIds);
         const badgesData = await getBadges(formatData);
         const updatedPosts = appendBadgesToPosts(res.data, badgesData.data);
@@ -133,6 +131,7 @@ return(
     data={data}
     handleClick={handleClick}
     handleClickProfile={handleClickProfile}
+    handlename = {userDetails[0].handle}
     />
     </div>
 )

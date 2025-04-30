@@ -13,6 +13,7 @@ const Card = ({
   handleSearch,
   setSearchText,
   searchText,
+  handlename,
 }) => {
   const location = useLocation();
   const isProfilePage = location.pathname === "/profile";
@@ -22,6 +23,16 @@ const Card = ({
 
   return (
     <>
+      <div style={{margin: '20px'}}></div>
+      <a
+        href={`https://champsverse.com/${handlename}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: "black", margin: "20px" }}
+      >
+        Visit {handlename}'s Profile
+      </a>
+
       <div
         style={{
           display: "flex",

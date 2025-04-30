@@ -190,7 +190,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
     let userDetails = await getUserDetails(userId);
     setUserDetails(userDetails);
     setProfilePic(userDetails[0].avatar);
-    navigate("/profile", { state: { userId } });
+    navigate("/profile", { state: { userDetails } });
   };
 
 

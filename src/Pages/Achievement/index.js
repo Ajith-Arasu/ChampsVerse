@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import apiCall from "../API/api";
+import Loader from "../Loader/loader";
 
 const Achievement = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -23,8 +24,12 @@ const Achievement = () => {
   const [openAlert, setOpenAlert] = useState(false);
   const [openConfirmAlert, setOpenConfirmAlert] = useState(false);
   const [selected, setSelected] = useState([]);
+  const [nextPage, setNextPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  
 
   const fetchData = async () => {
+    setIsLoading(true);
     try {
       if (pagekey !== null) {
         const result = await achievementsList("");
@@ -64,6 +69,8 @@ const Achievement = () => {
       }
     } catch (error) {
       console.error("Error fetching achievements:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,7 +82,7 @@ const Achievement = () => {
     if (
       scrollTop + windowHeight >= documentHeight - 5 &&
       !isLoading &&
-      pageKey !== null
+      pagekey !== null
     ) {
       setNextPage((prevPage) => prevPage + 1);
     }
@@ -87,9 +94,10 @@ const Achievement = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [nextPage]);
 
   const handleShownToPublic = (item) => {
     setOpenConfirmAlert(true);
@@ -114,6 +122,8 @@ const Achievement = () => {
 
   return (
     <>
+      <Typography style={{fontSize: isMobile?'21px':'48px', fontWeight: 800, textAlign: 'center'}}>Achievements</Typography>
+      {isLoading && <Loader/>}
       <div
         style={{
           display: "flex",
