@@ -196,6 +196,7 @@ const Header = ({ userDetails }) => {
             Latest Works
           </MenuItem>
           <MenuItem onClick={() => handleClick("comments")}>Comments</MenuItem>
+          <MenuItem onClick={() => handleClick("achievements")}>Achievements</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

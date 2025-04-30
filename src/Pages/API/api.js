@@ -434,7 +434,7 @@ const apiCall = () => {
     return result;
   };
 
-  const getCommentsList = async (type,pageKey) => {
+  const getCommentsList = async (type, pageKey) => {
     const response = await fetch(
       `${BASE_URL}/api/v1/reaction/comments?type=post&count=20&is_approved=${type}&page=${pageKey}`,
       {
@@ -447,7 +447,7 @@ const apiCall = () => {
     return result;
   };
 
-  const approveComments = async (ids,state,type) => {
+  const approveComments = async (ids, state, type) => {
     const response = await fetch(
       `${BASE_URL}/api/v1/reaction/comments/approve?ids=${ids}&approve=${state}&type=${type}`,
       {
@@ -460,6 +460,32 @@ const apiCall = () => {
     const result = await response.json();
     return result;
   };
+
+  const achievementsList = async (pagekey) => {
+    const response = await fetch(
+      `${BASE_URL}/api/v1/posts/list?feed_id=10_2024&count=12&page=${pagekey}&type=achievement`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const result = await response.json();
+    return result;
+  };
+
+  const approveAchievement = async (requestBody) => {
+    const response = await fetch(`${BASE_URL}/api/v1/achievement/approve`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
+      body: JSON.stringify(requestBody),
+    });
+    const result = await response.json();
+    return result;
+  };
+  
   return {
     data,
     getPost,
@@ -491,7 +517,9 @@ const apiCall = () => {
     sendRating,
     triggerActivityApi,
     getCommentsList,
-    approveComments
+    approveComments,
+    achievementsList,
+    approveAchievement
   };
 };
 

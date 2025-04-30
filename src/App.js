@@ -18,6 +18,7 @@ import QuestDetail from "./Pages/Quests/questDetail";
 import BotWorks from "./Pages/Bot Wroks/work";
 import Quests from "./Pages/Quests/index";
 import Comments from './Pages/comments/comments'
+import Achievement from "./Pages/Achievement";
 
 export default function App() {
   const [userDetails, setUserDetails] = useState([]);
@@ -44,6 +45,7 @@ export default function App() {
             <Route path="/bot-works" element={<BotWorks/>}/>
             <Route path="quests" element={<Quests/>}/>
             <Route path="comments" element={<Comments/>}/>
+            <Route path='/achievements' element={<Achievement/>}/>
           </Routes>
         </>
       </Router>
