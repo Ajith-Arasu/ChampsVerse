@@ -26,13 +26,13 @@ const Achievement = () => {
   const [selected, setSelected] = useState([]);
   const [nextPage, setNextPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  
 
   const fetchData = async () => {
+    if (isLoading || pagekey === null) return;
     setIsLoading(true);
     try {
       if (pagekey !== null) {
-        const result = await achievementsList("");
+        const result = await achievementsList(pagekey);
         const ids = result.data.map((item) => item.post_id).join(",");
         const userIds = result.data.map((item) => item.user_id).join(",");
         const userData = await getUserDetails(userIds);
@@ -59,20 +59,24 @@ const Achievement = () => {
             return post;
           })
           .filter((post) => post !== undefined);
-
-        setData(reorderedPostData);
         if (result?.page) {
           setPagekey(result?.page);
         } else {
           setPagekey(null);
         }
+
+        setData((prev) => [...prev, ...reorderedPostData]);
       }
     } catch (error) {
-      console.error("Error fetching achievements:", error);
+      console.error("Error fetching data:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [nextPage]);
 
   const handleScroll = () => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -94,10 +98,6 @@ const Achievement = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [nextPage]);
 
   const handleShownToPublic = (item) => {
     setOpenConfirmAlert(true);
@@ -122,8 +122,16 @@ const Achievement = () => {
 
   return (
     <>
-      <Typography style={{fontSize: isMobile?'21px':'48px', fontWeight: 800, textAlign: 'center'}}>Achievements</Typography>
-      {isLoading && <Loader/>}
+      <Typography
+        style={{
+          fontSize: isMobile ? "21px" : "48px",
+          fontWeight: 800,
+          textAlign: "center",
+        }}
+      >
+        Achievements
+      </Typography>
+      {isLoading && <Loader />}
       <div
         style={{
           display: "flex",
@@ -179,11 +187,27 @@ const Achievement = () => {
                   width: isMobile ? 30 : 40,
                 }}
               />
-              <Typography>{item.name}</Typography>
+              <Typography
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  maxWidth: isMobile ? 80 : 120,
+                  display: "block",
+                }}
+              >
+                {item.name}
+              </Typography>
+
               {item.is_approved === 0 && (
                 <Button
                   variant="contained"
-                  style={{ padding: "5px" }}
+                  size="small"
+                  sx={{
+                    padding: isMobile ? "2px 6px" : "6px 12px",
+                    fontSize: isMobile ? "10px" : "14px",
+                    minWidth: isMobile ? "auto" : "64px",
+                  }}
                   onClick={() => {
                     handleShownToPublic(item);
                   }}
