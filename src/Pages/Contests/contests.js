@@ -303,6 +303,8 @@ const Contests = () => {
           processedForm = {
             ...processedForm,
             difficulty_level: parseInt(formData.difficulty_level, 10),
+            category:formData.category,
+            winning_points:parseInt(formData.winning_points, 10)
           };
 
           // Pick only the required fields
@@ -313,6 +315,7 @@ const Contests = () => {
             "winning_points",
             "work_type",
             "type",
+            "category",
           ];
           processedForm = Object.fromEntries(
             Object.entries(processedForm).filter(([key]) =>
@@ -575,13 +578,26 @@ const Contests = () => {
                   Winning Points:
                 </Typography>
                 <input
-                  type="number"
+                  type="text"
                   name="winning_points"
                   value={formData.winning_points}
                   onChange={handleInputChange}
                   style={{ width: "100%", padding: "5px" }}
                   min="0"
                   step="1"
+                />
+              </div>
+
+              <div className={style.formGroup}>
+                <Typography variant="h5" sx={{ paddingBottom: "10px" }}>
+                  Category:
+                </Typography>
+                <input
+                  type="text"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  style={{ width: "100%", padding: "5px" }}
                 />
               </div>
 
