@@ -304,10 +304,16 @@ const Contests = () => {
             ...processedForm,
             difficulty_level: parseInt(formData.difficulty_level, 10),
             category:formData.category,
+            tags: Array.isArray(formData.tags)
+            ? formData.tags.map(tag => ({ name: tag }))
+            : String(formData.tags)
+                .split(",")
+                .map(tag => ({ name: tag.trim() })),
+          
             winning_points:parseInt(formData.winning_points, 10)
           };
 
-          // Pick only the required fields
+        
           const allowedFields = [
             "title",
             "description",
@@ -316,6 +322,7 @@ const Contests = () => {
             "work_type",
             "type",
             "category",
+            "tags"
           ];
           processedForm = Object.fromEntries(
             Object.entries(processedForm).filter(([key]) =>
@@ -596,6 +603,19 @@ const Contests = () => {
                   type="text"
                   name="category"
                   value={formData.category}
+                  onChange={handleInputChange}
+                  style={{ width: "100%", padding: "5px" }}
+                />
+              </div>
+
+              <div className={style.formGroup}>
+                <Typography variant="h5" sx={{ paddingBottom: "10px" }}>
+                  tags:
+                </Typography>
+                <input
+                  type="text"
+                  name="tags"
+                  value={formData.tags}
                   onChange={handleInputChange}
                   style={{ width: "100%", padding: "5px" }}
                 />

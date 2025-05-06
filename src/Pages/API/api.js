@@ -485,6 +485,19 @@ const apiCall = () => {
     const result = await response.json();
     return result;
   };
+
+  const getLatestActivity = async (pageKey,month)=>{
+    const response = await fetch(
+      `${BASE_URL}api/v1/user/activities?count=&page=${pageKey}&month=${month}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const result = await response.json();
+    return result;
+  }
   
   return {
     data,
@@ -519,7 +532,8 @@ const apiCall = () => {
     getCommentsList,
     approveComments,
     achievementsList,
-    approveAchievement
+    approveAchievement,
+    getLatestActivity
   };
 };
 
