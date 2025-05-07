@@ -486,7 +486,7 @@ const apiCall = () => {
     return result;
   };
 
-  const getLatestActivity = async (pageKey,month)=>{
+  const getLatestActivity = async (pageKey, month) => {
     const response = await fetch(
       `${BASE_URL}api/v1/user/activities?count=&page=${pageKey}&month=${month}`,
       {
@@ -497,8 +497,23 @@ const apiCall = () => {
     );
     const result = await response.json();
     return result;
-  }
-  
+  };
+
+  const syncQuests = async () => {
+    const requestBody = {
+      cdns: ["homeMicroContests"],
+    };
+    const response = await fetch(`${BASE_URL}/api/v1/sync/cdns`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "PUT",
+      body: JSON.stringify(requestBody),
+    });
+    const result = await response.json();
+    return result;
+  };
+
   return {
     data,
     getPost,
@@ -533,7 +548,8 @@ const apiCall = () => {
     approveComments,
     achievementsList,
     approveAchievement,
-    getLatestActivity
+    getLatestActivity,
+    syncQuests
   };
 };
 
