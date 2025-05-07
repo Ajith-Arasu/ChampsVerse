@@ -26,7 +26,7 @@ const Quests = () => {
   const [nextPage, setNextPage] = useState(1);
   const [pageKey, setPageKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { getQuestList, triggerActivityApi } = apiCall();
+  const { getQuestList, triggerActivityApi,syncQuests } = apiCall();
   const [quest, setQuest] = useState([]);
   const difficultyLabels = ["Easy", "Moderate", "Advanced", "Expert"];
   const difficultyBg = [Easy, Moderate, Advanced, Expert];
@@ -34,6 +34,7 @@ const Quests = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = React.useState(false);
   const [contestId, setContestId] = useState("");
+  const [openSyncConfirm, setOpenSyncConfirm]= useState(false)
 
   const handleClickOpen = (contest_id) => {
     setOpen(true);
@@ -42,6 +43,7 @@ const Quests = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setOpenSyncConfirm(false);
   };
 
   const handleClick = (contestId, title) => {
@@ -56,6 +58,11 @@ const Quests = () => {
     triggerActivityApi(body);
     setOpen(false);
   };
+
+  const handleSync= async()=>{
+    const res= await syncQuests();
+    setOpenSyncConfirm(false);
+  }
 
   const getPost = async () => {
     if (isLoading || pageKey === null) return;
@@ -83,6 +90,11 @@ const Quests = () => {
     setAnchorEl(null);
   };
 
+
+  const handleOpen = ()=>{
+    setOpenSyncConfirm(true)
+  }
+
   return (
     <div>
       <Typography
@@ -98,12 +110,20 @@ const Quests = () => {
         ALL QUESTS
       </Typography>
 
+      <Button
+        variant="contained"
+        style={{ position: "absolute", right: "5%" }}
+        onClick={() => handleOpen()}
+      >
+        Sync Quests
+      </Button>
+
       <div
         style={{
           display: "flex",
           flexWrap: "wrap",
           gap: isMobile ? "28px" : "25px",
-          margin: isMobile ? "0 10%" : "0 5%",
+          margin: isMobile ? "5% 10%" : "5% 5%",
         }}
       >
         {quest.map((item, index) => (
@@ -303,6 +323,20 @@ const Quests = () => {
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={() => handleTriggerActivity()} autoFocus>
             ok
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog maxWidth={"xs"} open={openSyncConfirm} fullWidth={"70px"}>
+        <DialogContent sx={{ textAlign: "center" }}>
+          <Typography> Are you sure?</Typography>
+          <Typography>you want to Sync Quests</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleSync} variant="contained">
+            Yes
+          </Button>
+          <Button onClick={handleClose} variant="outlined">
+            No
           </Button>
         </DialogActions>
       </Dialog>
