@@ -514,6 +514,34 @@ const apiCall = () => {
     return result;
   };
 
+  const getSponsorList = async (pageKey) => {
+    const response = await fetch(
+      `${BASE_URL}api/v1/sponsors?count=&page=count=&page=${pageKey}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const result = await response.json();
+    return result;
+  };
+
+  const updateQuest = async (questId, requestBody) => {
+    const response = await fetch(
+      `${BASE_URL}/api/v1/contest/${questId}?contest_type=MICRO_CONTEST`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "PATCH",
+        body: JSON.stringify(requestBody),
+      }
+    );
+    const result = await response.json();
+    return result;
+  };
+
   return {
     data,
     getPost,
@@ -549,7 +577,9 @@ const apiCall = () => {
     achievementsList,
     approveAchievement,
     getLatestActivity,
-    syncQuests
+    syncQuests,
+    getSponsorList,
+    updateQuest,
   };
 };
 
