@@ -198,6 +198,7 @@ const Header = ({ userDetails }) => {
           <MenuItem onClick={() => handleClick("comments")}>Comments</MenuItem>
           <MenuItem onClick={() => handleClick("achievements")}>Achievements</MenuItem>
           <MenuItem onClick={() => handleClick("events")}>Events</MenuItem>
+          <MenuItem onClick={() => handleClick("createContest/Quest")}>Create Contest / Quest</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

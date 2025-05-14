@@ -20,6 +20,7 @@ import Quests from "./Pages/Quests/index";
 import Comments from "./Pages/comments/comments";
 import Achievement from "./Pages/Achievement";
 import Events from './Pages/events'
+import CreateContest from "./Pages/Contests/createContest";
 
 export default function App() {
   const [userDetails, setUserDetails] = useState([]);
@@ -65,6 +66,7 @@ export default function App() {
             <Route path="comments" element={<Comments />} />
               <Route path='/events' element={<Events/>}/>
             <Route path="/achievements" element={<Achievement />} />
+            <Route path='/createContest/Quest' element={<CreateContest/>}/>
           </Routes>
         </>
       </Router>

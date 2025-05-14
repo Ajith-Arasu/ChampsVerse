@@ -26,7 +26,7 @@ const Quests = () => {
   const [nextPage, setNextPage] = useState(1);
   const [pageKey, setPageKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { getQuestList, triggerActivityApi,syncQuests } = apiCall();
+  const { getQuestList, triggerActivityApi, syncQuests } = apiCall();
   const [quest, setQuest] = useState([]);
   const difficultyLabels = ["Easy", "Moderate", "Advanced", "Expert"];
   const difficultyBg = [Easy, Moderate, Advanced, Expert];
@@ -34,7 +34,17 @@ const Quests = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = React.useState(false);
   const [contestId, setContestId] = useState("");
-  const [openSyncConfirm, setOpenSyncConfirm]= useState(false)
+  const [openSyncConfirm, setOpenSyncConfirm] = useState(false);
+  const [menuState, setMenuState] = useState({ anchorEl: null, item: null });
+
+  const handleOpenMenu = (event, item) => {
+    event.stopPropagation();
+    setMenuState({ anchorEl: event.currentTarget, item });
+  };
+
+  const handleCloseMenu = () => {
+    setMenuState({ anchorEl: null, item: null });
+  };
 
   const handleClickOpen = (contest_id) => {
     setOpen(true);
@@ -59,10 +69,10 @@ const Quests = () => {
     setOpen(false);
   };
 
-  const handleSync= async()=>{
-    const res= await syncQuests();
+  const handleSync = async () => {
+    const res = await syncQuests();
     setOpenSyncConfirm(false);
-  }
+  };
 
   const getPost = async () => {
     if (isLoading || pageKey === null) return;
@@ -82,18 +92,13 @@ const Quests = () => {
     getPost();
   }, []);
 
-  const handleOpenMenu = (event) => {
-    setAnchorEl(event.currentTarget);
+ 
+
+  
+
+  const handleOpen = () => {
+    setOpenSyncConfirm(true);
   };
-
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-
-
-  const handleOpen = ()=>{
-    setOpenSyncConfirm(true)
-  }
 
   return (
     <div>
@@ -184,29 +189,34 @@ const Quests = () => {
                 >{`${item.winning_points} Points`}</Typography>
 
                 <img
-                  onClick={(e) => {
-                    e.stopPropagation(); // ⛔ stop navigation
-                    handleOpenMenu(e);
-                  }}
+                  onClick={(e) => handleOpenMenu(e, item)}
                   src={threeDotsIcon}
                   style={{ position: "absolute", right: "5px" }}
-                ></img>
+                />
                 <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
+                  anchorEl={menuState.anchorEl}
+                  open={Boolean(menuState.anchorEl)}
                   onClose={handleCloseMenu}
-                  id="basic-menu"
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                  }}
                 >
                   <MenuItem
                     onClick={(e) => {
-                      e.stopPropagation(); // ⛔ stop navigation
-                      handleClickOpen(item.contest_id);
+                      e.stopPropagation();
+                      handleClickOpen(menuState.item.contest_id);
+                      handleCloseMenu(); 
                     }}
                   >
                     Trigger Activity Notification
+                  </MenuItem>
+                  <MenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate("/createContest/Quest", {
+                        state: { item: menuState.item },
+                      });
+                      handleCloseMenu();
+                    }}
+                  >
+                    Edit
                   </MenuItem>
                 </Menu>
               </div>
