@@ -1,11 +1,10 @@
-import style from "../Contests/style.module.css";
-import { useEffect, useState } from "react";
-import apiCall from "../API/api";
+import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Loader from "../Loader/loader";
-import React, { useRef } from "react";
 import { fromBlob, blobToURL } from "image-resize-compress";
-
+import apiCall from "../API/api";
+import Loader from "../Loader/loader";
+import style from "../Contests/style.module.css";
+import closeIcon from "../../asserts/close.png";
 import {
   Typography,
   Button,
@@ -21,6 +20,8 @@ import {
   FormControlLabel,
   Radio,
   MenuItem,
+  InputAdornment,
+  IconButton
 } from "@mui/material";
 
 const CreateContest = () => {
@@ -33,12 +34,15 @@ const CreateContest = () => {
   const { createContest, getUrlContestImage, getSponsorList, updateQuest } =
     apiCall();
   const [selectedFile, setSelectedFile] = useState(null);
-  const [pageKey, setPagekey] = useState("");
+  const [nextPage, setNextPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [pageKey, setPageKey] = useState("");
   const [data, setData] = useState([]);
   const location = useLocation();
   const { item } = location.state || {};
   const [changedFields, setChangedFields] = useState([]);
   const [tags, setTags] = useState([""]);
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   console.log("quest", item);
 
@@ -46,9 +50,9 @@ const CreateContest = () => {
     setSelectedFile(event.target.files[0]);
   };
 
-  const handleTagChange = (index, e) => {
+  const handleTagChange = (index, event) => {
     const newTags = [...tags];
-    newTags[index] = { name: e.target.value };
+    newTags[index] = event.target.value;
     setTags(newTags);
   };
 
@@ -59,6 +63,25 @@ const CreateContest = () => {
       setTags([...tags, ""]);
     }
   };
+  const handleRemove = (index) => {
+    const newTags = [...tags];
+    newTags.splice(index, 1);
+    setTags(newTags);
+  };
+
+  useEffect(() => {
+    const fetchSponsors = async () => {
+      try {
+        const data = await getSponsorList(pageKey);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching sponsors:", error);
+      }
+    };
+    fetchSponsors();
+    console.log('useeffect called');
+  }, []);
+
 
   useEffect(() => {
     const handleFileChange = (e) => {
@@ -118,6 +141,7 @@ const CreateContest = () => {
     }
   }, [item]);
 
+
   const handleSubmit = async (event) => {
     console.log("changedFields", changedFields);
     event.preventDefault();
@@ -137,8 +161,8 @@ const CreateContest = () => {
           tags: Array.isArray(tags)
             ? formData.tags.map((tag) => ({ name: tag }))
             : String(formData.tags)
-                .split(",")
-                .map((tag) => ({ name: tag.trim() })),
+              .split(",")
+              .map((tag) => ({ name: tag.trim() })),
           sponsors: [{ code: formData.sponsors, avatar: "SponsorAvatar1.png" }],
           winning_points: parseInt(formData.winning_points, 10),
         };
@@ -163,6 +187,8 @@ const CreateContest = () => {
 
       console.log("processedForm", processedForm);
       console.log("item", item);
+
+
       if (item) {
         console.log("item", item);
         const result = await updateQuest(item.contest_id, processedForm);
@@ -176,6 +202,7 @@ const CreateContest = () => {
           `${processedForm.type}S`,
           processedForm.type
         );
+
 
         const formats = [
           { label: "preSignedUrlThumb", quality: 30, width: 240, height: 320 },
@@ -241,6 +268,7 @@ const CreateContest = () => {
       [e.target.name]: e.target.value,
     }));
   };
+
 
   const sponsorOptions = [
     { label: "Sponsor A", value: "sponsorA" },
@@ -328,7 +356,7 @@ const CreateContest = () => {
             value={formData.type}
             onChange={handleChange}
             required
-            style={{ width: "50%", marginLeft: "10px" }}
+            style={{ width: "50%", marginTop: "4px", marginLeft: "10px" }}
           >
             {contestType.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -358,7 +386,7 @@ const CreateContest = () => {
             value={formData.title}
             onChange={handleChange}
             required
-            style={{ width: "50%" }}
+            style={{ width: "50%", marginTop: "4px" }}
             InputLabelProps={{ shrink: false }}
           />
         </Box>
@@ -387,7 +415,7 @@ const CreateContest = () => {
             required
             multiline
             minRows={3}
-            style={{ width: "80%" }}
+            style={{ width: "80%", marginTop: "4px" }}
           />
         </Box>
 
@@ -412,7 +440,7 @@ const CreateContest = () => {
             value={formData.work_type}
             onChange={handleChange}
             required
-            style={{ width: "50%" }}
+            style={{ width: "50%", marginTop: "4px" }}
           >
             {workTypeOptions.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -445,7 +473,7 @@ const CreateContest = () => {
             value={formData.difficulty_level}
             onChange={handleChange}
             required
-            style={{ width: "50%" }}
+            style={{ width: "50%", marginTop: "4px" }}
           >
             {difficultyLevelOptions.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -475,7 +503,7 @@ const CreateContest = () => {
             value={formData.winning_points}
             onChange={handleChange}
             required
-            style={{ width: "50%" }}
+            style={{ width: "50%", marginTop: "4px" }}
           />
         </Box>
 
@@ -499,7 +527,7 @@ const CreateContest = () => {
             value={formData.category}
             onChange={handleChange}
             required
-            style={{ width: "50%" }}
+            style={{ width: "50%", marginTop: "4px" }}
           />
         </Box>
 
@@ -521,14 +549,29 @@ const CreateContest = () => {
             {tags.map((tag, index) => (
               <Box
                 key={index}
-                style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
+                sx={{ display: "flex", gap: 2, mb: 2 }}
               >
                 <TextField
                   label="Enter"
                   name={`tag-${index}`}
                   value={tag}
                   onChange={(e) => handleTagChange(index, e)}
-                  style={{ width: "50%" }}
+                  sx={{ width: "50%", marginTop: "4px" }}
+                  InputProps={{
+                    endAdornment:
+                      index > 0 && index === tags.length - 1 && tags.length <= 5 ? (
+                        <InputAdornment position="end">
+                          <IconButton onClick={() => handleRemove(index)} edge="end">
+                            <img
+                              src={closeIcon}
+                              alt="close"
+                              width="16"
+                              height="16"
+                            />
+                          </IconButton>
+                        </InputAdornment>
+                      ) : null,
+                  }}
                 />
                 {index === tags.length - 1 && tags.length < 5 && (
                   <Button variant="contained" onClick={handleAdd}>
@@ -561,7 +604,7 @@ const CreateContest = () => {
             value={formData.sponsors}
             onChange={handleChange}
             required
-            style={{ width: "50%" }}
+            style={{ width: "50%", marginTop: "4px" }}
           >
             {sponsorOptions.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -588,7 +631,7 @@ const CreateContest = () => {
           <Button
             variant="contained"
             component="label"
-            style={{ width: "35%" }}
+            style={{ width: "35%", marginTop: "4px" }}
             disabled={!!selectedFile || item}
           >
             Upload File

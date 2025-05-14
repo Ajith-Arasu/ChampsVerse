@@ -516,7 +516,7 @@ const apiCall = () => {
 
   const getSponsorList = async (pageKey) => {
     const response = await fetch(
-      `${BASE_URL}api/v1/sponsors?count=&page=count=&page=${pageKey}`,
+      `${BASE_URL}api/v1/sponsors?count=10&page=${pageKey}`,
       {
         headers: {
           "Content-Type": "application/json",
