@@ -158,11 +158,12 @@ const CreateContest = () => {
           ...processedForm,
           difficulty_level: parseInt(formData.difficulty_level, 10),
           category: formData.category,
-          tags: Array.isArray(tags)
-            ? formData.tags.map((tag) => ({ name: tag }))
-            : String(formData.tags)
-              .split(",")
-              .map((tag) => ({ name: tag.trim() })),
+          tags:tags.map(tag => ({ name: tag })),
+          // tags: Array.isArray(tags)
+          //   ? formData.tags.map((tag) => ({ name: tag }))
+          //   : String(formData.tags)
+          //     .split(",")
+          //     .map((tag) => ({ name: tag.trim() })),
           sponsors: [{ code: formData.sponsors, avatar: "SponsorAvatar1.png" }],
           winning_points: parseInt(formData.winning_points, 10),
         };
@@ -192,6 +193,8 @@ const CreateContest = () => {
       if (item) {
         console.log("item", item);
         const result = await updateQuest(item.contest_id, processedForm);
+        window.location.reload();
+
       } else {
         const [name, extension] = selectedFile.name.split(".");
         const result = await createContest(processedForm);
@@ -252,10 +255,12 @@ const CreateContest = () => {
         }
 
         console.log("All files uploaded successfully!");
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error during submission:", error);
     } finally {
+
     }
   };
 
@@ -536,7 +541,7 @@ const CreateContest = () => {
           style={{
             width: "75%",
             borderRadius: "12px",
-            minHeight: "100px", // Ensures a minimum height
+            minHeight: "100px", 
             display: "flex",
             flexDirection: "column",
             backgroundColor: "white",
