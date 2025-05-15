@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Baloo2";
-  src: url("\public\Baloo2-ExtraBold.ttf") format("opentype");
+  src: url("%PUBLIC_URL%/fonts/Baloo2-Regular.ttf") format("opentype");
   font-weight: 800;
   font-style: normal;
 }
