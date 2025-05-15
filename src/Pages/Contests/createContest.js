@@ -42,6 +42,8 @@ const CreateContest = () => {
   const { item } = location.state || {};
   const [changedFields, setChangedFields] = useState([]);
   const [tags, setTags] = useState([""]);
+  const [sponsorOptions, setSponsorOptions] = useState([]);
+  const [allSponsors, setAllSponsors] = useState([]);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   console.log("quest", item);
@@ -73,15 +75,17 @@ const CreateContest = () => {
     const fetchSponsors = async () => {
       try {
         const data = await getSponsorList(pageKey);
-        console.log(data);
+        const item = data.data.map((item) => ({
+          label: item.sponsor_code,
+          value: item.sponsor_code,
+        }));
+        setSponsorOptions(item);
       } catch (error) {
         console.error("Error fetching sponsors:", error);
       }
     };
     fetchSponsors();
-    console.log('useeffect called');
   }, []);
-
 
   useEffect(() => {
     const handleFileChange = (e) => {
@@ -132,7 +136,7 @@ const CreateContest = () => {
         description: item.description || "",
         from: item.from?.split("T")[0] || "",
         to: item.to?.split("T")[0] || "",
-        sponsors: item.sponsors?.[0]?.code || "",
+        sponsors: item.sponsors?.[0]?.sponsor_code || "",
         difficulty_level: item.difficulty_level || "",
         category: item.category || "",
         tags: item.tags?.map((t) => t.name).join(", ") || "",
@@ -145,6 +149,13 @@ const CreateContest = () => {
   const handleSubmit = async (event) => {
     console.log("changedFields", changedFields);
     event.preventDefault();
+    const selectedSponsor = allSponsors.find(
+      (item) => item.sponsor_code === formData.sponsors
+    );
+    const avatar = selectedSponsor
+      ? selectedSponsor.sponsor_avatar
+      : "defaultAvatar.png";
+
     try {
       let processedForm = {
         ...formData,
@@ -152,19 +163,23 @@ const CreateContest = () => {
         to: `${String(formData.to)}T00:00:00.000Z`,
         work_type: formData.work_type.toUpperCase(),
       };
-
       if (formData.type === "MICRO_CONTEST") {
         processedForm = {
           ...processedForm,
           difficulty_level: parseInt(formData.difficulty_level, 10),
           category: formData.category,
-          tags:tags.map(tag => ({ name: tag })),
+          tags: tags.map(tag => ({ name: tag })),
           // tags: Array.isArray(tags)
           //   ? formData.tags.map((tag) => ({ name: tag }))
           //   : String(formData.tags)
           //     .split(",")
           //     .map((tag) => ({ name: tag.trim() })),
-          sponsors: [{ code: formData.sponsors, avatar: "SponsorAvatar1.png" }],
+          sponsors: [
+            {
+              code: formData.sponsors,
+              avatar,
+            },
+          ],
           winning_points: parseInt(formData.winning_points, 10),
         };
 
@@ -189,7 +204,6 @@ const CreateContest = () => {
       console.log("processedForm", processedForm);
       console.log("item", item);
 
-
       if (item) {
         console.log("item", item);
         const result = await updateQuest(item.contest_id, processedForm);
@@ -205,7 +219,6 @@ const CreateContest = () => {
           `${processedForm.type}S`,
           processedForm.type
         );
-
 
         const formats = [
           { label: "preSignedUrlThumb", quality: 30, width: 240, height: 320 },
@@ -273,13 +286,6 @@ const CreateContest = () => {
       [e.target.name]: e.target.value,
     }));
   };
-
-
-  const sponsorOptions = [
-    { label: "Sponsor A", value: "sponsorA" },
-    { label: "Sponsor B", value: "sponsorB" },
-    { label: "Sponsor C", value: "sponsorC" },
-  ];
 
   const contestType = [
     { label: "Contest", value: "CONTEST" },
@@ -541,7 +547,7 @@ const CreateContest = () => {
           style={{
             width: "75%",
             borderRadius: "12px",
-            minHeight: "100px", 
+            minHeight: "100px",
             display: "flex",
             flexDirection: "column",
             backgroundColor: "white",
@@ -611,6 +617,9 @@ const CreateContest = () => {
             required
             style={{ width: "50%", marginTop: "4px" }}
           >
+            {sponsorOptions.length === 0 && (
+              <MenuItem disabled>Loading sponsors…</MenuItem>
+            )}
             {sponsorOptions.map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
