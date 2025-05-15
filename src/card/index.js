@@ -23,7 +23,7 @@ const Card = ({
 
   return (
     <>
-      <div style={{margin: '20px'}}></div>
+      <div style={{ margin: '20px' }}></div>
       <a
         href={`https://champsverse.com/${handlename}`}
         target="_blank"
@@ -72,7 +72,42 @@ const Card = ({
           </button>
         </div>
       </div>
-      {data.length ? (
+      {data === undefined || data === null ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            width: "100vw",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      ) : data.length === 0 ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "60vh",
+            width: "100%",
+          }}
+        >
+          <Typography
+            style={{
+              fontFamily: "Baloo2",
+              color: "black",
+              fontSize: isMobile ? "20px" : "35px",
+              fontWeight: "800",
+              textAlign: "center",
+            }}
+          >
+            No Entries
+          </Typography>
+
+        </Box>
+      ) : (
         <Box>
           <div
             className={
@@ -89,11 +124,9 @@ const Card = ({
                     <div className={style["workCard-top"]}>
                       <div className={style["workCard-left"]}>
                         <img
-                          src={`${CDN_URL}/${
-                            !isQuestPage ? item.user_id : item.userID
-                          }/WORKS/IMAGES/medium/${
-                            !isQuestPage ? item.files[0].name : item.filename
-                          }`}
+                          src={`${CDN_URL}/${!isQuestPage ? item.user_id : item.userID
+                            }/WORKS/IMAGES/medium/${!isQuestPage ? item.files[0].name : item.filename
+                            }`}
                         />
                       </div>
 
@@ -114,9 +147,9 @@ const Card = ({
                                   cursor: "pointer",
                                   opacity:
                                     item.badge === "dmd" ||
-                                    item.badge === "mp" ||
-                                    item.badge === "wnd" ||
-                                    item.badge === "hof"
+                                      item.badge === "mp" ||
+                                      item.badge === "wnd" ||
+                                      item.badge === "hof"
                                       ? 1.0
                                       : 0.2,
                                 }}
@@ -332,8 +365,8 @@ const Card = ({
                               item.entry_status === 3
                                 ? "green"
                                 : item.entry_status === 5
-                                ? "orange"
-                                : "red",
+                                  ? "orange"
+                                  : "red",
                             width: "100%",
                             textAlign: "center",
                             color: "white",
@@ -343,8 +376,8 @@ const Card = ({
                             {item.entry_status === 3
                               ? "Approved"
                               : item.entry_status === 5
-                              ? "Pending For Approval"
-                              : "Rejected"}
+                                ? "Pending For Approval"
+                                : "Rejected"}
                           </Typography>
                         </div>
                       )}
@@ -354,18 +387,6 @@ const Card = ({
               );
             })}
           </div>
-        </Box>
-      ) : (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-            width: "100vw",
-          }}
-        >
-          <CircularProgress />
         </Box>
       )}
     </>
