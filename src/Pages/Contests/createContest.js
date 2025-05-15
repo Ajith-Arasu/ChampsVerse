@@ -21,7 +21,7 @@ import {
   Radio,
   MenuItem,
   InputAdornment,
-  IconButton
+  IconButton,
 } from "@mui/material";
 
 const CreateContest = () => {
@@ -89,7 +89,6 @@ const CreateContest = () => {
 
   useEffect(() => {
     const handleFileChange = (e) => {
-      console.log("handleFileChange called");
       if (e.target.files.length > 0) {
         const selectedFile = e.target.files[0];
         setFileName(selectedFile.name);
@@ -129,6 +128,7 @@ const CreateContest = () => {
 
   useEffect(() => {
     if (item) {
+      console.log("item", item);
       setFormData({
         type: item.type || "",
         work_type: item.work_type || "",
@@ -136,15 +136,14 @@ const CreateContest = () => {
         description: item.description || "",
         from: item.from?.split("T")[0] || "",
         to: item.to?.split("T")[0] || "",
-        sponsors: item.sponsors?.[0]?.sponsor_code || "",
+        sponsors: item.sponsors?.[0]?.code || "",
         difficulty_level: item.difficulty_level || "",
         category: item.category || "",
-        tags: item.tags?.map((t) => t.name).join(", ") || "",
+        tags: item.tags || "",
         winning_points: item.winning_points || "",
       });
     }
   }, [item]);
-
 
   const handleSubmit = async (event) => {
     console.log("changedFields", changedFields);
@@ -168,7 +167,7 @@ const CreateContest = () => {
           ...processedForm,
           difficulty_level: parseInt(formData.difficulty_level, 10),
           category: formData.category,
-          tags: tags.map(tag => ({ name: tag })),
+          tags: tags.map((tag) => ({ name: tag })),
           // tags: Array.isArray(tags)
           //   ? formData.tags.map((tag) => ({ name: tag }))
           //   : String(formData.tags)
@@ -207,8 +206,7 @@ const CreateContest = () => {
       if (item) {
         console.log("item", item);
         const result = await updateQuest(item.contest_id, processedForm);
-        window.location.reload();
-
+        //window.location.reload();
       } else {
         const [name, extension] = selectedFile.name.split(".");
         const result = await createContest(processedForm);
@@ -273,7 +271,6 @@ const CreateContest = () => {
     } catch (error) {
       console.error("Error during submission:", error);
     } finally {
-
     }
   };
 
@@ -307,6 +304,7 @@ const CreateContest = () => {
     { label: "Avatar 3", value: "avatar3" },
   ];
 
+  console.log("formData.ttags", formData.tags);
   return (
     <div style={{ backgroundColor: "rgb(250, 250, 250)" }}>
       <Box style={{ height: "20px" }}></Box>
@@ -534,7 +532,7 @@ const CreateContest = () => {
             name="Category"
             value={formData.category}
             onChange={handleChange}
-            required
+            
             style={{ width: "50%", marginTop: "4px" }}
           />
         </Box>
@@ -554,22 +552,24 @@ const CreateContest = () => {
         >
           <Typography style={{ marginLeft: "5px" }}>Tags</Typography>
           <Box>
-            {tags.map((tag, index) => (
-              <Box
-                key={index}
-                sx={{ display: "flex", gap: 2, mb: 2 }}
-              >
+            {(formData.tags || tags).map((tag, index) => (
+              <Box key={index} sx={{ display: "flex", gap: 2, mb: 2 }}>
                 <TextField
                   placeholder="Enter"
                   name={`tag-${index}`}
-                  value={tag}
+                  value={tag?.name || tag || ""}
                   onChange={(e) => handleTagChange(index, e)}
                   sx={{ width: "50%", marginTop: "4px" }}
                   InputProps={{
                     endAdornment:
-                      index > 0 && index === tags.length - 1 && tags.length <= 5 ? (
+                      index > 0 &&
+                      index === tags.length - 1 &&
+                      tags.length <= 5 ? (
                         <InputAdornment position="end">
-                          <IconButton onClick={() => handleRemove(index)} edge="end">
+                          <IconButton
+                            onClick={() => handleRemove(index)}
+                            edge="end"
+                          >
                             <img
                               src={closeIcon}
                               alt="close"
