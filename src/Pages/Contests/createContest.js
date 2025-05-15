@@ -392,13 +392,12 @@ const CreateContest = () => {
         >
           <Typography style={{ marginLeft: "5px" }}>Enter Title</Typography>
           <TextField
-            label="Title"
+            placeholder="Title"
             name="title"
             value={formData.title}
             onChange={handleChange}
             required
             style={{ width: "50%", marginTop: "4px" }}
-            InputLabelProps={{ shrink: false }}
           />
         </Box>
 
@@ -419,7 +418,7 @@ const CreateContest = () => {
             Enter Description
           </Typography>
           <TextField
-            label="Description"
+            placeholder="Description"
             name="description"
             value={formData.description}
             onChange={handleChange}
@@ -445,8 +444,7 @@ const CreateContest = () => {
         >
           <Typography style={{ marginLeft: "5px" }}>Work Type</Typography>
           <TextField
-            select
-            label="choose"
+            placeholder="choose"
             name="work_type"
             value={formData.work_type}
             onChange={handleChange}
@@ -478,8 +476,7 @@ const CreateContest = () => {
             Difficulty Level
           </Typography>
           <TextField
-            select
-            label="Choose"
+            placeholder="difficulty_level"
             name="difficulty_level"
             value={formData.difficulty_level}
             onChange={handleChange}
@@ -509,7 +506,7 @@ const CreateContest = () => {
         >
           <Typography style={{ marginLeft: "5px" }}>Winning Points</Typography>
           <TextField
-            label="enter"
+            placeholder="winning_points"
             name="winning_points"
             value={formData.winning_points}
             onChange={handleChange}
@@ -533,8 +530,8 @@ const CreateContest = () => {
         >
           <Typography style={{ marginLeft: "5px" }}>Category</Typography>
           <TextField
-            label="enter"
-            name="category"
+            placeholder="Category"
+            name="Category"
             value={formData.category}
             onChange={handleChange}
             required
@@ -563,7 +560,7 @@ const CreateContest = () => {
                 sx={{ display: "flex", gap: 2, mb: 2 }}
               >
                 <TextField
-                  label="Enter"
+                  placeholder="Enter"
                   name={`tag-${index}`}
                   value={tag}
                   onChange={(e) => handleTagChange(index, e)}
@@ -610,7 +607,7 @@ const CreateContest = () => {
           <Typography style={{ marginLeft: "5px" }}>Sponsor</Typography>
           <TextField
             select
-            label="choose"
+            placeholder="choose"
             name="sponsors"
             value={formData.sponsors}
             onChange={handleChange}
