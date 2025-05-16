@@ -45,8 +45,7 @@ const CreateContest = () => {
   const [sponsorOptions, setSponsorOptions] = useState([]);
   const [allSponsors, setAllSponsors] = useState([]);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-
-  console.log("quest", item);
+  let createContestresult;
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -57,8 +56,6 @@ const CreateContest = () => {
     newTags[index] = event.target.value;
     setTags(newTags);
   };
-
-  console.log("tags", tags);
 
   const handleAdd = () => {
     if (tags.length < 5) {
@@ -128,7 +125,6 @@ const CreateContest = () => {
 
   useEffect(() => {
     if (item) {
-      console.log("item", item);
       setFormData({
         type: item.type || "",
         work_type: item.work_type || "",
@@ -137,16 +133,19 @@ const CreateContest = () => {
         from: item.from?.split("T")[0] || "",
         to: item.to?.split("T")[0] || "",
         sponsors: item.sponsors?.[0]?.code || "",
-        difficulty_level: item.difficulty_level || "",
+        difficulty_level:
+          item.difficulty_level !== undefined
+            ? Number(item.difficulty_level)
+            : "",
         category: item.category || "",
         tags: item.tags || "",
         winning_points: item.winning_points || "",
+        ref_link: item.ref_link || "",
       });
     }
   }, [item]);
 
   const handleSubmit = async (event) => {
-    console.log("changedFields", changedFields);
     event.preventDefault();
     const selectedSponsor = allSponsors.find(
       (item) => item.sponsor_code === formData.sponsors
@@ -168,11 +167,6 @@ const CreateContest = () => {
           difficulty_level: parseInt(formData.difficulty_level, 10),
           category: formData.category,
           tags: tags.map((tag) => ({ name: tag })),
-          // tags: Array.isArray(tags)
-          //   ? formData.tags.map((tag) => ({ name: tag }))
-          //   : String(formData.tags)
-          //     .split(",")
-          //     .map((tag) => ({ name: tag.trim() })),
           sponsors: [
             {
               code: formData.sponsors,
@@ -192,6 +186,7 @@ const CreateContest = () => {
           "category",
           "tags",
           "sponsors",
+          "ref_link",
         ];
         processedForm = Object.fromEntries(
           Object.entries(processedForm).filter(([key]) =>
@@ -200,21 +195,28 @@ const CreateContest = () => {
         );
       }
 
-      console.log("processedForm", processedForm);
-      console.log("item", item);
-
       if (item) {
-        console.log("item", item);
         const updatedFields = Object.fromEntries(
           Object.entries(processedForm).filter(([key, value]) => {
             const oldValue = item[key];
+
+            // Skip empty strings, empty arrays, or tags with empty names
+            const isEmpty =
+              value === "" ||
+              (Array.isArray(value) && value.length === 0) ||
+              (key === "tags" &&
+                Array.isArray(value) &&
+                value.every((tag) => !tag.name?.trim()));
+
+            if (isEmpty) return false;
+
+            // Check if the value actually changed
             if (Array.isArray(value) && Array.isArray(oldValue)) {
               return JSON.stringify(value) !== JSON.stringify(oldValue);
             }
             return value !== oldValue;
           })
         );
-        console.log('updatedfields:',updatedFields);
 
         if (Object.keys(updatedFields).length > 0) {
           const result = await updateQuest(item.contest_id, updatedFields);
@@ -222,14 +224,16 @@ const CreateContest = () => {
         } else {
           console.log("No changes detected");
         }
-        //window.location.reload();
+        setFormData({});
       } else {
+        createContestresult = await createContest(processedForm);
+      }
+      if (selectedFile) {
         const [name, extension] = selectedFile.name.split(".");
-        const result = await createContest(processedForm);
         const imageURl = await getUrlContestImage(
           extension,
           name,
-          result.data.contest_id,
+          item.contest_id ? item.contest_id : createContestresult.data.contest_id,
           `${processedForm.type}S`,
           processedForm.type
         );
@@ -245,17 +249,13 @@ const CreateContest = () => {
           { label: "preSignedUrlRaw", quality: 80, width: 1920, height: 1080 },
         ];
 
-        console.log("selectedFile", selectedFile);
-        console.log("File", file);
         const processAndUploadImage = async ({
           label,
           quality,
           width,
           height,
         }) => {
-          console.log("processAndUploadImage called");
           const fileFormat = selectedFile.type.split("/")[1];
-
           const resizedBlob = await fromBlob(
             selectedFile,
             quality,
@@ -280,10 +280,10 @@ const CreateContest = () => {
         for (const format of formats) {
           await processAndUploadImage(format);
         }
-
-        console.log("All files uploaded successfully!");
-        window.location.reload();
       }
+
+      console.log("All files uploaded successfully!");
+      setFormData({});
     } catch (error) {
       console.error("Error during submission:", error);
     } finally {
@@ -291,8 +291,8 @@ const CreateContest = () => {
   };
 
   const handleChange = (e) => {
-    if (item) {
-      setChangedFields((prev) => [...prev, ...e.target.name]);
+    if (item && !changedFields.includes(e.target.name)) {
+      setChangedFields((prev) => [...prev, e.target.name]);
     }
     setFormData((prev) => ({
       ...prev,
@@ -308,19 +308,12 @@ const CreateContest = () => {
   const workTypeOptions = [{ label: "Post", value: "POST" }];
 
   const difficultyLevelOptions = [
-    { label: "Easy", value: "1" },
-    { label: "Moderate", value: "2" },
-    { label: "Advanced", value: "3" },
-    { label: "Expert", value: "4" },
+    { label: "Easy", value: 1 },
+    { label: "Moderate", value: 2 },
+    { label: "Advanced", value: 3 },
+    { label: "Expert", value: 4 },
   ];
 
-  const avatarOptions = [
-    { label: "Avatar 1", value: "avatar1" },
-    { label: "Avatar 2", value: "avatar2" },
-    { label: "Avatar 3", value: "avatar3" },
-  ];
-
-  console.log("formData.ttags", formData.tags);
   return (
     <div style={{ backgroundColor: "rgb(250, 250, 250)" }}>
       <Box style={{ height: "20px" }}></Box>
@@ -382,6 +375,7 @@ const CreateContest = () => {
             onChange={handleChange}
             required
             style={{ width: "50%", marginTop: "4px", marginLeft: "10px" }}
+            disabled={item}
           >
             {contestType.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -406,7 +400,7 @@ const CreateContest = () => {
         >
           <Typography style={{ marginLeft: "5px" }}>Enter Title</Typography>
           <TextField
-            placeholder="Title"
+            placeholder="Enter Title"
             name="title"
             value={formData.title}
             onChange={handleChange}
@@ -420,7 +414,7 @@ const CreateContest = () => {
           style={{
             width: "75%",
             borderRadius: "12px",
-            height: "125px",
+            minHeight: "170px",
             display: "flex",
             flexDirection: "column",
             backgroundColor: "white",
@@ -432,11 +426,10 @@ const CreateContest = () => {
             Enter Description
           </Typography>
           <TextField
-            placeholder="Description"
+            placeholder="Enter Description"
             name="description"
             value={formData.description}
             onChange={handleChange}
-            required
             multiline
             minRows={3}
             style={{ width: "80%", marginTop: "4px" }}
@@ -458,6 +451,7 @@ const CreateContest = () => {
         >
           <Typography style={{ marginLeft: "5px" }}>Work Type</Typography>
           <TextField
+            select
             placeholder="choose"
             name="work_type"
             value={formData.work_type}
@@ -490,12 +484,13 @@ const CreateContest = () => {
             Difficulty Level
           </Typography>
           <TextField
-            placeholder="difficulty_level"
+            select
             name="difficulty_level"
             value={formData.difficulty_level}
             onChange={handleChange}
             required
             style={{ width: "50%", marginTop: "4px" }}
+            disabled={item}
           >
             {difficultyLevelOptions.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -520,7 +515,7 @@ const CreateContest = () => {
         >
           <Typography style={{ marginLeft: "5px" }}>Winning Points</Typography>
           <TextField
-            placeholder="winning_points"
+            placeholder="Enter winning_points"
             name="winning_points"
             value={formData.winning_points}
             onChange={handleChange}
@@ -544,11 +539,10 @@ const CreateContest = () => {
         >
           <Typography style={{ marginLeft: "5px" }}>Category</Typography>
           <TextField
-            placeholder="Category"
-            name="Category"
+            placeholder="Enter Category"
+            name="category"
             value={formData.category}
             onChange={handleChange}
-
             style={{ width: "50%", marginTop: "4px" }}
           />
         </Box>
@@ -571,7 +565,7 @@ const CreateContest = () => {
             {(formData.tags || tags).map((tag, index) => (
               <Box key={index} sx={{ display: "flex", gap: 2, mb: 2 }}>
                 <TextField
-                  placeholder="Enter"
+                  placeholder="Enter tag"
                   name={`tag-${index}`}
                   value={tag?.name || tag || ""}
                   onChange={(e) => handleTagChange(index, e)}
@@ -579,8 +573,8 @@ const CreateContest = () => {
                   InputProps={{
                     endAdornment:
                       index > 0 &&
-                        index === tags.length - 1 &&
-                        tags.length <= 5 ? (
+                      index === tags.length - 1 &&
+                      tags.length <= 5 ? (
                         <InputAdornment position="end">
                           <IconButton
                             onClick={() => handleRemove(index)}
@@ -623,21 +617,26 @@ const CreateContest = () => {
           <Typography style={{ marginLeft: "5px" }}>Sponsor</Typography>
           <TextField
             select
-            placeholder="choose"
             name="sponsors"
             value={formData.sponsors}
             onChange={handleChange}
-            required
             style={{ width: "50%", marginTop: "4px" }}
           >
-            {sponsorOptions.length === 0 && (
+            {/* Placeholder item (will show when value is empty) */}
+            <MenuItem value="" disabled>
+              Choose sponsor
+            </MenuItem>
+
+            {/* Loading state */}
+            {sponsorOptions.length === 0 ? (
               <MenuItem disabled>Loading sponsors…</MenuItem>
+            ) : (
+              sponsorOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))
             )}
-            {sponsorOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
           </TextField>
         </Box>
 
@@ -659,15 +658,14 @@ const CreateContest = () => {
             variant="contained"
             component="label"
             style={{ width: "35%", marginTop: "4px" }}
-            disabled={!!selectedFile || item}
+            disabled={!!selectedFile}
           >
-            Upload File
+            {item ? "Reupload File" : "Upload File"}
             <input type="file" hidden onChange={handleFileChange} />
           </Button>
           {selectedFile && <Typography>File: {selectedFile.name}</Typography>}
         </Box>
 
-        {/* Submit Button */}
         <Box
           style={{
             width: "75%",
@@ -680,15 +678,26 @@ const CreateContest = () => {
             padding: "10px",
           }}
         >
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            style={{ width: "25%" }}
-          >
-            Submit
-          </Button>
+          <Typography style={{ marginLeft: "5px" }}>Ref Link</Typography>
+          <TextField
+            placeholder="enter link"
+            name="link"
+            value={formData.ref_link}
+            onChange={handleChange}
+            style={{ width: "50%", marginTop: "4px" }}
+          />
         </Box>
+
+        {/* Submit Button */}
+
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          style={{ width: "25%" }}
+        >
+          Submit
+        </Button>
       </Box>
     </div>
   );
