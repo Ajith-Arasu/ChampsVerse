@@ -205,7 +205,23 @@ const CreateContest = () => {
 
       if (item) {
         console.log("item", item);
-        const result = await updateQuest(item.contest_id, processedForm);
+        const updatedFields = Object.fromEntries(
+          Object.entries(processedForm).filter(([key, value]) => {
+            const oldValue = item[key];
+            if (Array.isArray(value) && Array.isArray(oldValue)) {
+              return JSON.stringify(value) !== JSON.stringify(oldValue);
+            }
+            return value !== oldValue;
+          })
+        );
+        console.log('updatedfields:',updatedFields);
+
+        if (Object.keys(updatedFields).length > 0) {
+          const result = await updateQuest(item.contest_id, updatedFields);
+          console.log("Updated fields:", result);
+        } else {
+          console.log("No changes detected");
+        }
         //window.location.reload();
       } else {
         const [name, extension] = selectedFile.name.split(".");
@@ -532,7 +548,7 @@ const CreateContest = () => {
             name="Category"
             value={formData.category}
             onChange={handleChange}
-            
+
             style={{ width: "50%", marginTop: "4px" }}
           />
         </Box>
@@ -563,8 +579,8 @@ const CreateContest = () => {
                   InputProps={{
                     endAdornment:
                       index > 0 &&
-                      index === tags.length - 1 &&
-                      tags.length <= 5 ? (
+                        index === tags.length - 1 &&
+                        tags.length <= 5 ? (
                         <InputAdornment position="end">
                           <IconButton
                             onClick={() => handleRemove(index)}
