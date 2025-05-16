@@ -15,6 +15,7 @@ import {
   Box,
   TextField,
   FormControl,
+  Select,
   FormLabel,
   RadioGroup,
   FormControlLabel,
@@ -23,6 +24,7 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
+import { grey } from '@mui/material/colors';
 
 const CreateContest = () => {
   const inputRef = useRef(null);
@@ -120,6 +122,7 @@ const CreateContest = () => {
     description: "",
     from: "",
     to: "",
+    difficulty_level: "",
     sponsors: "",
   });
 
@@ -483,21 +486,34 @@ const CreateContest = () => {
           <Typography style={{ marginLeft: "5px" }}>
             Difficulty Level
           </Typography>
-          <TextField
-            select
-            name="difficulty_level"
-            value={formData.difficulty_level}
-            onChange={handleChange}
-            required
-            style={{ width: "50%", marginTop: "4px" }}
-            disabled={item}
-          >
-            {difficultyLevelOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
+          <FormControl style={{ width: "50%", marginTop: "4px" }} size="small">
+            <Select
+              displayEmpty
+              name="difficulty_level"
+              value={formData.difficulty_level}
+              onChange={handleChange}
+              required
+              style={{ width: "50%", marginTop: "4px" }}
+              disabled={item}
+              renderValue={(selected) => {
+                if (!selected) {
+                  return (
+                    <span style={{ color: grey[500] }}>
+                      Choose difficulty_level
+                    </span>
+                  );
+                }
+                const selectedOption = sponsorOptions.find(opt => opt.value === selected);
+                return selectedOption?.label ?? selected;
+              }}
+            >
+              {difficultyLevelOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Box>
 
         {/* Winning Points */}
@@ -573,8 +589,8 @@ const CreateContest = () => {
                   InputProps={{
                     endAdornment:
                       index > 0 &&
-                      index === tags.length - 1 &&
-                      tags.length <= 5 ? (
+                        index === tags.length - 1 &&
+                        tags.length <= 5 ? (
                         <InputAdornment position="end">
                           <IconButton
                             onClick={() => handleRemove(index)}
