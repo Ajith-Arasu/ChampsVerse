@@ -3,6 +3,7 @@ import React from "react";
 import apiCall from "../API/api";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import Loader from "../Loader/loader";
 
 const Events = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -56,11 +57,10 @@ const Events = () => {
   const selectedMonthFormatted = `M${selectedMonthIndex + 1}`;
   const month = `${currentYear}-${selectedMonthFormatted}`;
 
-
   const changeMonth = (event) => {
     setSelectedType(event.target.value);
     setData([]);
-    setPagekey('')
+    setPagekey("");
   };
 
   const fetchData = async () => {
@@ -99,7 +99,6 @@ const Events = () => {
         }
 
         setData((prev) => [...prev, ...updatedActivity]);
-        
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -109,7 +108,7 @@ const Events = () => {
   };
 
   useEffect(() => {
-    console.log('useEffect called')
+    console.log("useEffect called");
     fetchData();
   }, [nextPage, selectedType]);
 
@@ -141,6 +140,7 @@ const Events = () => {
       >
         Latest Events
       </Typography>
+      {isLoading && <Loader></Loader>}
       <div style={{ margin: "0 5%" }}>
         <label>
           <input
