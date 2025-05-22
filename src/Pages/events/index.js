@@ -56,7 +56,6 @@ const Events = () => {
   const selectedMonthFormatted = `M${selectedMonthIndex + 1}`;
   const month = `${currentYear}-${selectedMonthFormatted}`;
 
-  console.log("month",month)
 
   const changeMonth = (event) => {
     setSelectedType(event.target.value);
@@ -65,7 +64,6 @@ const Events = () => {
   };
 
   const fetchData = async () => {
-    console.log('fetchdata called')
     if (isLoading || pagekey === null) return;
     setIsLoading(true);
     try {
@@ -73,7 +71,6 @@ const Events = () => {
         const result = await getLatestActivity(pagekey, month);
         const userIds = result.data.map((item) => item.user_id).join(",");
         const userData = await getUserDetails(userIds);
-        console.log("userData", userData);
         let userMap = {};
 
         if (userData && Array.isArray(userData)) {
@@ -82,7 +79,6 @@ const Events = () => {
             return map;
           }, {});
         }
-        console.log("userMap", userMap);
         // Append handle and firstname to activity
         const updatedActivity = result.data.map((act) => {
           const user = userMap[act.user_id];
@@ -96,14 +92,14 @@ const Events = () => {
           return act;
         });
 
-        console.log("updatedActivity", updatedActivity);
         if (result?.page) {
           setPagekey(result?.page);
         } else {
           setPagekey(null);
         }
 
-        setData(updatedActivity);
+        setData((prev) => [...prev, ...updatedActivity]);
+        
       }
     } catch (error) {
       console.error("Error fetching data:", error);

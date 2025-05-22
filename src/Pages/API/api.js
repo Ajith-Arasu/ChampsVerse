@@ -488,7 +488,7 @@ const apiCall = () => {
 
   const getLatestActivity = async (pageKey, month) => {
     const response = await fetch(
-      `${BASE_URL}api/v1/user/activities?count=&page=${pageKey}&month=${month}`,
+      `${BASE_URL}/api/v1/user/activities?count=&page=${pageKey}&month=${month}`,
       {
         headers: {
           "Content-Type": "application/json",

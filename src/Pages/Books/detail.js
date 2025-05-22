@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import apiCall from "../API/api";
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useMemo} from "react";
 import { Typography, Button, useMediaQuery } from "@mui/material";
 import style from "../Books/style.module.css";
 
@@ -11,6 +11,107 @@ const Detail = () => {
   const [refetch, setrefetch] = useState(false);
   const CDN_URL = process.env.REACT_APP_CDN_URL;
   const isMobile = useMediaQuery("(max-width:600px)");
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  
+  const displayItems = useMemo(() => {
+    const items = [];
+
+    // Book cover
+    if (data.cover?.[0]) {
+      items.push({ type: "cover", image: data.cover[0], title: data.title });
+    }
+
+    if (data.category === "story book") {
+      // Add each chapter cover and pages
+      data.chapters?.forEach((chapter, chapterIndex) => {
+        if (chapter.cover?.[0]) {
+          items.push({
+            type: "chapterCover",
+            image: chapter.cover[0],
+            title: chapter.title,
+            desc: chapter.desc,
+          });
+        }
+
+        chapter.pages?.forEach((page, pageIndex) => {
+          items.push({
+            type: "page",
+            desc: page.desc,
+            chapterIndex,
+            pageIndex,
+          });
+        });
+      });
+    } else {
+      // If not story book, add each page
+      data.pages?.forEach((page, index) => {
+        items.push({ type: "page", desc: page.desc, pageIndex: index });
+      });
+    }
+
+    return items;
+  }, [data]);
+
+  const handleNext = () => {
+    if (currentIndex < displayItems.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
+  const item = displayItems[currentIndex];
+
+  const renderContent = () => {
+    switch (item && item?.type) {
+      case "cover":
+      case "chapterCover":
+        return (
+          <div
+            className={style["book-image"]}
+            style={{ width: "100%", borderRadius: 0 }}
+          >
+            <img
+              style={{
+                objectFit: "fill",
+                height: "600px",
+                width: "100%",
+                borderRadius: 0,
+              }}
+              src={`${CDN_URL}/${data.user_id}/BOOKS/IMAGES/medium/${item.image.name}`}
+              alt="Cover"
+            />
+            <div
+              className={style["title-card"]}
+              style={{ width: "30%", height: "30%" }}
+            >
+              <Typography
+                className={style[isMobile ? "book-title-mob" : "book-title"]}
+              >
+                {item.title}
+              </Typography>
+            </div>
+          </div>
+        );
+
+      case "page":
+        return (
+          <Typography style={{ color: "black", fontSize: "1.2rem" }}>
+            {item.desc}
+          </Typography>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+
   const handleClick = async (status) => {
     let result = await bookPublish(userId, bookId, status);
     if (result.statusCode === 200) {
@@ -57,75 +158,74 @@ const Detail = () => {
     return (
       <>
         <div className={style["creation-detail"]}>
-          {!isMobile && <>
-            <div
-                  className={
-                    style[isMobile ? "user-Detail-mob" : "user-Detail"]
-                  }
+          {!isMobile && (
+            <>
+              <div
+                className={style[isMobile ? "user-Detail-mob" : "user-Detail"]}
+              >
+                <Typography style={{ fontSize: isMobile ? "10px" : "1rem" }}>
+                  Title
+                </Typography>
+                <Typography style={{ fontSize: isMobile ? "10px" : "1rem" }}>
+                  {data?.title}
+                </Typography>
+              </div>
+              <div className={style["user-Detail"]}>
+                <Typography
+                  style={{ fontSize: isMobile ? "10px" : "1rem" }}
+                  variant="h5"
                 >
-                  <Typography style={{ fontSize: isMobile ? "10px" : "1rem" }}>
-                    Title
-                  </Typography>
-                  <Typography style={{ fontSize: isMobile ? "10px" : "1rem" }}>
-                    {data?.title}
-                  </Typography>
-                </div>
-                <div className={style["user-Detail"]}>
-                  <Typography
-                    style={{ fontSize: isMobile ? "10px" : "1rem" }}
-                    variant="h5"
-                  >
-                    Author
-                  </Typography>
-                  <Typography style={{ fontSize: isMobile ? "10px" : "1rem" }}>
-                    {data?.user_id}
-                  </Typography>
-                </div>
-                <div className={style["user-Detail"]}>
-                  <Typography
-                    style={{ fontSize: isMobile ? "10px" : "1rem" }}
-                    variant="h5"
-                  >
-                    Date of Publications
-                  </Typography>
-                  <Typography style={{ fontSize: isMobile ? "10px" : "1rem" }}>
-                    {data?.created_at?.split("T")[0]}
-                  </Typography>
-                </div>
-                <div className={style["user-Detail"]}>
-                  <Typography
-                    style={{ fontSize: isMobile ? "10px" : "1rem" }}
-                    variant="h5"
-                  >
-                    Genre
-                  </Typography>
-                  <Typography style={{ fontSize: isMobile ? "10px" : "1rem" }}>
-                    {data?.category}
-                  </Typography>
-                </div>
-                <div className={style["user-Detail"]}>
-                  <Typography
-                    style={{ fontSize: isMobile ? "10px" : "1rem" }}
-                    variant="h5"
-                  >
-                    Pages
-                  </Typography>
-                  <Typography style={{ fontSize: isMobile ? "10px" : "1rem" }}>
-                    {data?.pages?.length}
-                  </Typography>
-                </div>
-                <div className={style["user-Detail"]}>
-                  <Typography
-                    style={{ fontSize: isMobile ? "10px" : "1rem" }}
-                    variant="h5"
-                  >
-                    Status
-                  </Typography>
-                  <Typography style={{ fontSize: isMobile ? "10px" : "1rem" }}>
-                    {data?.status}
-                  </Typography>
-                </div>
-                {data.status === "approved" && data?.is_public && (
+                  Author
+                </Typography>
+                <Typography style={{ fontSize: isMobile ? "10px" : "1rem" }}>
+                  {data?.user_id}
+                </Typography>
+              </div>
+              <div className={style["user-Detail"]}>
+                <Typography
+                  style={{ fontSize: isMobile ? "10px" : "1rem" }}
+                  variant="h5"
+                >
+                  Date of Publications
+                </Typography>
+                <Typography style={{ fontSize: isMobile ? "10px" : "1rem" }}>
+                  {data?.created_at?.split("T")[0]}
+                </Typography>
+              </div>
+              <div className={style["user-Detail"]}>
+                <Typography
+                  style={{ fontSize: isMobile ? "10px" : "1rem" }}
+                  variant="h5"
+                >
+                  Genre
+                </Typography>
+                <Typography style={{ fontSize: isMobile ? "10px" : "1rem" }}>
+                  {data?.category}
+                </Typography>
+              </div>
+              <div className={style["user-Detail"]}>
+                <Typography
+                  style={{ fontSize: isMobile ? "10px" : "1rem" }}
+                  variant="h5"
+                >
+                  Pages
+                </Typography>
+                <Typography style={{ fontSize: isMobile ? "10px" : "1rem" }}>
+                  {data?.pages?.length}
+                </Typography>
+              </div>
+              <div className={style["user-Detail"]}>
+                <Typography
+                  style={{ fontSize: isMobile ? "10px" : "1rem" }}
+                  variant="h5"
+                >
+                  Status
+                </Typography>
+                <Typography style={{ fontSize: isMobile ? "10px" : "1rem" }}>
+                  {data?.status}
+                </Typography>
+              </div>
+              {data.status === "approved" && data?.is_public && (
                 <div className={style["user-Detail"]}>
                   <Typography
                     style={{ fontSize: isMobile ? "10px" : "1rem" }}
@@ -169,7 +269,8 @@ const Detail = () => {
                   </Button>
                 </div>
               )}
-                </>}
+            </>
+          )}
           {isMobile && (
             <>
               {" "}
@@ -337,7 +438,7 @@ const Detail = () => {
             position: "relative",
           }}
         >
-          {/* Left Swipe Button */}
+          {/* Left Button */}
           <button
             style={{
               position: "absolute",
@@ -352,22 +453,28 @@ const Detail = () => {
               cursor: "pointer",
               fontWeight: "bold",
             }}
+            onClick={handlePrev}
+            disabled={currentIndex === 0}
           >
-            {`<`}
+            {"<"}
           </button>
 
-          {/* Main Box */}
+          {/* Main Content */}
           <div
             style={{
               height: "600px",
               width: "60%",
               boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.5)",
-              color: "blue",
               borderRadius: "20px",
+              padding: "16px",
+              overflowY: "auto",
+              backgroundColor: "white",
             }}
-          ></div>
+          >
+            {renderContent()}
+          </div>
 
-          {/* Right Swipe Button */}
+          {/* Right Button */}
           <button
             style={{
               position: "absolute",
@@ -382,8 +489,10 @@ const Detail = () => {
               cursor: "pointer",
               fontWeight: "bold",
             }}
+            onClick={handleNext}
+            disabled={currentIndex === displayItems.length - 1}
           >
-            {`>`}
+            {">"}
           </button>
         </div>
       </>
