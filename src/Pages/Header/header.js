@@ -33,7 +33,7 @@ const Header = ({ userDetails }) => {
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
-
+  
   return (
     <AppBar
       position="static"
@@ -44,9 +44,10 @@ const Header = ({ userDetails }) => {
     >
       <Toolbar>
         <img
-          src="/cv.png"
+         src="/cv.png"
           alt="CV"
-          style={{ width: isMobile ? "250px" : "250px" }}
+          style={{ width: isMobile ? "250px" : "250px", cursor: "pointer" }}
+           onClick={() => handleClick("work")}
         />
 
         {/* Tab Sections */}

@@ -24,15 +24,16 @@ const Card = ({
   return (
     <>
       <div style={{ margin: '20px' }}></div>
-      <a
-        href={`https://champsverse.com/${handlename}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ color: "black", margin: "20px" }}
-      >
-        Visit {handlename}'s Profile
-      </a>
-
+      {isProfilePage && (
+        <a
+          href={`https://champsverse.com/${handlename}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "#000", margin: "20px" }}
+        >
+          Visit {handlename}'s Profile
+        </a>
+      )}
       <div
         style={{
           display: "flex",
