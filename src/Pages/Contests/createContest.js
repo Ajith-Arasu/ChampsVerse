@@ -24,7 +24,7 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import { grey } from '@mui/material/colors';
+import { grey } from "@mui/material/colors";
 
 const CreateContest = () => {
   const inputRef = useRef(null);
@@ -79,6 +79,7 @@ const CreateContest = () => {
           value: item.sponsor_code,
         }));
         setSponsorOptions(item);
+        setAllSponsors(data.data);
       } catch (error) {
         console.error("Error fetching sponsors:", error);
       }
@@ -150,12 +151,12 @@ const CreateContest = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const selectedSponsor = allSponsors.find(
-      (item) => item.sponsor_code === formData.sponsors
-    );
-    const avatar = selectedSponsor
-      ? selectedSponsor.sponsor_avatar
-      : "defaultAvatar.png";
+    console.log("allSponsors", formData.sponsors);
+    const getSponsorAvatar = (code) => {
+      const sponsor = allSponsors.find((s) => s.sponsor_code === code);
+      return sponsor && sponsor.sponsor_avatar;
+    };
+    const avatar = getSponsorAvatar(formData.sponsors);
 
     try {
       let processedForm = {
@@ -176,7 +177,9 @@ const CreateContest = () => {
               avatar,
             },
           ],
-          winning_points: parseInt(formData.winning_points, 10),
+          winning_points: formData.winning_points
+            ? parseInt(formData.winning_points, 10)
+            : "",
         };
 
         const allowedFields = [
@@ -203,17 +206,19 @@ const CreateContest = () => {
           Object.entries(processedForm).filter(([key, value]) => {
             const oldValue = item[key];
 
-            // Skip empty strings, empty arrays, or tags with empty names
             const isEmpty =
               value === "" ||
+              value === null ||
               (Array.isArray(value) && value.length === 0) ||
               (key === "tags" &&
                 Array.isArray(value) &&
-                value.every((tag) => !tag.name?.trim()));
+                value.every((tag) => !tag.name?.trim())) ||
+              (key === "sponsors" &&
+                Array.isArray(value) &&
+                value.every((s) => !s.code?.trim()));
 
             if (isEmpty) return false;
 
-            // Check if the value actually changed
             if (Array.isArray(value) && Array.isArray(oldValue)) {
               return JSON.stringify(value) !== JSON.stringify(oldValue);
             }
@@ -229,14 +234,33 @@ const CreateContest = () => {
         }
         setFormData({});
       } else {
-        createContestresult = await createContest(processedForm);
+        const cleanedForm = Object.fromEntries(
+          Object.entries(processedForm).filter(([key, value]) => {
+            if (value === "" || value === null || value === undefined)
+              return false;
+
+            if (Array.isArray(value)) {
+              if (key === "tags") {
+                return value.some((tag) => tag.name?.trim());
+              }
+              if (key === "sponsors") {
+                return value.some((sponsor) => sponsor.code?.trim());
+              }
+              return value.length > 0;
+            }
+
+            return true;
+          })
+        );
+        createContestresult = await createContest(cleanedForm);
       }
+
       if (selectedFile) {
         const [name, extension] = selectedFile.name.split(".");
         const imageURl = await getUrlContestImage(
           extension,
           name,
-          item.contest_id ? item.contest_id : createContestresult.data.contest_id,
+          item ? item.contest_id : createContestresult.data.contest_id,
           `${processedForm.type}S`,
           processedForm.type
         );
@@ -284,11 +308,9 @@ const CreateContest = () => {
           await processAndUploadImage(format);
         }
       }
-
       console.log("All files uploaded successfully!");
-      setFormData({});
+      setFormData([]);
     } catch (error) {
-      console.error("Error during submission:", error);
     } finally {
     }
   };
@@ -503,7 +525,9 @@ const CreateContest = () => {
                     </span>
                   );
                 }
-                const selectedOption = sponsorOptions.find(opt => opt.value === selected);
+                const selectedOption = sponsorOptions.find(
+                  (opt) => opt.value === selected
+                );
                 return selectedOption?.label ?? selected;
               }}
             >
@@ -589,8 +613,8 @@ const CreateContest = () => {
                   InputProps={{
                     endAdornment:
                       index > 0 &&
-                        index === tags.length - 1 &&
-                        tags.length <= 5 ? (
+                      index === tags.length - 1 &&
+                      tags.length <= 5 ? (
                         <InputAdornment position="end">
                           <IconButton
                             onClick={() => handleRemove(index)}
