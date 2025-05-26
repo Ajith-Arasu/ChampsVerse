@@ -66,6 +66,7 @@ const Comments = () => {
     6: '#8E24AA',
     7: '#6A1B9A',
     8: '#D3D3D3',
+    9: 'grey'
   };
 
   const changeCommentType = (event) => {
