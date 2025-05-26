@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import apiCall from "../API/api";
-import { Typography, Button, Checkbox ,useMediaQuery} from "@mui/material";
+import { Typography, Button, Checkbox, useMediaQuery } from "@mui/material";
 import Loader from "../Loader/loader";
 
 const Comments = () => {
@@ -54,6 +54,18 @@ const Comments = () => {
     } finally {
       setDisable(false);
     }
+  };
+
+  const colorMap = {
+    0: '#BB00BB',
+    1: '#4CAF50',
+    2: '#009688',
+    3: '#FF9800',
+    4: '#F44336',
+    5: '#C62828',
+    6: '#8E24AA',
+    7: '#6A1B9A',
+    8: '#D3D3D3',
   };
 
   const changeCommentType = (event) => {
@@ -110,7 +122,7 @@ const Comments = () => {
         </label>
       </div>
       <Typography
-        sx={{ textAlign: "center", fontSize:isMobile?'24px': "52px", color: "black" }}
+        sx={{ textAlign: "center", fontSize: isMobile ? '24px' : "52px", color: "black" }}
       >
         Comments
       </Typography>
@@ -121,8 +133,8 @@ const Comments = () => {
             display: "flex",
             gap: "20px",
             position: "absolute",
-            right: isMobile? '4%':"10%",
-            top: isMobile?"27%":"18%",
+            right: isMobile ? '4%' : "10%",
+            top: isMobile ? "27%" : "18%",
           }}
         >
           <Button
@@ -141,56 +153,60 @@ const Comments = () => {
           </Button>
         </div>
       )}
-      {data.length === 0 && <Typography sx={{textAlign: "center", marginTop: '10%'}}>No comments to approve</Typography>}
-      <div style={{marginTop: isMobile && '12%'}}>
-      {data.map((item) => (
-        <div
-          style={{
-            margin: isMobile? '0 3%':"0 10% ",
-            border: "1px solid rgb(0, 0, 0,0.7)",
-            padding: "10px",
-            display: "flex",
-            justifyContent: "space-between",
-            
-          }}
-        >
-          <div style={{ display: "flex", gap: isMobile? '5px':"20px" }}>
-            {selectedType === "unapproved" && (
-              <Checkbox
-                {...label}
-                checked={checkedItems.includes(item.comment_id)}
-                onChange={() => handleSelect(item.comment_id)}
-              />
-            )}
-            <Typography style={{ overflowWrap: "break-word" }}>
-              {item.text}
-            </Typography>
-          </div>
-          {checkedItems.includes(item.comment_id) &&
-            checkedItems.length <= 1 && (
-              <div style={{ display: "flex", gap:isMobile? '5px': "20px" }}>
-                <Button
-                  variant="outlined"
-                  color="success"
-                   size="small"
-                  disabled={checkedItems.length === 0}
-                  onClick={() => handleApprove(1)}
-                >
-                  Approve
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="error"
-                   size="small"
-                  disabled={checkedItems.length === 0}
-                  onClick={() => handleApprove(0)}
-                >
-                  Reject
-                </Button>
+      {data.length === 0 && <Typography sx={{ textAlign: "center", marginTop: '10%' }}>No comments to approve</Typography>}
+      <div style={{ marginTop: isMobile && '12%' }}>
+        {data.map(item => {
+          const bgColor = colorMap[item.apprv_sts];
+          return (
+            <div
+              style={{
+                margin: isMobile ? '0 3%' : "0 10% ",
+                border: "1px solid rgb(0, 0, 0,0.7)",
+                padding: "10px",
+                display: "flex",
+                justifyContent: "space-between",
+                backgroundColor: bgColor,
+
+              }}
+            >
+              <div style={{ display: "flex", gap: isMobile ? '5px' : "20px" }}>
+                {selectedType === "unapproved" && (
+                  <Checkbox
+                    {...label}
+                    checked={checkedItems.includes(item.comment_id)}
+                    onChange={() => handleSelect(item.comment_id)}
+                  />
+                )}
+                <Typography style={{ overflowWrap: "break-word" }}>
+                  {item.text}
+                </Typography>
               </div>
-            )}
-        </div>
-      ))}
+              {checkedItems.includes(item.comment_id) &&
+                checkedItems.length <= 1 && (
+                  <div style={{ display: "flex", gap: isMobile ? '5px' : "20px" }}>
+                    <Button
+                      variant="outlined"
+                      color="success"
+                      size="small"
+                      disabled={checkedItems.length === 0}
+                      onClick={() => handleApprove(1)}
+                    >
+                      Approve
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      size="small"
+                      disabled={checkedItems.length === 0}
+                      onClick={() => handleApprove(0)}
+                    >
+                      Reject
+                    </Button>
+                  </div>
+                )}
+            </div>
+          )
+        })}
       </div>
     </div>
   );
