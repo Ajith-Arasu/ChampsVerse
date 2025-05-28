@@ -24,7 +24,7 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import { grey } from '@mui/material/colors';
+import { grey } from "@mui/material/colors";
 
 const CreateContest = () => {
   const inputRef = useRef(null);
@@ -44,20 +44,27 @@ const CreateContest = () => {
   const { item } = location.state || {};
   const [changedFields, setChangedFields] = useState([]);
   const [tags, setTags] = useState([""]);
+  const [contestCategory, setContestCategory] = useState([""]);
   const [sponsorOptions, setSponsorOptions] = useState([]);
   const [allSponsors, setAllSponsors] = useState([]);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const [selectedType, setSelectedType] = useState('');
+  const [selectedType, setSelectedType] = useState("");
   let createContestresult;
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
   };
 
-  const handleTagChange = (index, event) => {
-    const newTags = [...tags];
-    newTags[index] = event.target.value;
-    setTags(newTags);
+  const handleTagChange = (index, event, type) => {
+    if (type === 'tags') {
+      const newTags = [...tags];
+      newTags[index] = event.target.value;
+      setTags(newTags);
+    } else {
+      const newContestCategory = [...contestCategory];
+      newContestCategory[index] = event.target.value;
+      setContestCategory(newContestCategory);
+    }
   };
   const handleCategoryChange = (index, event) => {
     const newCategories = [...categories];
@@ -65,27 +72,27 @@ const CreateContest = () => {
     setCategories(newCategories);
   };
 
-  const handleAdd = () => {
+  const handleAdd = (type) => {
     if (tags.length < 5) {
       setTags([...tags, ""]);
     }
   };
   const handleAddCategory = () => {
-    if (categories.length < 5) {
-      setCategories([...categories, ""]);
+    if (contestCategory.length < 5) {
+      setContestCategory([...contestCategory, ""]);
     }
   };
+
   const handleRemove = (index) => {
     const newTags = [...tags];
     newTags.splice(index, 1);
     setTags(newTags);
   };
   const handleRemoveCategory = (index) => {
-    const newCategories = [...categories];
-    newCategories.splice(index, 1);
-    setCategories(newCategories);
+    const newContestCategories = [...contestCategory];
+    newContestCategories.splice(index, 1);
+    setContestCategory(newContestCategories);
   };
-
 
   useEffect(() => {
     const fetchSponsors = async () => {
@@ -141,9 +148,8 @@ const CreateContest = () => {
     to: "",
     difficulty_level: "",
     sponsors: "",
-    category: [""],
     lower_age: "",
-    higher_age: ""
+    higher_age: "",
   });
   const isContest = formData.type === "CONTEST";
   const isQuest = formData.type === "MICRO_CONTEST";
@@ -162,7 +168,9 @@ const CreateContest = () => {
           item.difficulty_level !== undefined
             ? Number(item.difficulty_level)
             : "",
-        category: Array.isArray(item.category) ? item.category : [item.category || ""],
+        category: Array.isArray(item.category)
+          ? item.category
+          : [item.category || ""],
         tags: item.tags || "",
         winning_points: item.winning_points || "",
         ref_link: item.ref_link || "",
@@ -217,7 +225,7 @@ const CreateContest = () => {
           "sponsors",
           "ref_link",
           "lower_age",
-          "higher_age"
+          "higher_age",
         ];
         processedForm = Object.fromEntries(
           Object.entries(processedForm).filter(([key]) =>
@@ -264,7 +272,9 @@ const CreateContest = () => {
         const imageURl = await getUrlContestImage(
           extension,
           name,
-          item.contest_id ? item.contest_id : createContestresult.data.contest_id,
+          item.contest_id
+            ? item.contest_id
+            : createContestresult.data.contest_id,
           `${processedForm.type}S`,
           processedForm.type
         );
@@ -516,7 +526,10 @@ const CreateContest = () => {
               <Typography style={{ marginLeft: "5px" }}>
                 Difficulty Level
               </Typography>
-              <FormControl style={{ width: "50%", marginTop: "4px" }} size="small">
+              <FormControl
+                style={{ width: "50%", marginTop: "4px" }}
+                size="small"
+              >
                 <Select
                   displayEmpty
                   name="difficulty_level"
@@ -533,7 +546,9 @@ const CreateContest = () => {
                         </span>
                       );
                     }
-                    const selectedOption = sponsorOptions.find(opt => opt.value === selected);
+                    const selectedOption = sponsorOptions.find(
+                      (opt) => opt.value === selected
+                    );
                     return selectedOption?.label ?? selected;
                   }}
                 >
@@ -559,7 +574,9 @@ const CreateContest = () => {
                 padding: "10px",
               }}
             >
-              <Typography style={{ marginLeft: "5px" }}>Winning Points</Typography>
+              <Typography style={{ marginLeft: "5px" }}>
+                Winning Points
+              </Typography>
               <TextField
                 placeholder="Enter winning_points"
                 name="winning_points"
@@ -642,7 +659,7 @@ const CreateContest = () => {
                 style={{ width: "50%", marginTop: "4px" }}
               />
             </Box>
-            <Box
+            {/* <Box
               style={{
                 width: "75%",
                 borderRadius: "12px",
@@ -683,6 +700,62 @@ const CreateContest = () => {
                   </Box>
                 ))}
               </Box>
+            </Box> */}
+            {/*New Category*/}
+            <Box
+              style={{
+                width: "75%",
+                borderRadius: "12px",
+                minHeight: "100px",
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "white",
+                border: "1px solid rgb(218, 220, 224)",
+                padding: "10px",
+              }}
+            >
+              <Typography style={{ marginLeft: "5px" }}>Category</Typography>
+              <Box>
+                {(formData.contestCategory || contestCategory).map(
+                  (item, index) => (
+                    <Box key={index} sx={{ display: "flex", gap: 2, mb: 2 }}>
+                      <TextField
+                        placeholder="Enter category"
+                        name={`category-${index}`}
+                        value={item?.name}
+                        sx={{ width: "50%", marginTop: "4px" }}
+                        onChange={(e) => handleTagChange(index, e, "category")}
+                        InputProps={{
+                          endAdornment:
+                            index > 0 &&
+                            index === contestCategory.length - 1 &&
+                            contestCategory.length <= 5 ? (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  onClick={() => handleRemoveCategory(index)}
+                                  edge="end"
+                                >
+                                  <img
+                                    src={closeIcon}
+                                    alt="close"
+                                    width="16"
+                                    height="16"
+                                  />
+                                </IconButton>
+                              </InputAdornment>
+                            ) : null,
+                        }}
+                      />
+                      {index === contestCategory.length - 1 &&
+                        contestCategory.length < 5 && (
+                          <Button variant="contained" onClick={handleAddCategory}>
+                            Add
+                          </Button>
+                        )}
+                    </Box>
+                  )
+                )}
+              </Box>
             </Box>
           </>
         )}
@@ -713,61 +786,8 @@ const CreateContest = () => {
                   InputProps={{
                     endAdornment:
                       index > 0 &&
-                        index === tags.length - 1 &&
-                        tags.length <= 5 ? (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() => handleRemove(index)}
-                            edge="end"
-                          >
-                            <img
-                              src={closeIcon}
-                              alt="close"
-                              width="16"
-                              height="16"
-                            />
-                          </IconButton>
-                        </InputAdornment>
-                      ) : null,
-                  }}
-                />
-                {index === tags.length - 1 && tags.length < 5 && (
-                  <Button variant="contained" onClick={handleAdd}>
-                    Add
-                  </Button>
-                )}
-              </Box>
-            ))}
-          </Box>
-        </Box>
-        {/*New Category*/}
-          <Box
-          style={{
-            width: "75%",
-            borderRadius: "12px",
-            minHeight: "100px",
-            display: "flex",
-            flexDirection: "column",
-            backgroundColor: "white",
-            border: "1px solid rgb(218, 220, 224)",
-            padding: "10px",
-          }}
-        >
-          <Typography style={{ marginLeft: "5px" }}>Category</Typography>
-          <Box>
-            {(formData.tags || tags).map((tag, index) => (
-              <Box key={index} sx={{ display: "flex", gap: 2, mb: 2 }}>
-                <TextField
-                  placeholder="Enter tag"
-                  name={`tag-${index}`}
-                  value={tag?.name || tag || ""}
-                  onChange={(e) => handleTagChange(index, e)}
-                  sx={{ width: "50%", marginTop: "4px" }}
-                  InputProps={{
-                    endAdornment:
-                      index > 0 &&
-                        index === tags.length - 1 &&
-                        tags.length <= 5 ? (
+                      index === tags.length - 1 &&
+                      tags.length <= 5 ? (
                         <InputAdornment position="end">
                           <IconButton
                             onClick={() => handleRemove(index)}
@@ -877,7 +897,6 @@ const CreateContest = () => {
           />
         </Box>
 
-
         {/* File Upload */}
         <Box
           style={{
@@ -942,5 +961,3 @@ const CreateContest = () => {
 };
 
 export default CreateContest;
-
-
