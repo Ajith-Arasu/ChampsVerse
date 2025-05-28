@@ -47,6 +47,7 @@ const CreateContest = () => {
   const [sponsorOptions, setSponsorOptions] = useState([]);
   const [allSponsors, setAllSponsors] = useState([]);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [selectedType, setSelectedType] = useState('');
   let createContestresult;
 
   const handleFileChange = (event) => {
@@ -58,10 +59,20 @@ const CreateContest = () => {
     newTags[index] = event.target.value;
     setTags(newTags);
   };
+  const handleCategoryChange = (index, event) => {
+    const newCategories = [...categories];
+    newCategories[index] = event.target.value;
+    setCategories(newCategories);
+  };
 
   const handleAdd = () => {
     if (tags.length < 5) {
       setTags([...tags, ""]);
+    }
+  };
+  const handleAddCategory = () => {
+    if (categories.length < 5) {
+      setCategories([...categories, ""]);
     }
   };
   const handleRemove = (index) => {
@@ -69,6 +80,12 @@ const CreateContest = () => {
     newTags.splice(index, 1);
     setTags(newTags);
   };
+  const handleRemoveCategory = (index) => {
+    const newCategories = [...categories];
+    newCategories.splice(index, 1);
+    setCategories(newCategories);
+  };
+
 
   useEffect(() => {
     const fetchSponsors = async () => {
@@ -124,7 +141,12 @@ const CreateContest = () => {
     to: "",
     difficulty_level: "",
     sponsors: "",
+    category: [""],
+    lower_age: "",
+    higher_age: ""
   });
+  const isContest = formData.type === "CONTEST";
+  const isQuest = formData.type === "MICRO_CONTEST";
 
   useEffect(() => {
     if (item) {
@@ -140,10 +162,12 @@ const CreateContest = () => {
           item.difficulty_level !== undefined
             ? Number(item.difficulty_level)
             : "",
-        category: item.category || "",
+        category: Array.isArray(item.category) ? item.category : [item.category || ""],
         tags: item.tags || "",
         winning_points: item.winning_points || "",
         ref_link: item.ref_link || "",
+        l_age: item.lower_age || "",
+        h_age: item.higher_age || "",
       });
     }
   }, [item]);
@@ -168,7 +192,7 @@ const CreateContest = () => {
         processedForm = {
           ...processedForm,
           difficulty_level: parseInt(formData.difficulty_level, 10),
-          category: formData.category,
+          categories: categories.map((cat) => ({ name: cat })),
           tags: tags.map((tag) => ({ name: tag })),
           sponsors: [
             {
@@ -177,6 +201,8 @@ const CreateContest = () => {
             },
           ],
           winning_points: parseInt(formData.winning_points, 10),
+          l_age: parseInt(formData.lower_age, 10),
+          h_age: parseInt(formData.higher_age, 10),
         };
 
         const allowedFields = [
@@ -190,6 +216,8 @@ const CreateContest = () => {
           "tags",
           "sponsors",
           "ref_link",
+          "lower_age",
+          "higher_age"
         ];
         processedForm = Object.fromEntries(
           Object.entries(processedForm).filter(([key]) =>
@@ -471,97 +499,193 @@ const CreateContest = () => {
         </Box>
 
         {/* Difficulty Level */}
-        <Box
-          style={{
-            width: "75%",
-            borderRadius: "12px",
-            height: "100px",
-            display: "flex",
-            flexDirection: "column",
-            backgroundColor: "white",
-            border: "1px solid rgb(218, 220, 224)",
-            padding: "10px",
-          }}
-        >
-          <Typography style={{ marginLeft: "5px" }}>
-            Difficulty Level
-          </Typography>
-          <FormControl style={{ width: "50%", marginTop: "4px" }} size="small">
-            <Select
-              displayEmpty
-              name="difficulty_level"
-              value={formData.difficulty_level}
-              onChange={handleChange}
-              required
-              style={{ width: "50%", marginTop: "4px" }}
-              disabled={item}
-              renderValue={(selected) => {
-                if (!selected) {
-                  return (
-                    <span style={{ color: grey[500] }}>
-                      Choose difficulty_level
-                    </span>
-                  );
-                }
-                const selectedOption = sponsorOptions.find(opt => opt.value === selected);
-                return selectedOption?.label ?? selected;
+        {isQuest && (
+          <>
+            <Box
+              style={{
+                width: "75%",
+                borderRadius: "12px",
+                height: "100px",
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "white",
+                border: "1px solid rgb(218, 220, 224)",
+                padding: "10px",
               }}
             >
-              {difficultyLevelOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
+              <Typography style={{ marginLeft: "5px" }}>
+                Difficulty Level
+              </Typography>
+              <FormControl style={{ width: "50%", marginTop: "4px" }} size="small">
+                <Select
+                  displayEmpty
+                  name="difficulty_level"
+                  value={formData.difficulty_level}
+                  onChange={handleChange}
+                  required
+                  style={{ width: "50%", marginTop: "4px" }}
+                  disabled={item}
+                  renderValue={(selected) => {
+                    if (!selected) {
+                      return (
+                        <span style={{ color: grey[500] }}>
+                          Choose difficulty_level
+                        </span>
+                      );
+                    }
+                    const selectedOption = sponsorOptions.find(opt => opt.value === selected);
+                    return selectedOption?.label ?? selected;
+                  }}
+                >
+                  {difficultyLevelOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
 
-        {/* Winning Points */}
-        <Box
-          style={{
-            width: "75%",
-            borderRadius: "12px",
-            height: "100px",
-            display: "flex",
-            flexDirection: "column",
-            backgroundColor: "white",
-            border: "1px solid rgb(218, 220, 224)",
-            padding: "10px",
-          }}
-        >
-          <Typography style={{ marginLeft: "5px" }}>Winning Points</Typography>
-          <TextField
-            placeholder="Enter winning_points"
-            name="winning_points"
-            value={formData.winning_points}
-            onChange={handleChange}
-            required
-            style={{ width: "50%", marginTop: "4px" }}
-          />
-        </Box>
+            {/* Winning Points */}
+            <Box
+              style={{
+                width: "75%",
+                borderRadius: "12px",
+                height: "100px",
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "white",
+                border: "1px solid rgb(218, 220, 224)",
+                padding: "10px",
+              }}
+            >
+              <Typography style={{ marginLeft: "5px" }}>Winning Points</Typography>
+              <TextField
+                placeholder="Enter winning_points"
+                name="winning_points"
+                value={formData.winning_points}
+                onChange={handleChange}
+                required
+                style={{ width: "50%", marginTop: "4px" }}
+              />
+            </Box>
+            {/* Category */}
+            <Box
+              style={{
+                width: "75%",
+                borderRadius: "12px",
+                height: "100px",
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "white",
+                border: "1px solid rgb(218, 220, 224)",
+                padding: "10px",
+              }}
+            >
+              <Typography style={{ marginLeft: "5px" }}>Category</Typography>
+              <TextField
+                placeholder="Enter Category"
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                style={{ width: "50%", marginTop: "4px" }}
+              />
+            </Box>
+          </>
+        )}
+        {/* From */}
+        {isContest && (
+          <>
+            <Box
+              style={{
+                width: "75%",
+                borderRadius: "12px",
+                height: "100px",
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "white",
+                border: "1px solid rgb(218, 220, 224)",
+                padding: "10px",
+              }}
+            >
+              <Typography style={{ marginLeft: "5px" }}>From</Typography>
+              <TextField
+                placeholder="From"
+                name="from"
+                value={formData.from}
+                onChange={handleChange}
+                required
+                style={{ width: "50%", marginTop: "4px" }}
+              />
+            </Box>
 
-        {/* Category */}
-        <Box
-          style={{
-            width: "75%",
-            borderRadius: "12px",
-            height: "100px",
-            display: "flex",
-            flexDirection: "column",
-            backgroundColor: "white",
-            border: "1px solid rgb(218, 220, 224)",
-            padding: "10px",
-          }}
-        >
-          <Typography style={{ marginLeft: "5px" }}>Category</Typography>
-          <TextField
-            placeholder="Enter Category"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            style={{ width: "50%", marginTop: "4px" }}
-          />
-        </Box>
+            {/* To */}
+            <Box
+              style={{
+                width: "75%",
+                borderRadius: "12px",
+                height: "100px",
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "white",
+                border: "1px solid rgb(218, 220, 224)",
+                padding: "10px",
+              }}
+            >
+              <Typography style={{ marginLeft: "5px" }}>To</Typography>
+              <TextField
+                placeholder="To"
+                name="to"
+                value={formData.to}
+                onChange={handleChange}
+                required
+                style={{ width: "50%", marginTop: "4px" }}
+              />
+            </Box>
+            <Box
+              style={{
+                width: "75%",
+                borderRadius: "12px",
+                minHeight: "100px",
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "white",
+                border: "1px solid rgb(218, 220, 224)",
+                padding: "10px",
+              }}
+            >
+              <Typography style={{ marginLeft: "5px" }}>Category</Typography>
+              <Box>
+                {formData.category.map((category, index) => (
+                  <Box key={index} sx={{ display: "flex", gap: 2, mb: 2 }}>
+                    <TextField
+                      placeholder="Enter category"
+                      name={`category-${index}`}
+                      value={category}
+                      onChange={(e) => handleCategoryChange(index, e)}
+                      sx={{ width: "50%", marginTop: "4px" }}
+                      InputProps={{
+                        endAdornment:
+                          formData.category.length > 1 ? (
+                            <InputAdornment position="end">
+                              <IconButton onClick={() => handleRemoveCategory(index)} edge="end">
+                                <img src={closeIcon} alt="close" width="16" height="16" />
+                              </IconButton>
+                            </InputAdornment>
+                          ) : null,
+                      }}
+                    />
+                    {index === formData.category.length - 1 && formData.category.length < 5 && (
+                      <Button variant="contained" onClick={handleAddCategory}>
+                        Add
+                      </Button>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          </>
+        )}
 
         {/* Tags */}
         <Box
@@ -577,6 +701,59 @@ const CreateContest = () => {
           }}
         >
           <Typography style={{ marginLeft: "5px" }}>Tags</Typography>
+          <Box>
+            {(formData.tags || tags).map((tag, index) => (
+              <Box key={index} sx={{ display: "flex", gap: 2, mb: 2 }}>
+                <TextField
+                  placeholder="Enter tag"
+                  name={`tag-${index}`}
+                  value={tag?.name || tag || ""}
+                  onChange={(e) => handleTagChange(index, e)}
+                  sx={{ width: "50%", marginTop: "4px" }}
+                  InputProps={{
+                    endAdornment:
+                      index > 0 &&
+                        index === tags.length - 1 &&
+                        tags.length <= 5 ? (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => handleRemove(index)}
+                            edge="end"
+                          >
+                            <img
+                              src={closeIcon}
+                              alt="close"
+                              width="16"
+                              height="16"
+                            />
+                          </IconButton>
+                        </InputAdornment>
+                      ) : null,
+                  }}
+                />
+                {index === tags.length - 1 && tags.length < 5 && (
+                  <Button variant="contained" onClick={handleAdd}>
+                    Add
+                  </Button>
+                )}
+              </Box>
+            ))}
+          </Box>
+        </Box>
+        {/*New Category*/}
+          <Box
+          style={{
+            width: "75%",
+            borderRadius: "12px",
+            minHeight: "100px",
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "white",
+            border: "1px solid rgb(218, 220, 224)",
+            padding: "10px",
+          }}
+        >
+          <Typography style={{ marginLeft: "5px" }}>Category</Typography>
           <Box>
             {(formData.tags || tags).map((tag, index) => (
               <Box key={index} sx={{ display: "flex", gap: 2, mb: 2 }}>
@@ -655,6 +832,51 @@ const CreateContest = () => {
             )}
           </TextField>
         </Box>
+        {/*Lower age*/}
+        <Box
+          style={{
+            width: "75%",
+            borderRadius: "12px",
+            height: "100px",
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "white",
+            border: "1px solid rgb(218, 220, 224)",
+            padding: "10px",
+          }}
+        >
+          <Typography style={{ marginLeft: "5px" }}>Lower Age</Typography>
+          <TextField
+            placeholder="Enter lower_age"
+            name="lower_age"
+            value={formData.lower_age}
+            onChange={handleChange}
+            style={{ width: "50%", marginTop: "4px" }}
+          />
+        </Box>
+        {/*Higher Age*/}
+        <Box
+          style={{
+            width: "75%",
+            borderRadius: "12px",
+            height: "100px",
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "white",
+            border: "1px solid rgb(218, 220, 224)",
+            padding: "10px",
+          }}
+        >
+          <Typography style={{ marginLeft: "5px" }}>Higher Age</Typography>
+          <TextField
+            placeholder="Enter higher_age"
+            name="higher_age"
+            value={formData.higher_age}
+            onChange={handleChange}
+            style={{ width: "50%", marginTop: "4px" }}
+          />
+        </Box>
+
 
         {/* File Upload */}
         <Box
@@ -720,3 +942,5 @@ const CreateContest = () => {
 };
 
 export default CreateContest;
+
+
