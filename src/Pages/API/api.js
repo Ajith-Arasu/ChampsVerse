@@ -542,6 +542,21 @@ const apiCall = () => {
     return result;
   };
 
+  const ApproveQuestWork = async(contestId,type,body)=>{
+    const response = await fetch(
+      `${BASE_URL}/api/v1/contest/entry/approve?contest_id=${contestId}&contest_type=${type}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...body }),
+      }
+    );
+    const result = await response.json();
+    return result;
+  }
+
   return {
     data,
     getPost,
@@ -580,6 +595,7 @@ const apiCall = () => {
     syncQuests,
     getSponsorList,
     updateQuest,
+    ApproveQuestWork
   };
 };
 

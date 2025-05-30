@@ -6,7 +6,6 @@ import Loader from "../Loader/loader";
 
 const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
   const navigate = useNavigate();
-  const CDN_URL = "https://dcp5pbxslacdh.cloudfront.net";
   const [data, setData] = useState([]);
   const [nextPage, setNextPage] = useState(1);
   const [pageKey, setPageKey] = useState("");
@@ -20,6 +19,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
     getBadges,
     getUserDetails,
     addWinnersCategory,
+    ApproveQuestWork,
   } = apiCall();
   const [count, setCount] = useState(20);
   const [refresh, setRefreshPage] = useState(false);
@@ -73,7 +73,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
             badgesData.data
           );
           console.log("updatedPosts", updatedPosts);
-          setData(updatedPosts)
+          setData(updatedPosts);
         }
       }
     } catch (error) {
@@ -86,16 +86,13 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
   const handleQuestPost = async (work_id, user_id, status) => {
     const type = "MICRO_CONTEST";
     const body = {
-      entries: [
-        {
-          work_id: work_id,
-          work_type: "POST",
-          user_id: user_id,
-          entry_status: status,
-        },
-      ],
+      work_id: work_id,
+      work_type: "POST",
+      user_id: user_id,
+      entry_status: status,
     };
-    const response = await addWinnersCategory(contestId, body, type);
+    const response = await ApproveQuestWork(contestId, type, body);
+    window.location.reload();
   };
 
   // const appendBadgesToPosts = (posts, badges, userData) => {
@@ -128,7 +125,6 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
       );
       console.log("matchedBadge", matchedBadge);
       if (matchedBadge && matchedBadge.badge) {
-        
         entry.badge = matchedBadge.badge;
       }
 
