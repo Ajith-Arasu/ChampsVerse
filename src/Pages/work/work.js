@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Card from "../../card/index";
 import Loader from "../Loader/loader";
 
-const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
+const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
   const navigate = useNavigate();
   const CDN_URL = "https://dcp5pbxslacdh.cloudfront.net";
   const [data, setData] = useState([]);
@@ -19,7 +19,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
     addBadges,
     getBadges,
     getUserDetails,
-    addWinnersCategory
+    addWinnersCategory,
   } = apiCall();
   const [count, setCount] = useState(20);
   const [refresh, setRefreshPage] = useState(false);
@@ -27,11 +27,10 @@ const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
   const [entry, setEntry] = useState([]);
   const isQuestPage = location.pathname === "/quests-Works";
 
-
   const handleSearch = async () => {
-    setData([])
+    setData([]);
     const post = await getPost(searchText);
-    setData(post.data)
+    setData(post.data);
   };
 
   const fetchData = async () => {
@@ -39,29 +38,43 @@ const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
     setIsLoading(true);
     try {
       if (pageKey !== null) {
-        let result = await feedData(pageKey, count);
-        const ids = result.data.map((item) => item.post_id).join(",");
-        const userIds = result.data.map((item) => item.user_id).join(",");
-        const userData = await getUserDetails(userIds);
-        if (result?.page) {
-          setPageKey(result?.page);
+        console.log("fetch datta");
+        let userData;
+        let res;
+        let result;
+        console.log("entriesData.length", !entriesData);
+        if (!entriesData) {
+          result = await feedData(pageKey, count);
+          const ids = result.data.map((item) => item.post_id).join(",");
+          const userIds = result.data.map((item) => item.user_id).join(",");
+          userData = await getUserDetails(userIds);
+          if (result?.page) {
+            setPageKey(result?.page);
+          } else {
+            setPageKey(null);
+          }
+          res = await getPost(ids);
+          const reorderedPostData = result.data
+            .map((feedItem) =>
+              res.data.find((post) => post.post_id === feedItem.post_id)
+            )
+            .filter((post) => post !== undefined);
+          setData((prev) => [...prev, ...reorderedPostData]);
         } else {
-          setPageKey(null);
+          console.log("entriesData0008", entriesData);
+          const formatData = transformedData(
+            result && result?.data ? result?.data : entriesData && entriesData
+          );
+          console.log("formatData", formatData);
+          const badgesData = await getBadges(formatData);
+          console.log("badgesData", badgesData);
+          const updatedPosts = appendBadgesToEntries(
+            entriesData,
+            badgesData.data
+          );
+          console.log("updatedPosts", updatedPosts);
+          setData(updatedPosts)
         }
-        let res = await getPost(ids);
-        const formatData = transformedData(result.data);
-        const badgesData = await getBadges(formatData);
-        const updatedPosts = appendBadgesToPosts(
-          res.data,
-          badgesData.data,
-          userData
-        );
-        const reorderedPostData = result.data
-          .map((feedItem) =>
-            updatedPosts.find((post) => post.post_id === feedItem.post_id)
-          )
-          .filter((post) => post !== undefined);
-        setData((prev) => [...prev, ...reorderedPostData]);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -70,50 +83,66 @@ const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
     }
   };
 
-  const handleQuestPost =async(work_id,user_id,status)=>{
-    
-    const type = 'MICRO_CONTEST'
-    const body={
-      "entries": [
+  const handleQuestPost = async (work_id, user_id, status) => {
+    const type = "MICRO_CONTEST";
+    const body = {
+      entries: [
         {
-            "work_id": work_id,
-            "work_type": "POST",
-            "user_id": user_id,
-            "entry_status": status
-        }]
-    }
-    const response = await addWinnersCategory(contestId, body, type)
-  }
+          work_id: work_id,
+          work_type: "POST",
+          user_id: user_id,
+          entry_status: status,
+        },
+      ],
+    };
+    const response = await addWinnersCategory(contestId, body, type);
+  };
 
-  const appendBadgesToPosts = (posts, badges, userData) => {
-    return posts.map((post) => {
-      const matchedBadge = badges.find(
-        (badge) => badge.post_id === post.post_id
+  // const appendBadgesToPosts = (posts, badges, userData) => {
+  //   return posts.map((post) => {
+  //     const matchedBadge = badges.find(
+  //       (badge) => badge.post_id === post.post_id
+  //     );
+  //     if (matchedBadge) {
+  //       if (matchedBadge.badge) {
+  //         post.badge = matchedBadge.badge;
+  //       } else {
+  //         post.badge = null;
+  //       }
+  //     }
+  //     const foundItem = userData.find((item) => item.uid === post.user_id);
+  //     if (foundItem) {
+  //       post.avatar = foundItem.avatar;
+  //       post.defaultAvatar = foundItem.defaultAvatar;
+  //       post.name = foundItem.firstname;
+  //     }
+
+  //     return post;
+  //   });
+  // };
+
+  const appendBadgesToEntries = (entries, badgesData) => {
+    return entries.map((entry) => {
+      const matchedBadge = badgesData.find(
+        (badge) => badge.post_id === entry.postId
       );
-      if (matchedBadge) {
-        if (matchedBadge.badge) {
-          post.badge = matchedBadge.badge;
-        } else {
-          post.badge = null;
-        }
-      }
-      const foundItem = userData.find((item) => item.uid === post.user_id);
-      if (foundItem) {
-        post.avatar = foundItem.avatar;
-        post.defaultAvatar = foundItem.defaultAvatar;
-        post.name = foundItem.firstname
+      console.log("matchedBadge", matchedBadge);
+      if (matchedBadge && matchedBadge.badge) {
+        
+        entry.badge = matchedBadge.badge;
       }
 
-      return post;
+      return entry;
     });
   };
 
   const transformedData = (data) => {
+    console.log("trans data", data);
     const transformed = {
       ids: data.map((item) => {
         return {
-          user_id: item.user_id,
-          post_id: item.post_id,
+          user_id: item.user_id ? item.user_id : item.userID,
+          post_id: item.post_id ? item.post_id : item.postId,
         };
       }),
     };
@@ -121,11 +150,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
   };
 
   useEffect(() => {
-    if (location.pathname === "/quests-Works") {
-      setData(entriesData);
-    } else {
-      fetchData();
-    }
+    fetchData();
   }, [location.pathname, nextPage, entriesData]);
 
   const handleScroll = () => {
@@ -150,6 +175,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
   }, []);
 
   const handleClick = async (index, type) => {
+    console.log("badges - click");
     const resultBD = await addBadges(
       isQuestPage ? data[index].userID : data[index].user_id,
       isQuestPage ? data[index].postId : data[index].post_id,
@@ -158,7 +184,9 @@ const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
       isQuestPage,
       contestId
     );
+    console.log("resultBD", resultBD);
     if (resultBD.statusCode === 200) {
+      console.log("getBadges", getBadges);
       let requestbody = {
         ids: [
           {
@@ -182,6 +210,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
         }
         return item;
       });
+      console.log("updatedData", updatedData);
       setData(updatedData);
     }
   };
@@ -192,7 +221,6 @@ const Work = ({ setUserDetails, setProfilePic, entriesData,contestId }) => {
     setProfilePic(userDetails[0].avatar);
     navigate("/profile", { state: { userDetails } });
   };
-
 
   return (
     <>

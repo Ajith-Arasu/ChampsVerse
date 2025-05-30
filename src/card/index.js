@@ -21,7 +21,11 @@ const Card = ({
   const CDN_URL = process.env.REACT_APP_CDN_URL;
   const isMobile = useMediaQuery("(max-width:600px)");
 
+
+  console.log('data', data)
   return (
+
+
     <>
       <div style={{ margin: '20px' }}></div>
       {isProfilePage && (
