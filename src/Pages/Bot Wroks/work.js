@@ -72,6 +72,8 @@ const Work = ({ setUserDetails, setProfilePic }) => {
         } else {
           setPageKey(null);
         }
+
+        console.log("userData", userData);
         let res = await getPost(ids);
         const formatData = transformedData(result.data);
         const badgesData = await getBadges(formatData);
@@ -101,6 +103,7 @@ const Work = ({ setUserDetails, setProfilePic }) => {
   };
 
   const Card = ({ data, handleClick, handleClickProfile, botWorks }) => {
+    console.log("data0001", data);
     return (
       <>
         <Typography
@@ -174,8 +177,8 @@ const Work = ({ setUserDetails, setProfilePic }) => {
                     ? "calc(100% / 2 - 16px)"
                     : "calc(100% / 5 - 16px)",
                   textAlign: "center",
-                  height: isMobile ? "150px" : "250px",
-                  width: isMobile ? "180px" : "300px",
+                  height: isMobile ? "150px" : "400px",
+                  width: isMobile ? "180px" : "350px",
                   border: "2px solid black",
                   boxShadow: "0 6px 10px rgba(0, 0, 0, 0.1)",
                 }}
@@ -188,6 +191,22 @@ const Work = ({ setUserDetails, setProfilePic }) => {
                     item.files[0].name ? item.files[0].name : item.filename
                   }`}
                 ></img>
+
+                <Box style={{ display: "flex", textAlign: "center", alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
+                  <Avatar
+                    src={
+                      item.defaultAvatar
+                        ? `${CDN_URL}/APP/UserAvatars/${item.avatar}`
+                        : `${CDN_URL}/${item.user_id}/PROFILE/IMAGES/filetype/${item.avatar}`
+                    }
+                    onClick={() => handleClickProfile(item.user_id)}
+                    sx={{
+                      height: isMobile ? 30 : 40,
+                      width: isMobile ? 30 : 40,
+                    }}
+                  ></Avatar>
+                  <Typography>{item.firstname}</Typography>
+                </Box>
                 <Rating
                   name="simple-controlled"
                   value={currentRating}
@@ -219,8 +238,9 @@ const Work = ({ setUserDetails, setProfilePic }) => {
       if (foundItem) {
         post.avatar = foundItem.avatar;
         post.defaultAvatar = foundItem.defaultAvatar;
+        post.firstname = foundItem.firstname;
       }
-
+      console.log("post", post);
       return post;
     });
   };
@@ -304,6 +324,7 @@ const Work = ({ setUserDetails, setProfilePic }) => {
     navigate("/profile", { state: { userId } });
   };
 
+  console.log("data", data);
   return (
     <>
       <Card
