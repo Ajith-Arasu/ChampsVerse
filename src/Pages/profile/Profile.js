@@ -9,11 +9,12 @@ const Profile =()=>{
   const [data, setData] = useState([]);
   const location = useLocation();
   const [nextPage, setNextPage] = useState(1);
-  const {userDetails} = location.state
+  const {userDetails} = location.state;
 
   console.log("userDetails",userDetails)
 
   const {  getPostByUserId,getPost,getBadges,addBadges,getUserDetails } = apiCall();  
+
   useEffect(()=>{
     fetchData();
   },[])

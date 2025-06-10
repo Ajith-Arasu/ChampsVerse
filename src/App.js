@@ -19,14 +19,14 @@ import BotWorks from "./Pages/Bot Wroks/work";
 import Quests from "./Pages/Quests/index";
 import Comments from "./Pages/comments/comments";
 import Achievement from "./Pages/Achievement";
-import Events from './Pages/events';
+import Events from "./Pages/events";
 import CreateContest from "./Pages/Contests/createContest";
-import { ThemeProvider, CssBaseline, createTheme } from '@mui/material';
-import '../src/font.css';
+import { ThemeProvider, CssBaseline, createTheme } from "@mui/material";
+import "../src/font.css";
 
 const theme = createTheme({
   typography: {
-    fontFamily: "'Baloo2'", 
+    fontFamily: "'Baloo2'",
   },
 });
 
@@ -59,9 +59,20 @@ export default function App() {
           <Route path="/deleted-post" element={<DeletedPost />} />
           <Route path="/deleted-user" element={<DeletedUser />} />
           <Route path="/deleted-user/:userId" element={<DeletedUserDetail />} />
-          <Route path="/deleted-user/:userId/works" element={<DeletedUserWorks />} />
+          <Route
+            path="/deleted-user/:userId/works"
+            element={<DeletedUserWorks />}
+          />
           <Route path="/quests-Works" element={<QuestDetail />} />
-          <Route path="/bot-works" element={<BotWorks />} />
+          <Route
+            path="/bot-works"
+            element={
+              <BotWorks
+                setUserDetails={setUserDetails}
+                setProfilePic={setProfilePic}
+              />
+            }
+          />
           <Route path="/quests" element={<Quests />} />
           <Route path="/comments" element={<Comments />} />
           <Route path="/events" element={<Events />} />

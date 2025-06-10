@@ -192,20 +192,35 @@ const Work = ({ setUserDetails, setProfilePic }) => {
                   }`}
                 ></img>
 
-                <Box style={{ display: "flex", textAlign: "center", alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
+                <Box
+                  style={{
+                    display: "flex",
+                    gap: "2px",
+                  }}
+                >
                   <Avatar
                     src={
                       item.defaultAvatar
                         ? `${CDN_URL}/APP/UserAvatars/${item.avatar}`
                         : `${CDN_URL}/${item.user_id}/PROFILE/IMAGES/filetype/${item.avatar}`
                     }
-                    onClick={() => handleClickProfile(item.user_id)}
+                    onClick={() => handleClickProfile(item.user_id, item)}
                     sx={{
                       height: isMobile ? 30 : 40,
                       width: isMobile ? 30 : 40,
                     }}
                   ></Avatar>
-                  <Typography>{item.firstname}</Typography>
+                  <Typography
+                    sx={{
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      width: "90%", 
+                      display: "block",
+                    }}
+                  >
+                    {item.firstname}
+                  </Typography>
                 </Box>
                 <Rating
                   name="simple-controlled"
@@ -213,6 +228,7 @@ const Work = ({ setUserDetails, setProfilePic }) => {
                   onChange={(event, newValue) => {
                     handleRating(newValue, item.post_id);
                   }}
+                  style={{marginBottom: '5px'}}
                 />
               </div>
             );
@@ -318,10 +334,14 @@ const Work = ({ setUserDetails, setProfilePic }) => {
   };
 
   const handleClickProfile = async (userId) => {
-    let userDetails = await getUserDetails(userId);
-    setUserDetails(userDetails);
-    setProfilePic(userDetails[0].avatar);
-    navigate("/profile", { state: { userId } });
+    try {
+      const userDetails = await getUserDetails(userId);
+      setUserDetails(userDetails);
+      setProfilePic(userDetails[0].avatar);
+      navigate("/profile", { state: { userDetails } });
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
   };
 
   console.log("data", data);
