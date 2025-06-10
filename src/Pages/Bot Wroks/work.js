@@ -177,8 +177,8 @@ const Work = ({ setUserDetails, setProfilePic }) => {
                     ? "calc(100% / 2 - 16px)"
                     : "calc(100% / 5 - 16px)",
                   textAlign: "center",
-                  height: isMobile ? "150px" : "400px",
-                  width: isMobile ? "180px" : "350px",
+                  height: isMobile ? "300px" : "400px",
+                  width: isMobile ? "250px" : "350px",
                   border: "2px solid black",
                   boxShadow: "0 6px 10px rgba(0, 0, 0, 0.1)",
                 }}
