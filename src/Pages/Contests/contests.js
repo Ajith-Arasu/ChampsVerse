@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import style from "../Contests/style.module.css";
 import { useEffect, useState } from "react";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Loader/loader";
 import React, { useRef } from "react";
@@ -27,7 +27,7 @@ const Contests = () => {
     getUrlContestImage,
     uploadIMG,
     updateContestStatus,
-  } = apiCall();
+  } = ApiCall();
   const [nextPage, setNextPage] = useState(1);
   const [pageKey, setPageKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);

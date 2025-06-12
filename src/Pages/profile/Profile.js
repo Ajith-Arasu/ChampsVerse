@@ -1,5 +1,5 @@
 import { useEffect,useState } from "react";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import { useLocation } from "react-router-dom";
 import Card from "../../card/index"
 
@@ -13,7 +13,7 @@ const Profile =()=>{
 
   console.log("userDetails",userDetails)
 
-  const {  getPostByUserId,getPost,getBadges,addBadges,getUserDetails } = apiCall();  
+  const {  getPostByUserId,getPost,getBadges,addBadges,getUserDetails } = ApiCall();  
 
   useEffect(()=>{
     fetchData();

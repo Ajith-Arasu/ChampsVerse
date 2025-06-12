@@ -16,7 +16,7 @@ import Easy from "../../asserts/easy.png";
 import Expert from "../../asserts/hard.png";
 import Advanced from "../../asserts/complex.png";
 import Moderate from "../../asserts/moderate.png";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import { useEffect, useState } from "react";
 import threeDotsIcon from "../../asserts/icons8-three-dots-30.png";
 
@@ -26,7 +26,7 @@ const Quests = () => {
   const [nextPage, setNextPage] = useState(1);
   const [pageKey, setPageKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { getQuestList, triggerActivityApi, syncQuests } = apiCall();
+  const { getQuestList, triggerActivityApi, syncQuests } = ApiCall();
   const [quest, setQuest] = useState([]);
   const difficultyLabels = ["Easy", "Moderate", "Advanced", "Expert"];
   const difficultyBg = [Easy, Moderate, Advanced, Expert];

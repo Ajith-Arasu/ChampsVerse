@@ -1,11 +1,11 @@
 import { Avatar, Typography,useMediaQuery } from "@mui/material";
 import style from "../DeletedUser/style.module.css";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const DeletedUser = () => {
-  const { getDeletedUser } = apiCall();
+  const { getDeletedUser } = ApiCall();
   const [pageKey, setPageKey] = useState(""); // Controls pagination
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);

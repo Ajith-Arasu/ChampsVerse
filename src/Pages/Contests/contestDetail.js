@@ -17,7 +17,7 @@ import {
 import style from "../Contests/style.module.css";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import Loader from  "../Loader/loader";
 
 const ContestDetail = () => {
@@ -30,7 +30,7 @@ const ContestDetail = () => {
     getUserDetails,
     addWinnersCategory,
     announceContestResult,
-  } = apiCall();
+  } = ApiCall();
   const [isLoading, setIsLoading] = useState(false);
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   const [open, setOpen] = useState(false);

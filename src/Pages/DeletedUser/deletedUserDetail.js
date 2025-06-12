@@ -3,11 +3,11 @@ import { Typography, Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import DeletedUserWorks from "../DeletedUser/deletedUserWorks";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import DeletedPost from "../DeletedPost/deletedPost";
 
 const DeletedUserDetail = () => {
-  const { getDeletedUserPost, getPost } = apiCall();
+  const { getDeletedUserPost, getPost } = ApiCall();
   const [selectedTab, setSelectedTab] = useState("post");
   const { userId } = useParams();
   const [pageKey, setPageKey] = useState("");

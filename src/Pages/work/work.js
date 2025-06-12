@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import Card from "../../card/index";
 import Loader from "../Loader/loader";
@@ -20,7 +20,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
     getUserDetails,
     addWinnersCategory,
     ApproveQuestWork,
-  } = apiCall();
+  } = ApiCall();
   const [count, setCount] = useState(20);
   const [refresh, setRefreshPage] = useState(false);
   const location = useLocation();

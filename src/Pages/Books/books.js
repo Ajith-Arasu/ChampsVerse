@@ -1,7 +1,7 @@
 import { Typography,useMediaQuery } from "@mui/material";
 import style from "../Books/style.module.css";
 import { useEffect, useState } from "react";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import {useNavigate} from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
@@ -9,7 +9,7 @@ import Loader from  "../Loader/loader";
 
 const Books = () => {
   const navigate = useNavigate();
-  const { getBooksList,getBooksById } = apiCall();
+  const { getBooksList,getBooksById } = ApiCall();
   const [nextPage, setNextPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [pageKey, setPageKey] = useState("");

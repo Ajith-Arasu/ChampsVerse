@@ -1,6 +1,6 @@
 import { useMediaQuery, Typography, Box, Avatar } from "@mui/material";
 import { useState, useEffect } from "react";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import { useLocation } from "react-router-dom";
 import style from "./style.module.css";
 import Works from "../../Pages/work/work";
@@ -10,7 +10,7 @@ const QuestDetail = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
   const [pageKey, setPageKey] = useState("");
   const { getContestEntries, getUserDetails, getPost, addBadges, getBadges } =
-    apiCall();
+    ApiCall();
   const [entriesData, setEntriesData] = useState([]);
   const location = useLocation();
   const { contestId, title } = location.state || {};

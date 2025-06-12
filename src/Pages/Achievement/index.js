@@ -9,14 +9,14 @@ import {
   DialogContent,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import Loader from "../Loader/loader";
 
 const Achievement = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
   const [pagekey, setPagekey] = useState("");
   const { achievementsList, getUserDetails, getPost, approveAchievement } =
-    apiCall();
+    ApiCall();
   const [data, setData] = useState([]);
   const CDN_URL = process.env.REACT_APP_CDN_URL;
   const [checkedItems, setCheckedItems] = useState([]);
