@@ -30,7 +30,7 @@ const Login = () => {
     .then((res) => {
       console.log("Login successful:", res); // res should not be undefined
       alert("Login Successful");
-      navigate('/work')
+      navigate('/home')
     })
     .catch((err) => {
       console.error("Login failed:", err);

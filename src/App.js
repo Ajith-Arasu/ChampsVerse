@@ -1,6 +1,7 @@
 import * as React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./Pages/Login/index";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import Login from "./Pages/Login/index";
+import Home from './Pages/home/index';
 import Work from "./Pages/work/work";
 import Header from "./Pages/Header/header";
 import Profile from "./Pages/profile/Profile";
@@ -21,8 +22,9 @@ import Comments from "./Pages/comments/comments";
 import Achievement from "./Pages/Achievement";
 import Events from "./Pages/events";
 import CreateContest from "./Pages/Contests/createContest";
-import { ThemeProvider, CssBaseline, createTheme } from "@mui/material";
+import { ThemeProvider, CssBaseline, createTheme, Box } from "@mui/material";
 import "../src/font.css";
+import background from './asserts/BGADMIN.png';
 
 const theme = createTheme({
   typography: {
@@ -30,25 +32,32 @@ const theme = createTheme({
   },
 });
 
-export default function App() {
-  const [userDetails, setUserDetails] = useState([]);
-  const [profilePic, setProfilePic] = useState("");
+// Separate AppContent component to use useLocation hook
+const AppContent = ({ userDetails, setUserDetails, profilePic, setProfilePic }) => {
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/";
+  const isHomePage = location.pathname === "/home";
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline /> {/* Applies global CSS reset and theme font */}
-      <Router>
-        <Header userDetails={userDetails} profilePic={profilePic} />
+    <>
+      {!isLoginPage && !isHomePage && <Header userDetails={userDetails} profilePic={profilePic} />}
+      <Box
+        sx={{
+          backgroundImage: !isLoginPage ?`url(${background})` : "none",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          minHeight: "100vh",
+          margin:0,
+          padding: 0,
+        }}
+      >
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/home" element={<Home />}/>
           <Route
             path="/work"
-            element={
-              <Work
-                setUserDetails={setUserDetails}
-                setProfilePic={setProfilePic}
-              />
-            }
+            element={<Work setUserDetails={setUserDetails} setProfilePic={setProfilePic} />}
           />
           <Route path="/profile" element={<Profile />} />
           <Route path="/books" element={<Books />} />
@@ -59,19 +68,11 @@ export default function App() {
           <Route path="/deleted-post" element={<DeletedPost />} />
           <Route path="/deleted-user" element={<DeletedUser />} />
           <Route path="/deleted-user/:userId" element={<DeletedUserDetail />} />
-          <Route
-            path="/deleted-user/:userId/works"
-            element={<DeletedUserWorks />}
-          />
+          <Route path="/deleted-user/:userId/works" element={<DeletedUserWorks />} />
           <Route path="/quests-Works" element={<QuestDetail />} />
           <Route
             path="/bot-works"
-            element={
-              <BotWorks
-                setUserDetails={setUserDetails}
-                setProfilePic={setProfilePic}
-              />
-            }
+            element={<BotWorks setUserDetails={setUserDetails} setProfilePic={setProfilePic} />}
           />
           <Route path="/quests" element={<Quests />} />
           <Route path="/comments" element={<Comments />} />
@@ -79,6 +80,25 @@ export default function App() {
           <Route path="/achievements" element={<Achievement />} />
           <Route path="/createContest/Quest" element={<CreateContest />} />
         </Routes>
+      </Box>
+    </>
+  );
+};
+
+export default function App() {
+  const [userDetails, setUserDetails] = useState([]);
+  const [profilePic, setProfilePic] = useState("");
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <AppContent
+          userDetails={userDetails}
+          setUserDetails={setUserDetails}
+          profilePic={profilePic}
+          setProfilePic={setProfilePic}
+        />
       </Router>
     </ThemeProvider>
   );
