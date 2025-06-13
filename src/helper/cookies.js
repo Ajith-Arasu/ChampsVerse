@@ -1,6 +1,15 @@
-export function setCookie() {
-  console.log("setCookie")
-  
+export function setCookie(name, value, daysToLive) {
+  // Encode value in order to escape semicolons, commas, and whitespace
+  let cookie = name + '=' + encodeURIComponent(value);
+ 
+  if (typeof daysToLive === 'number') {
+    var time = new Date(new Date().setSeconds(new Date().getSeconds() + daysToLive)).toUTCString();
+    /* Sets the max-age attribute so that the cookie expires
+        after the specified number of days */
+    cookie += '; expires=' + time + ';path=/';
+ 
+    document.cookie = cookie;
+  }
 }
  
 export function getCookie(name) {

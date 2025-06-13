@@ -34,6 +34,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
   };
 
   const fetchData = async () => {
+    console.log("fetch data calleed")
     if (isLoading || pageKey === null) return;
     setIsLoading(true);
     try {

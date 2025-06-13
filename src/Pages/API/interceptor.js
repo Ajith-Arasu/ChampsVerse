@@ -1,18 +1,21 @@
-// fetchWithInterceptor.js
 const fetchWithInterceptor = async (url, options = {}) => {
-  // Example: You can log the request or modify headers here
-  console.log("Request URL:", url);
-  console.log("Request Options:", options);
-
   try {
     const response = await fetch(url, options);
 
-    // Global error handling or response logging
     if (!response.ok) {
       console.error("HTTP error:", response.status);
+
       if (response.status === 401) {
-        // Example: token expired, redirect to login
-        console.warn("Unauthorized - maybe redirect to login");
+        console.warn("Unauthorized - logging out");
+
+        // Clear auth data
+        localStorage.removeItem("accessToken");
+        sessionStorage.clear();
+        document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+        // Redirect to login page
+        window.location.href = "/";
+        return;
       }
     }
 
