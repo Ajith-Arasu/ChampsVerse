@@ -88,6 +88,7 @@ const Quests = () => {
       setIsLoading(false);
     }
   };
+  
   useEffect(() => {
     getPost();
   }, []);
