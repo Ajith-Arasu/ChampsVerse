@@ -1,12 +1,12 @@
 import { useParams } from "react-router-dom";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import { useEffect, useState ,useMemo} from "react";
 import { Typography, Button, useMediaQuery } from "@mui/material";
 import style from "../Books/style.module.css";
 
 const Detail = () => {
   const { userId, bookId } = useParams();
-  const { getBooksById, bookPublish, bookPublic } = apiCall();
+  const { getBooksById, bookPublish, bookPublic } = ApiCall();
   const [data, setData] = useState([]);
   const [refetch, setrefetch] = useState(false);
   const CDN_URL = process.env.REACT_APP_CDN_URL;

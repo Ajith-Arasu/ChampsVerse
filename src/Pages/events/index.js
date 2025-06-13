@@ -1,13 +1,13 @@
 import { Radio, Typography, useMediaQuery } from "@mui/material";
 import React from "react";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import Loader from "../Loader/loader";
 
 const Events = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
-  const { getLatestActivity, getUserDetails } = apiCall();
+  const { getLatestActivity, getUserDetails } = ApiCall();
   const [nextPage, setNextPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [pagekey, setPagekey] = useState("");

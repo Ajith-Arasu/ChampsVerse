@@ -2,12 +2,12 @@ import { Typography,useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import style from "../StorageConsumption/style.module.css";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import { useEffect, useState } from "react";
 
 const StorageConsumption = () => {
   const [pageKey, setPageKey] = useState("");
-  const { getStorageConsumption, getUserDetails } = apiCall();
+  const { getStorageConsumption, getUserDetails } = ApiCall();
   const [isLoading, setIsLoading] = useState(false);
   const [nextPage, setNextPage] = useState(1);
   const [data, setData] = useState([]);

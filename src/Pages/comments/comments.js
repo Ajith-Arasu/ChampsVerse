@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import { Typography, Button, Checkbox, useMediaQuery } from "@mui/material";
 import Loader from "../Loader/loader";
 
 const Comments = () => {
-  const { getCommentsList, approveComments } = apiCall();
+  const { getCommentsList, approveComments } = ApiCall();
   const [isLoading, setIsLoading] = useState(false);
   const [nextPage, setNextPage] = useState(1);
   const [pageKey, setPageKey] = useState("");

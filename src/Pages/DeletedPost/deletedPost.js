@@ -1,5 +1,5 @@
 import style from "../DeletedPost/style.module.css";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import { useEffect, useState } from "react";
 import {
   Avatar,
@@ -23,7 +23,7 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
     deletePostJson,
     deletedUserS3Post,
     deletedUserPostJson,
-  } = apiCall();
+  } = ApiCall();
   const [data, setData] = useState([]);
   const CDN_URL = process.env.REACT_APP_CDN_URL;
   const label = { inputProps: { "aria-label": "Checkbox demo" } };

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { fromBlob, blobToURL } from "image-resize-compress";
-import apiCall from "../API/api";
+import ApiCall from "../API/api";
 import Loader from "../Loader/loader";
 import style from "../Contests/style.module.css";
 import closeIcon from "../../asserts/close.png";
@@ -34,7 +34,7 @@ const CreateContest = () => {
   const [file, setFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { createContest, getUrlContestImage, getSponsorList, updateQuest } =
-    apiCall();
+    ApiCall();
   const [selectedFile, setSelectedFile] = useState(null);
   const [nextPage, setNextPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
