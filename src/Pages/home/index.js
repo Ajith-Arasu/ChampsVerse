@@ -22,8 +22,9 @@ const Home = () => {
   ];
 
   const handlestats = (nav) => {
+    console.log("nav",nav)
     if (nav !== null) {
-      navigate("/nav");
+      navigate(`/${nav}`);
     }
   };
 
