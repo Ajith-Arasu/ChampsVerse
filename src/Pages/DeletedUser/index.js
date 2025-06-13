@@ -58,7 +58,7 @@ const DeletedUser = () => {
   }, []); // Runs only once on mount
 
   const handleDetail = (userId) => {
-    navigate(`/deleted-user/${userId}`,{state:{
+    navigate(`/deleteduser/${userId}`,{state:{
       userData:data
     },});
   };

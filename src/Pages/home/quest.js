@@ -65,7 +65,7 @@ const Quests = () => {
             style={{ fontSize: "32px", fontWeight: 800, color: "white" }}
           >{`Quests (12)`}</Typography>
 
-          <Typography style={{fontSize: "12px", fontWeight: 400, color: "white", marginRight: '8%'}}>View All</Typography>
+          <Typography style={{fontSize: "12px", fontWeight: 400, color: "white", marginRight: '8%', cursor: 'pointer'}} onClick={() => navigate("/quests")}>View All</Typography>
         </Box>
         {isLoading && <Loader />}
         <div>
@@ -100,9 +100,10 @@ const Quests = () => {
                   style={{
                     display: "flex",
                     flexDirection: "column",
-                    height: isMobile ? "250px" : "390px",
+                    height: isMobile ? "250px" : "350px",
                     width: isMobile ? "150px" : "220px",
                     flexShrink: 0,
+                    cursor: 'pointer'
                   }}
                 >
                   <div
@@ -265,7 +266,7 @@ const Quests = () => {
                           borderRadius: "20px",
                           padding: "5px 10px",
                           width: "40%",
-                          margin: "8% 30%",
+                          margin: "0 30%",
                         }}
                       >
                         <Typography

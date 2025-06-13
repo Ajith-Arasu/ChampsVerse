@@ -65,13 +65,13 @@ const AppContent = ({ userDetails, setUserDetails, profilePic, setProfilePic }) 
           <Route path="/storage-consumption" element={<StorageConsumption />} />
           <Route path="/contests" element={<Contests />} />
           <Route path="/contestdetail" element={<ContestDetail />} />
-          <Route path="/deleted-post" element={<DeletedPost />} />
-          <Route path="/deleted-user" element={<DeletedUser />} />
+          <Route path="/deletedpost" element={<DeletedPost />} />
+          <Route path="/deleteduser" element={<DeletedUser />} />
           <Route path="/deleted-user/:userId" element={<DeletedUserDetail />} />
           <Route path="/deleted-user/:userId/works" element={<DeletedUserWorks />} />
           <Route path="/quests-Works" element={<QuestDetail />} />
           <Route
-            path="/bot-works"
+            path="/latestworks"
             element={<BotWorks setUserDetails={setUserDetails} setProfilePic={setProfilePic} />}
           />
           <Route path="/quests" element={<Quests />} />
