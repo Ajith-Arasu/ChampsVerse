@@ -12,13 +12,20 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
+  const [searchKey, setSearchKey] = useState("");
 
   const statsData = [
-    { label: "Total Users", value: "50,000" },
-    { label: "Total Books", value: "10,000" },
-    { label: "Total Achievements", value: "2,500" },
-    { label: "Total Works", value: "8,000" },
+    { label: "Total Users", value: "50,000", nav: null },
+    { label: "Total Works", value: "8,000", nav: "work" },
+    { label: "Total Books", value: "10,000", nav: "books" },
+    { label: "Total Achievements", value: "2,500", nav: "achievements" },
   ];
+
+  const handlestats = (nav) => {
+    if (nav !== null) {
+      navigate("/nav");
+    }
+  };
 
   const tabs = [
     "Home",
@@ -34,7 +41,7 @@ const Home = () => {
 
   const handleTab = (tab) => {
     setActiveTab(tab);
-    navigate(`/${tab.toLowerCase()}`);
+    navigate(`/${tab.toLowerCase().replace(/\s+/g, "")}`);
   };
 
   return (
@@ -42,8 +49,8 @@ const Home = () => {
       <Box sx={{ width: "25%" }}>
         <Box
           sx={{
-            width: "120%", // Set appropriate width
-            height: "800px", // Set appropriate height
+            width: "125%", // Set appropriate width
+            height: "750px", // Set appropriate height
             backgroundImage: `url(${menuBG})`,
             backgroundSize: "100% 109%",
             backgroundRepeat: "no-repeat",
@@ -55,7 +62,7 @@ const Home = () => {
             component="img"
             src={logo}
             alt="Logo"
-            sx={{ width: "230px", marginTop: "10%", marginLeft: "15%" }}
+            sx={{ width: "200px", marginTop: "5%", marginLeft: "15%" }}
           />
           <Box
             sx={{
@@ -84,7 +91,7 @@ const Home = () => {
           </Box>
         </Box>
       </Box>
-      <Box sx={{ width: "75%" }}>
+      <Box sx={{ width: "80%" }}>
         <Box
           sx={{ display: "flex", gap: "3px", justifyContent: "space-between" }}
         >
@@ -107,7 +114,8 @@ const Home = () => {
               <TextField
                 placeholder="Search Something"
                 variant="standard"
-                value={""}
+                value={searchKey}
+                onChange={(e) => setSearchKey(e.target.value)}
                 fullWidth
                 InputProps={{
                   disableUnderline: true,
@@ -153,6 +161,10 @@ const Home = () => {
                 backgroundSize: "100% 100%",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
+                cursor: 'pointer'
+              }}
+              onClick={() => {
+                handlestats(stat.nav);
               }}
             >
               <Box

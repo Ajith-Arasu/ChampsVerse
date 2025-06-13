@@ -40,7 +40,7 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
   const [disabledJson, setDisabledJson] = useState(false);
   const [selectionAlert, setSelectionAlert] = useState(false);
   const location = useLocation();
-  const isDeletedPost = location.pathname === "/deleted-post";
+  const isDeletedPost = location.pathname === "/deletedpost";
    const isMobile = useMediaQuery('(max-width:600px)');
 
   const handleClick = (type) => {
@@ -144,7 +144,7 @@ const DeletedPost = ({ userDeletedData, userId, selectedTab }) => {
     }
   };
   useEffect(() => {
-    if (location.pathname === "/deleted-post") {
+    if (location.pathname === "/deletedpost") {
       getPost();
     } else {
       setData(userDeletedData);
