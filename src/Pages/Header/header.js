@@ -13,6 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import style from "../Header/style.module.css";
 import menu from "../../asserts/menu.png";
 import { useState } from "react";
+import logo from "../../asserts/Logo-CV.png";
 
 const Header = ({ userDetails }) => {
   const location = useLocation();
@@ -47,7 +48,7 @@ const Header = ({ userDetails }) => {
         >
           <Toolbar>
             <img
-              src="/cv.png"
+              src={logo}
               alt="CV"
               style={{ width: isMobile ? "250px" : "250px", cursor: "pointer" }}
               onClick={() => handleClick("work")}
