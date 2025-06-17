@@ -13,6 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import style from "../Header/style.module.css";
 import menu from "../../asserts/menu.png";
 import { useState } from "react";
+import Logo from '../../asserts/Logo-CV.png'
 
 const Header = ({ userDetails }) => {
   const location = useLocation();
@@ -47,7 +48,7 @@ const Header = ({ userDetails }) => {
         >
           <Toolbar>
             <img
-              src="/cv.png"
+              src={Logo}
               alt="CV"
               style={{ width: isMobile ? "250px" : "250px", cursor: "pointer" }}
               onClick={() => handleClick("work")}
@@ -177,30 +178,37 @@ const Header = ({ userDetails }) => {
                 "aria-labelledby": "basic-button",
               }}
             >
-              {isMobile && (
-                <>
-                  <MenuItem onClick={() => handleClick("work")}>Works</MenuItem>
-                  <MenuItem onClick={() => handleClick("books")}>
-                    Books
-                  </MenuItem>
-                  <MenuItem onClick={() => handleClick("contests")}>
-                    Contests
-                  </MenuItem>
-                  <MenuItem onClick={() => handleClick("quests")}>
-                    Quest
-                  </MenuItem>
-                  <MenuItem onClick={() => handleClick("storage-consumption")}>
-                    Storage consumption
-                  </MenuItem>{" "}
-                </>
-              )}
-              <MenuItem onClick={() => handleClick("deleted-user")}>
+              {isMobile && [
+                <MenuItem key="work" onClick={() => handleClick("work")}>
+                  Works
+                </MenuItem>,
+                <MenuItem key="books" onClick={() => handleClick("books")}>
+                  Books
+                </MenuItem>,
+                <MenuItem
+                  key="contests"
+                  onClick={() => handleClick("contests")}
+                >
+                  Contests
+                </MenuItem>,
+                <MenuItem key="quests" onClick={() => handleClick("quests")}>
+                  Quest
+                </MenuItem>,
+                <MenuItem
+                  key="storage"
+                  onClick={() => handleClick("storage-consumption")}
+                >
+                  Storage consumption
+                </MenuItem>,
+              ]}
+
+              <MenuItem onClick={() => handleClick("deleteduser")}>
                 Deleted User
               </MenuItem>
-              <MenuItem onClick={() => handleClick("deleted-post")}>
+              <MenuItem onClick={() => handleClick("deletedpost")}>
                 Deleted Post
               </MenuItem>
-              <MenuItem onClick={() => handleClick("bot-works")}>
+              <MenuItem onClick={() => handleClick("latestworks")}>
                 Latest Works
               </MenuItem>
               <MenuItem onClick={() => handleClick("comments")}>
