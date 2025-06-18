@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography,useMediaQuery } from "@mui/material";
 import background from "../../asserts/LoginPageBG.png";
 import overlayImg from "../../asserts/fileds.png";
 import loginBtn from "../../asserts/LoginBtn.png";
@@ -6,14 +6,18 @@ import logo from "../../asserts/Logo-CV.png";
 import ApiCall from "../API/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import mobileLoginBG from "../../asserts/mobileLoginBG.png";
+import mobileFields from '../../asserts/mobfields.png';
+import mobileLoginBtn from '../../asserts/MobLoginBtn.png'
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = ApiCall();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width:600px)");
 
-  const handleLogin =async () => {
+  const handleLogin = async () => {
     const credentials = {
       email: username.trim(),
       password: password.trim(),
@@ -27,16 +31,15 @@ const Login = () => {
     console.log("credentials", credentials);
 
     login(credentials)
-    .then((res) => {
-      console.log("Login successful:", res); // res should not be undefined
-      alert("Login Successful");
-      navigate('/home')
-    })
-    .catch((err) => {
-      console.error("Login failed:", err);
-      alert("Login failed. Please check credentials.");
-    });
-    
+      .then((res) => {
+        console.log("Login successful:", res); // res should not be undefined
+        alert("Login Successful");
+        navigate("/home");
+      })
+      .catch((err) => {
+        console.error("Login failed:", err);
+        alert("Login failed. Please check credentials.");
+      });
   };
 
   const centerStyle = (top, left) => ({
@@ -47,9 +50,9 @@ const Login = () => {
   });
 
   const overlayBoxStyle = {
-    width: "390px",
-    height: "54px",
-    backgroundImage: `url(${overlayImg})`,
+    width: isMobile? "250px":"390px",
+    height: isMobile?'auto': "54px",
+    backgroundImage:  `url(${overlayImg})`,
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
@@ -62,25 +65,27 @@ const Login = () => {
   return (
     <Box
       sx={{
-        backgroundImage: `url(${background})`,
+        backgroundImage: isMobile
+          ? `url(${mobileLoginBG})`
+          : `url(${background})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
+        backgroundPosition: isMobile? 'none':"center",
         width: "100vw",
         height: "100vh",
         position: "relative",
       }}
     >
       {/* Logo */}
-      <Box sx={centerStyle("10%", "12%")}>
-        <Box component="img" src={logo} alt="Logo" sx={{ width: "230px" }} />
+      <Box sx={centerStyle("10%", isMobile? '48%':"12%")}>
+        <Box component="img" src={logo} alt="Logo" sx={{ width: isMobile? '150px':"230px" }} />
       </Box>
 
       {/* Login Text */}
       <Typography
         sx={{
-          ...centerStyle("35%", "9%"),
-          fontSize: "32px",
+          ...centerStyle(isMobile? '70%':"35%", isMobile? '18%':"9%"),
+          fontSize: isMobile? '26px':"32px",
           fontWeight: 800,
           color: "white",
           fontFamily: "Baloo2",
@@ -90,7 +95,7 @@ const Login = () => {
       </Typography>
 
       {/* Username Field */}
-      <Box sx={centerStyle("50%", "20%")}>
+      <Box sx={centerStyle(isMobile? '77%':"50%", isMobile? '47%':"20%")}>
         <Box sx={overlayBoxStyle}>
           <TextField
             variant="standard"
@@ -115,7 +120,7 @@ const Login = () => {
       </Box>
 
       {/* Password Field */}
-      <Box sx={centerStyle("65%", "20%")}>
+      <Box sx={centerStyle(isMobile? '85%':"65%", isMobile? '47%':"20%")}>
         <Box sx={overlayBoxStyle}>
           <TextField
             variant="standard"
@@ -137,11 +142,11 @@ const Login = () => {
 
       {/* Login Button */}
       <Button
-        sx={centerStyle("80%", "12%")}
+        sx={centerStyle(isMobile?'96%':"95%", isMobile?"27%":"12%")}
         disableRipple
         onClick={handleLogin}
       >
-        <Box component="img" src={loginBtn} alt="Login Button" />
+        <Box component="img" src={isMobile? mobileLoginBtn:loginBtn} alt="Login Button" />
       </Button>
     </Box>
   );
