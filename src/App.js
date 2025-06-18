@@ -2,6 +2,7 @@ import * as React from "react";
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import Login from "./Pages/Login/index";
 import Home from './Pages/home/index';
+import HeaderNew from './component/header';
 import Work from "./Pages/work/work";
 import Header from "./Pages/Header/header";
 import Profile from "./Pages/profile/Profile";
@@ -25,6 +26,7 @@ import CreateContest from "./Pages/Contests/createContest";
 import { ThemeProvider, CssBaseline, createTheme, Box } from "@mui/material";
 import "../src/font.css";
 import background from './asserts/BGADMIN.png';
+import Works from './Pages/Works/index'
 
 const theme = createTheme({
   typography: {
@@ -32,15 +34,16 @@ const theme = createTheme({
   },
 });
 
-// Separate AppContent component to use useLocation hook
+
 const AppContent = ({ userDetails, setUserDetails, profilePic, setProfilePic }) => {
   const location = useLocation();
   const isLoginPage = location.pathname === "/";
   const isHomePage = location.pathname === "/home";
+  const isWorksPage = location.pathname === "/works";
 
   return (
     <>
-      {!isLoginPage && !isHomePage && <Header userDetails={userDetails} profilePic={profilePic} />}
+      {!isLoginPage && !isHomePage && !isWorksPage && <Header userDetails={userDetails} profilePic={profilePic} />}
       <Box
         sx={{
           backgroundImage: !isLoginPage ?`url(${background})` : "none",
@@ -52,6 +55,7 @@ const AppContent = ({ userDetails, setUserDetails, profilePic, setProfilePic }) 
           padding: 0,
         }}
       >
+        {isWorksPage && <HeaderNew/>}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />}/>
@@ -59,6 +63,9 @@ const AppContent = ({ userDetails, setUserDetails, profilePic, setProfilePic }) 
             path="/work"
             element={<Work setUserDetails={setUserDetails} setProfilePic={setProfilePic} />}
           />
+          <Route
+            path="/works"
+            element={<Works/>}/>
           <Route path="/profile" element={<Profile />} />
           <Route path="/books" element={<Books />} />
           <Route path="/booksdetail/:userId/:bookId" element={<Detail />} />

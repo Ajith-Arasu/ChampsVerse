@@ -13,7 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import style from "../Header/style.module.css";
 import menu from "../../asserts/menu.png";
 import { useState } from "react";
-import Logo from '../../asserts/Logo-CV.png'
+import logo from "../../asserts/Logo-CV.png";
 
 const Header = ({ userDetails }) => {
   const location = useLocation();

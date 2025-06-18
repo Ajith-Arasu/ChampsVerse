@@ -25,13 +25,11 @@ const Quests = () => {
   const Expert =
     " radial-gradient(96.46% 96.46% at 50% 50%, rgba(213, 0, 0, 0.8) 0%, rgba(255, 0, 0, 0.8) 100%)";
 
-  const handleClick = (quest) => {
-    setSelectedQuest(quest);
-    setDialogOpen(true);
-    navigate(`/quest?q=${quest.contest_code}`, {
-      state: { quest },
-    });
+  
+  const handleClick = (contestId, title) => {
+    navigate("/quests-Works", { state: { contestId, title } });
   };
+  
 
   const difficultyLabels = ["Easy", "Moderate", "Advanced", "Expert"];
 
@@ -96,7 +94,7 @@ const Quests = () => {
               return (
                 <div
                   key={index}
-                  onClick={() => handleClick(item)}
+                  onClick={() => handleClick(item.contest_id, item.title)}
                   style={{
                     display: "flex",
                     flexDirection: "column",
@@ -251,8 +249,8 @@ const Quests = () => {
                           height: isMobile ? "20%" : "30%",
                         }}
                       >
-                        {item.description.length > (isMobile ? 60 : 100)
-                          ? item.description.slice(0, isMobile ? 60 : 100) +
+                        {item.description.length > (isMobile ? 60 : 60)
+                          ? item.description.slice(0, isMobile ? 60 : 60) +
                             "..."
                           : item.description}
                       </Typography>
