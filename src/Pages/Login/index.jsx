@@ -95,7 +95,7 @@ const Login = () => {
       </Typography>
 
       {/* Username Field */}
-      <Box sx={centerStyle(isMobile? '67%':"50%", isMobile? '37%':"20%")}>
+      <Box sx={centerStyle(isMobile? '67%':"50%", isMobile? '42%':"20%")}>
         <Box sx={overlayBoxStyle}>
           <TextField
             variant="standard"
@@ -120,7 +120,7 @@ const Login = () => {
       </Box>
 
       {/* Password Field */}
-      <Box sx={centerStyle(isMobile? '75%':"65%", isMobile? '37%':"20%")}>
+      <Box sx={centerStyle(isMobile? '75%':"65%", isMobile? '42%':"20%")}>
         <Box sx={overlayBoxStyle}>
           <TextField
             variant="standard"
@@ -142,7 +142,7 @@ const Login = () => {
 
       {/* Login Button */}
       <Button
-        sx={centerStyle(isMobile?'86%':"80%", isMobile?"27%":"12%")}
+        sx={centerStyle(isMobile?'82%':"80%", isMobile?"27%":"12%")}
         disableRipple
         onClick={handleLogin}
       >
