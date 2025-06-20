@@ -41,10 +41,11 @@ const AppContent = ({ userDetails, setUserDetails, profilePic, setProfilePic }) 
   const isHomePage = location.pathname === "/home";
   const isWorksPage = location.pathname === "/works";
   const isStorage = location.pathname === '/storage-consumption'
+  const isQuestWorks = location.pathname === '/quests-Works'
 
   return (
     <>
-      {!isLoginPage && !isHomePage && !isWorksPage && !isStorage && <Header userDetails={userDetails} profilePic={profilePic} />}
+      {!isLoginPage && !isHomePage && !isWorksPage && !isStorage && !isQuestWorks && <Header userDetails={userDetails} profilePic={profilePic} />}
       <Box
         sx={{
           backgroundImage: !isLoginPage ?`url(${background})` : "none",
@@ -56,7 +57,7 @@ const AppContent = ({ userDetails, setUserDetails, profilePic, setProfilePic }) 
           padding: 0,
         }}
       >
-        {isWorksPage && <HeaderNew/>}
+        {(isWorksPage || isQuestWorks) && <HeaderNew/>}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />}/>

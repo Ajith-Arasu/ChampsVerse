@@ -157,8 +157,8 @@ const QuestWorks = () => {
   console.log("entriesData", entriesData);
   return (
     <div style={{ marginLeft: "5%", marginTop: "3%" }}>
-      <Typography style={{ fontSize: "32px", fontWeight: 800, color: "white" }}>
-        Works ({entriesData.length})
+      <Typography style={{ fontSize: "32px", fontWeight: 800, color: "white" , textAlign: 'center'}}>
+        {title}
       </Typography>
       {isLoading && <Loader />}
       <div
