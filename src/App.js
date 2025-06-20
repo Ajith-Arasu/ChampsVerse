@@ -8,7 +8,7 @@ import Header from "./Pages/Header/header";
 import Profile from "./Pages/profile/Profile";
 import Books from "./Pages/Books/books";
 import Detail from "./Pages/Books/detail";
-import StorageConsumption from "./Pages/StorageConsumption/storageConsumption";
+import StorageConsumption from "./Pages/Users/index";
 import Contests from "./Pages/Contests/contests";
 import ContestDetail from "./Pages/Contests/contestDetail";
 import { useState } from "react";
@@ -16,7 +16,7 @@ import DeletedPost from "./Pages/DeletedPost/deletedPost";
 import DeletedUser from "./Pages/DeletedUser/index";
 import DeletedUserDetail from "./Pages/DeletedUser/deletedUserDetail";
 import DeletedUserWorks from "./Pages/DeletedUser/deletedUserWorks";
-import QuestDetail from "./Pages/Quests/questDetail";
+import QuestDetail from "./Pages/Quests/questWorks";
 import BotWorks from "./Pages/Bot Wroks/work";
 import Quests from "./Pages/Quests/index";
 import Comments from "./Pages/comments/comments";
@@ -40,10 +40,11 @@ const AppContent = ({ userDetails, setUserDetails, profilePic, setProfilePic }) 
   const isLoginPage = location.pathname === "/";
   const isHomePage = location.pathname === "/home";
   const isWorksPage = location.pathname === "/works";
+  const isStorage = location.pathname === '/storage-consumption'
 
   return (
     <>
-      {!isLoginPage && !isHomePage && !isWorksPage && <Header userDetails={userDetails} profilePic={profilePic} />}
+      {!isLoginPage && !isHomePage && !isWorksPage && !isStorage && <Header userDetails={userDetails} profilePic={profilePic} />}
       <Box
         sx={{
           backgroundImage: !isLoginPage ?`url(${background})` : "none",
