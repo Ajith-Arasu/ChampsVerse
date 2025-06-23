@@ -14,6 +14,7 @@ const Card = ({
   setSearchText,
   searchText,
   handlename,
+  userDetails,
 }) => {
   const location = useLocation();
   const isProfilePage = location.pathname === "/profile";
@@ -22,15 +23,12 @@ const Card = ({
   const isMobile = useMediaQuery("(max-width:600px)");
 
 
-  console.log('data', data)
   return (
-
-
     <>
-      <div style={{ margin: '20px' }}></div>
+      <div style={{ margin: "20px" }}></div>
       {isProfilePage && (
         <a
-          href={`https://champsverse.com/${handlename}`}
+          href={`https://champsverse.com/user/${handlename}`}
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: "#000", margin: "20px" }}
@@ -77,6 +75,87 @@ const Card = ({
           </button>
         </div>
       </div>
+      {!isMobile && userDetails && (
+        <div style={{ display: "flex", gap: "18px", margin: "5% 10%" }}>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <Typography>FirstName : </Typography>
+            <Typography style={{ color: "white" }}>
+              {userDetails[0].firstname}
+            </Typography>
+          </div>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <Typography>Handle :</Typography>
+            <Typography style={{ color: "white" }}>
+              {userDetails[0].handle}
+            </Typography>
+          </div>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <Typography>Email : </Typography>
+            <Typography style={{ color: "white" }}>
+              {userDetails[0].email}
+            </Typography>
+          </div>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <Typography>DOB : </Typography>
+            <Typography style={{ color: "white" }}>
+              {userDetails[0].dob}
+            </Typography>
+          </div>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <Typography>Age : </Typography>
+            <Typography style={{ color: "white" }}>
+              {userDetails[0].dob}
+            </Typography>
+          </div>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <Typography>Gender :</Typography>
+            <Typography style={{ color: "white" }}>
+              {userDetails[0].gender}
+            </Typography>
+          </div>
+        </div>
+      )}
+      {isMobile && userDetails && (
+        <div style={{ margin: "4% 5%" }}>
+          <div style={{ display: "flex", gap: "25px" }}>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <Typography>FirstName : </Typography>
+              <Typography style={{ color: "white" }}>
+                {userDetails[0].firstname}
+              </Typography>
+            </div>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <Typography>Handle :</Typography>
+              <Typography style={{ color: "white" }}>
+                {userDetails[0].handle}
+              </Typography>
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: "2px" }}>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <Typography style={{}}>Email : </Typography>
+              <Typography style={{ color: "white" }}>
+                {userDetails[0].email}
+              </Typography>
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: "2px" }}>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <Typography>DOB : </Typography>
+              <Typography style={{ color: "white" }}>
+                {userDetails[0].dob}
+              </Typography>
+            </div>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <Typography>Age : </Typography>
+              <Typography style={{ color: "white" }}>
+                {userDetails[0].dob}
+              </Typography>
+            </div>
+           
+          </div>
+        </div>
+      )}
       {data === undefined || data === null ? (
         <Box
           sx={{
@@ -110,7 +189,6 @@ const Card = ({
           >
             No Entries
           </Typography>
-
         </Box>
       ) : (
         <Box>
@@ -129,9 +207,11 @@ const Card = ({
                     <div className={style["workCard-top"]}>
                       <div className={style["workCard-left"]}>
                         <img
-                          src={`${CDN_URL}/${!isQuestPage ? item.user_id : item.userID
-                            }/WORKS/IMAGES/medium/${!isQuestPage ? item.files[0].name : item.filename
-                            }`}
+                          src={`${CDN_URL}/${
+                            !isQuestPage ? item.user_id : item.userID
+                          }/WORKS/IMAGES/medium/${
+                            !isQuestPage ? item.files[0].name : item.filename
+                          }`}
                         />
                       </div>
 
@@ -152,9 +232,9 @@ const Card = ({
                                   cursor: "pointer",
                                   opacity:
                                     item.badge === "dmd" ||
-                                      item.badge === "mp" ||
-                                      item.badge === "wnd" ||
-                                      item.badge === "hof"
+                                    item.badge === "mp" ||
+                                    item.badge === "wnd" ||
+                                    item.badge === "hof"
                                       ? 1.0
                                       : 0.2,
                                 }}
@@ -370,8 +450,8 @@ const Card = ({
                               item.entry_status === 3
                                 ? "green"
                                 : item.entry_status === 5
-                                  ? "orange"
-                                  : "red",
+                                ? "orange"
+                                : "red",
                             width: "100%",
                             textAlign: "center",
                             color: "white",
@@ -381,8 +461,8 @@ const Card = ({
                             {item.entry_status === 3
                               ? "Approved"
                               : item.entry_status === 5
-                                ? "Pending For Approval"
-                                : "Rejected"}
+                              ? "Pending For Approval"
+                              : "Rejected"}
                           </Typography>
                         </div>
                       )}

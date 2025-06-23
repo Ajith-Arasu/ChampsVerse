@@ -55,6 +55,12 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
             setPageKey(null);
           }
           res = await getPost(ids);
+          const formatData = transformedData(
+            result && result?.data 
+          );
+          const badgesData = await getBadges(formatData);
+          const updateData = appendBadgesToPosts(res.data,badgesData.data,userData)
+          
           const reorderedPostData = result.data
             .map((feedItem) =>
               res.data.find((post) => post.post_id === feedItem.post_id)
@@ -66,14 +72,11 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
           const formatData = transformedData(
             result && result?.data ? result?.data : entriesData && entriesData
           );
-          console.log("formatData", formatData);
           const badgesData = await getBadges(formatData);
-          console.log("badgesData", badgesData);
           const updatedPosts = appendBadgesToEntries(
             entriesData,
             badgesData.data
           );
-          console.log("updatedPosts", updatedPosts);
           setData(updatedPosts);
         }
       }
@@ -96,28 +99,27 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
     window.location.reload();
   };
 
-  // const appendBadgesToPosts = (posts, badges, userData) => {
-  //   return posts.map((post) => {
-  //     const matchedBadge = badges.find(
-  //       (badge) => badge.post_id === post.post_id
-  //     );
-  //     if (matchedBadge) {
-  //       if (matchedBadge.badge) {
-  //         post.badge = matchedBadge.badge;
-  //       } else {
-  //         post.badge = null;
-  //       }
-  //     }
-  //     const foundItem = userData.find((item) => item.uid === post.user_id);
-  //     if (foundItem) {
-  //       post.avatar = foundItem.avatar;
-  //       post.defaultAvatar = foundItem.defaultAvatar;
-  //       post.name = foundItem.firstname;
-  //     }
-
-  //     return post;
-  //   });
-  // };
+  const appendBadgesToPosts = (posts, badges, userData) => {
+    return posts.map((post) => {
+      const matchedBadge = badges.find(
+        (badge) => badge.post_id === post.post_id
+      );
+      if (matchedBadge) {
+        if (matchedBadge.badge) {
+          post.badge = matchedBadge.badge;
+        } else {
+          post.badge = null;
+        }
+      }
+      const foundItem = userData.find((item) => item.uid === post.user_id);
+      if (foundItem) {
+        post.avatar = foundItem.avatar;
+        post.defaultAvatar = foundItem.defaultAvatar;
+        post.name = foundItem.firstname;
+      }
+      return post;
+    });
+  };
 
   const appendBadgesToEntries = (entries, badgesData) => {
     return entries.map((entry) => {

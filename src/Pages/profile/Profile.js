@@ -133,6 +133,7 @@ return(
     handleClick={handleClick}
     handleClickProfile={handleClickProfile}
     handlename = {userDetails[0].handle}
+    userDetails= {userDetails}
     />
     </div>
 )
