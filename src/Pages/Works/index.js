@@ -137,7 +137,6 @@ const Works = () => {
           const avtimg = item.defaultAvatar
             ? `${process.env.REACT_APP_CDN_URL}/APP/UserAvatars/${item.avatar}`
             : `${process.env.REACT_APP_CDN_URL}/${item.user_id}/PROFILE/IMAGES/medium/${item.avatar}`;
-          console.log("avtimg", avtimg);
           return (
             <div
               key={index}

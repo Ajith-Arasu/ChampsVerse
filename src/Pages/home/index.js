@@ -8,11 +8,16 @@ import QuestHome from "./quest";
 import menuBG from "../../asserts/menuBg.png";
 import logo from "../../asserts/Logo-CV.png";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import DashboardCards from "../../component/sideMenu";
+import LatestWorks from "../LatestWorks/index";
 
 const Home = () => {
   const navigate = useNavigate();
   const [searchKey, setSearchKey] = useState("");
+  const location = useLocation();
+  const isLatestWorks = location.pathname === "/latestworks";
+  const isHome = location.pathname === "/home";
 
   const statsData = [
     { label: "Total Users", value: "50,000", nav: null },
@@ -22,27 +27,26 @@ const Home = () => {
   ];
 
   const handlestats = (nav) => {
-    console.log("nav",nav)
     if (nav !== null) {
       navigate(`/${nav}`);
     }
   };
 
   const tabs = [
-    "Home",
-    "Contests",
-    "Comments",
-    "Deleted User",
-    "Deleted Post",
-    "Latest Works",
-    "Events",
+    { display: "Home", value: "home" },
+    { display: "Contests", value: "contests" },
+    { display: "Comments", value: "comments" },
+    { display: "Deleted User", value: "deleteduser" },
+    { display: "Deleted Post", value: "deletedpost" },
+    { display: "Latest Works", value: "latestworks" },
+    { display: "Events", value: "events" },
   ];
 
-  const [activeTab, setActiveTab] = useState("Home");
+  const [activeTab, setActiveTab] = useState("home");
 
-  const handleTab = (tab) => {
-    setActiveTab(tab);
-    navigate(`/${tab.toLowerCase().replace(/\s+/g, "")}`);
+  const handleTab = (value) => {
+    setActiveTab(value);
+    navigate(`/${value}`);
   };
 
   return (
@@ -79,14 +83,14 @@ const Home = () => {
             {tabs.map((tab) => (
               <Typography
                 key={tab}
-                onClick={() => handleTab(tab)}
+                onClick={() => handleTab(tab.value)}
                 sx={{
-                  color: activeTab === tab ? "yellow" : "white",
+                  color: activeTab === tab.value ? "yellow" : "white",
                   cursor: "pointer",
-                  fontWeight: activeTab === tab ? "bold" : "normal",
+                  fontWeight: activeTab === tab.value ? "bold" : "normal",
                 }}
               >
-                {tab}
+                {tab.display}
               </Typography>
             ))}
           </Box>
@@ -142,81 +146,14 @@ const Home = () => {
           ></img>
         </Box>
 
-        <Typography
-          style={{
-            fontSize: "32px",
-            fontFamily: "Baloo2",
-            fontWeight: 800,
-            color: "white",
-          }}
-        >
-          Dashboard
-        </Typography>
-        <Box style={{ display: "flex", gap: "10px" }}>
-          {statsData.map((stat, index) => (
-            <Box
-              sx={{
-                width: "220px", // Set appropriate width
-                height: "152px", // Set appropriate height
-                backgroundImage: `url(${menuCard})`,
-                backgroundSize: "100% 100%",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                cursor: 'pointer'
-              }}
-              onClick={() => {
-                handlestats(stat.nav);
-              }}
-            >
-              <Box
-                style={{
-                  display: "flex",
-                }}
-              >
-                <img
-                  src={cardIcon}
-                  style={{
-                    marginTop: "30px",
-                    marginLeft: "30px",
-                    marginRight: 0,
-                    marginBottom: 0,
-                  }}
-                ></img>
-                <Typography
-                  style={{
-                    marginTop: "40px",
-                    fontSize: "12px",
-                    color: "white",
-                    marginLeft: "15%",
-                  }}
-                >{`10% vs last Month`}</Typography>
-              </Box>
-              <Box sx={{ marginTop: "5%" }}>
-                <Typography
-                  style={{
-                    marginLeft: "30px",
-                    fontSize: "12px",
-                    fontWeight: "500",
-                    color: "white",
-                  }}
-                >
-                  {stat.label}
-                </Typography>
-                <Typography
-                  style={{
-                    marginLeft: "30px",
-                    fontSize: "32px",
-                    fontWeight: "800",
-                    color: "white",
-                  }}
-                >
-                  {stat.value}
-                </Typography>
-              </Box>
-            </Box>
-          ))}
-        </Box>
-        <QuestHome />
+        {isHome && (
+          <>
+            <DashboardCards />
+            <QuestHome />
+          </>
+        )}
+
+        {isLatestWorks && <LatestWorks />}
       </Box>
     </Box>
   );

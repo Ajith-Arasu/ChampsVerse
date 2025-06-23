@@ -17,7 +17,7 @@ import DeletedUser from "./Pages/DeletedUser/index";
 import DeletedUserDetail from "./Pages/DeletedUser/deletedUserDetail";
 import DeletedUserWorks from "./Pages/DeletedUser/deletedUserWorks";
 import QuestDetail from "./Pages/Quests/questWorks";
-import BotWorks from "./Pages/Bot Wroks/work";
+import BotWorks from "./Pages/LatestWorks/index";
 import Quests from "./Pages/Quests/index";
 import Comments from "./Pages/comments/comments";
 import Achievement from "./Pages/Achievement";
@@ -42,10 +42,11 @@ const AppContent = ({ userDetails, setUserDetails, profilePic, setProfilePic }) 
   const isWorksPage = location.pathname === "/works";
   const isStorage = location.pathname === '/storage-consumption'
   const isQuestWorks = location.pathname === '/quests-Works'
+  const isLatestWorks = location.pathname === '/latestworks'
 
   return (
     <>
-      {!isLoginPage && !isHomePage && !isWorksPage && !isStorage && !isQuestWorks && <Header userDetails={userDetails} profilePic={profilePic} />}
+      {!isLoginPage && !isHomePage && !isWorksPage && !isStorage && !isQuestWorks && !isLatestWorks && <Header userDetails={userDetails} profilePic={profilePic} />}
       <Box
         sx={{
           backgroundImage: !isLoginPage ?`url(${background})` : "none",
@@ -81,7 +82,7 @@ const AppContent = ({ userDetails, setUserDetails, profilePic, setProfilePic }) 
           <Route path="/quests-Works" element={<QuestDetail />} />
           <Route
             path="/latestworks"
-            element={<BotWorks setUserDetails={setUserDetails} setProfilePic={setProfilePic} />}
+            element={<Home/>}
           />
           <Route path="/quests" element={<Quests />} />
           <Route path="/comments" element={<Comments />} />

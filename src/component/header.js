@@ -4,18 +4,39 @@ import { Box, TextField, Button, Typography } from "@mui/material";
 import profileIcon from "../asserts/adminProfileIcon.png";
 import { useState } from "react";
 import logo from "../asserts/Logo-CV.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 const Header = () => {
   const [searchKey, setSearchKey] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const isLatestWorks = location.pathname === '/latestworks'
+  
   return (
     <Box>
       {" "}
+      
       <Box
-        sx={{ display: "flex", gap: "3px", justifyContent: "space-between" ,marginLeft: "5%" }}
+        sx={{
+          display: "flex",
+          gap: "3px",
+          justifyContent: "space-between",
+          marginLeft: "5%",
+        }}
       >
-        <Box component="img" src={logo} alt="Logo" sx={{ width: "190px",height: '48px' , cursor : 'pointer', marginTop: '1%'}} onClick={() => navigate('/home')}/>
+        {!isLatestWorks && <Box
+          component="img"
+          src={logo}
+          alt="Logo"
+          sx={{
+            width: "190px",
+            height: "48px",
+            cursor: "pointer",
+            marginTop: "1%",
+          }}
+          onClick={() => navigate("/home")}
+        />}
         <Box style={{ display: "flex" }}>
           <Box
             sx={{
