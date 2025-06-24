@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DashboardCards from "../../component/sideMenu";
 import LatestWorks from "../LatestWorks/index";
+import Comments from "../comments/index";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const Home = () => {
   const location = useLocation();
   const isLatestWorks = location.pathname === "/latestworks";
   const isHome = location.pathname === "/home";
+  const isComments = location.pathname === '/comments';
 
   const statsData = [
     { label: "Total Users", value: "50,000", nav: null },
@@ -152,7 +154,7 @@ const Home = () => {
             <QuestHome />
           </>
         )}
-
+{isComments && <Comments/>}
         {isLatestWorks && <LatestWorks />}
       </Box>
     </Box>

@@ -1,8 +1,13 @@
 import * as React from "react";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import Login from "./Pages/Login/index";
-import Home from './Pages/home/index';
-import HeaderNew from './component/header';
+import Home from "./Pages/home/index";
+import HeaderNew from "./component/header";
 import Work from "./Pages/work/work";
 import Header from "./Pages/Header/header";
 import Profile from "./Pages/profile/Profile";
@@ -19,14 +24,14 @@ import DeletedUserWorks from "./Pages/DeletedUser/deletedUserWorks";
 import QuestDetail from "./Pages/Quests/questWorks";
 import BotWorks from "./Pages/LatestWorks/index";
 import Quests from "./Pages/Quests/index";
-import Comments from "./Pages/comments/comments";
+import Comments from "./Pages/comments/index";
 import Achievement from "./Pages/Achievement";
 import Events from "./Pages/events";
 import CreateContest from "./Pages/Contests/createContest";
 import { ThemeProvider, CssBaseline, createTheme, Box } from "@mui/material";
 import "../src/font.css";
-import background from './asserts/BGADMIN.png';
-import Works from './Pages/Works/index'
+import background from "./asserts/BGADMIN.png";
+import Works from "./Pages/Works/index";
 
 const theme = createTheme({
   typography: {
@@ -34,41 +39,59 @@ const theme = createTheme({
   },
 });
 
-
-const AppContent = ({ userDetails, setUserDetails, profilePic, setProfilePic }) => {
+const AppContent = ({
+  userDetails,
+  setUserDetails,
+  profilePic,
+  setProfilePic,
+}) => {
   const location = useLocation();
   const isLoginPage = location.pathname === "/";
   const isHomePage = location.pathname === "/home";
   const isWorksPage = location.pathname === "/works";
-  const isStorage = location.pathname === '/storage-consumption'
-  const isQuestWorks = location.pathname === '/quests-Works'
-  const isLatestWorks = location.pathname === '/latestworks'
+  const isStorage = location.pathname === "/storage-consumption";
+  const isQuestWorks = location.pathname === "/quests-Works";
+  const isLatestWorks = location.pathname === "/latestworks";
+  const isComments = location.pathname === "/comments";
+  const isQuests = location.pathname === "/quests";
 
   return (
     <>
-      {!isLoginPage && !isHomePage && !isWorksPage && !isStorage && !isQuestWorks && !isLatestWorks && <Header userDetails={userDetails} profilePic={profilePic} />}
+      {!isLoginPage &&
+        !isHomePage &&
+        !isWorksPage &&
+        !isStorage &&
+        !isQuestWorks &&
+        !isLatestWorks &&
+        !isComments &&
+        !isQuests && (
+          <Header userDetails={userDetails} profilePic={profilePic} />
+        )}
       <Box
         sx={{
-          backgroundImage: !isLoginPage ?`url(${background})` : "none",
+          backgroundImage: !isLoginPage ? `url(${background})` : "none",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           minHeight: "100vh",
-          margin:0,
+          margin: 0,
           padding: 0,
         }}
       >
-        {(isWorksPage || isQuestWorks) && <HeaderNew/>}
+        {(isWorksPage || isQuestWorks || isQuests) && <HeaderNew />}
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/home" element={<Home />}/>
+          <Route path="/home" element={<Home />} />
           <Route
             path="/work"
-            element={<Work setUserDetails={setUserDetails} setProfilePic={setProfilePic} />}
+            element={
+              <Work
+                setUserDetails={setUserDetails}
+                setProfilePic={setProfilePic}
+              />
+            }
           />
-          <Route
-            path="/works"
-            element={<Works/>}/>
+          <Route path="/works" element={<Works />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/books" element={<Books />} />
           <Route path="/booksdetail/:userId/:bookId" element={<Detail />} />
@@ -78,14 +101,14 @@ const AppContent = ({ userDetails, setUserDetails, profilePic, setProfilePic }) 
           <Route path="/deletedpost" element={<DeletedPost />} />
           <Route path="/deleteduser" element={<DeletedUser />} />
           <Route path="/deleted-user/:userId" element={<DeletedUserDetail />} />
-          <Route path="/deleted-user/:userId/works" element={<DeletedUserWorks />} />
-          <Route path="/quests-Works" element={<QuestDetail />} />
           <Route
-            path="/latestworks"
-            element={<Home/>}
+            path="/deleted-user/:userId/works"
+            element={<DeletedUserWorks />}
           />
+          <Route path="/quests-Works" element={<QuestDetail />} />
+          <Route path="/latestworks" element={<Home />} />
           <Route path="/quests" element={<Quests />} />
-          <Route path="/comments" element={<Comments />} />
+          <Route path="/comments" element={<Home />} />
           <Route path="/events" element={<Events />} />
           <Route path="/achievements" element={<Achievement />} />
           <Route path="/createContest/Quest" element={<CreateContest />} />
