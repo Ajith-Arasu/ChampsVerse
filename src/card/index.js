@@ -110,7 +110,7 @@ const Card = ({
           <div style={{ display: "flex", gap: "8px" }}>
             <Typography>Gender :</Typography>
             <Typography style={{ color: "white" }}>
-              {userDetails[0].gender}
+              {userDetails[0].gender === 1 ? `Male`: `Female`}
             </Typography>
           </div>
         </div>
