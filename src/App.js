@@ -14,7 +14,7 @@ import Profile from "./Pages/profile/Profile";
 import Books from "./Pages/Books/books";
 import Detail from "./Pages/Books/detail";
 import StorageConsumption from "./Pages/Users/index";
-import Contests from "./Pages/Contests/contests";
+import Contests from "./Pages/Contests/index";
 import ContestDetail from "./Pages/Contests/contestDetail";
 import { useState } from "react";
 import DeletedPost from "./Pages/DeletedPost/deletedPost";
@@ -96,7 +96,7 @@ const AppContent = ({
           <Route path="/books" element={<Books />} />
           <Route path="/booksdetail/:userId/:bookId" element={<Detail />} />
           <Route path="/storage-consumption" element={<StorageConsumption />} />
-          <Route path="/contests" element={<Contests />} />
+          <Route path="/contests" element={<Home />} />
           <Route path="/contestdetail" element={<ContestDetail />} />
           <Route path="/deletedpost" element={<DeletedPost />} />
           <Route path="/deleteduser" element={<DeletedUser />} />
