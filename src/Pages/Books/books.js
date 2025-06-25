@@ -1,4 +1,4 @@
-import { Typography, useMediaQuery, IconButton } from "@mui/material";
+import { Typography, useMediaQuery, IconButton} from "@mui/material";
 import style from "../Books/style.module.css";
 import { useEffect, useState } from "react";
 import ApiCall from "../API/api";
@@ -10,7 +10,7 @@ import v_dots from "../../asserts/v_dots.png";
 
 const Books = () => {
   const navigate = useNavigate();
-  const { getBooksList, getBooksById } = ApiCall();
+  const { getBooksList, getBooksById, getUserDetails } = ApiCall();
   const [nextPage, setNextPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [pageKey, setPageKey] = useState("");
@@ -18,46 +18,52 @@ const Books = () => {
   const CDN_URL = process.env.REACT_APP_CDN_URL;
   const isMobile = useMediaQuery('(max-width:600px)');
 
-  const getBooks = async () => {
-    if (isLoading || pageKey === null) return;
-    setIsLoading(true);
-   
+  const fetchData = async () => {
     try {
-      if (pageKey !== null) {
+      const booksRes = await getBooksList(pageKey);
+      const bookPageKey = booksRes?.page || null;
+      setPageKey(bookPageKey);
 
-        let books = await getBooksList(pageKey);
-        if (books?.page) {
-          setPageKey(books?.page);
-        } else {
-          setPageKey(null);
+      const bookList = booksRes?.data || [];
+      if (bookList.length === 0) return;
+
+      const bookDetailBody = {
+        targetIds: bookList.map(book => ({
+          user_id: book.user_id,
+          book_id: book.book_id,
+        })),
+      };
+
+      const booksDetail = await getBooksById(bookDetailBody);
+      const books = booksDetail?.data || [];
+      console.log('books', books);
+      if (books.length === 0) return;
+      const userIds = [...new Set(books.map(book => book.user_id))].join(",");
+      const usersRes = await getUserDetails(userIds);
+      const userData = usersRes || [];
+      console.log('userdata', userData);
+
+      const mergedData = books.map((book) => {
+        const foundUser = userData.find(user => user.uid === book.user_id);
+        if (foundUser) {
+          book.author = foundUser.firstname || "Unknown";
+          book.genre = foundUser.genre || "N/A";
+          book.status = foundUser.status || "N/A";
         }
-        const body = transformedData(books.data);
-        const booksDetail = await getBooksById(body);
-        setData((prev) => [...prev, ...booksDetail.data]);
-      }
-    }
-    catch (error) {
+
+        return book;
+      });
+      setData(prev => [...prev, ...mergedData]);
+
+    } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
       setIsLoading(false);
     }
-  }
-
-  useEffect(() => {
-    getBooks();
-  }, [nextPage]);
-
-  const transformedData = (data) => {
-    const transformed = {
-      targetIds: data.map((item) => {
-        return {
-          user_id: item.user_id,
-          book_id: item.book_id,
-        };
-      }),
-    };
-    return transformed;
   };
+  useEffect(() => {
+    fetchData();
+  }, [nextPage]);
 
   const handleScroll = () => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -82,9 +88,10 @@ const Books = () => {
 
   const handleClick = async (data, userId, bookId) => {
     navigate(`/booksdetail/${userId}/${bookId}`, { state: { data, userId: userId, bookId: bookId } })
+
   }
 
- return (
+  return (
     <>
       {isLoading && <Loader />}
       <Typography
@@ -96,6 +103,7 @@ const Books = () => {
           paddingTop: '103px',
           color: '#FFFFFF',
           fontSize: isMobile ? '18px' : '32px',
+
         }}
       >
         BOOKS{" "}
@@ -116,32 +124,33 @@ const Books = () => {
             <div class={style[isMobile ? 'grid-item-mob' : "grid-item"]}>
               <div className={style["book-image"]}
                 onClick={() => handleClick(item, item.user_id, item.book_id)}>
-                <img src={`${CDN_URL}/${item.user_id}/BOOKS/IMAGES/medium/${item.cover[0].name}`} />
-                <IconButton
-                  sx={{
-                    position: 'absolute',
-                    top: 15,
-                    right: 15,
-                    backdropFilter: 'blur(25.24px)',
-                    backgroundColor: 'rgba(0,0,0,0.2)',
-                    boxShadow: '0px 0px 8.41px 0px rgba(0, 0, 0, 0.2)',
-                    width: isMobile ? 20 : 25,
-                    height: isMobile ? 20 : 25,
-                    zIndex: 2,
-                    color: '#FFFFFF 40%'
-                  }}>
-                  <img
-                    src={v_dots}
-                    alt="Dots"
-                    style={{
-                      width: '3px',
-                      height: '12.5px',
-                      objectFit: 'contain',
-                      alignItems: 'center',
-                      color: '#FFFFFF'
+                <img src={`${CDN_URL}/${item.user_id}/BOOKS/IMAGES/medium/${item.cover[0].name}`}></img>
+                 <IconButton
+                    sx={{
+                      position: 'absolute',
+                      top: 15,
+                      right: 15,
+                      backdropFilter: 'blur(25.24px)',
+                      backgroundColor: 'rgba(0,0,0,0.2)',
+                      boxShadow: '0px 0px 8.41px 0px rgba(0, 0, 0, 0.2)',
+                      width: isMobile ? 20 : 25,
+                      height: isMobile ? 20 : 25,
+                      zIndex: 2,
+                      color: '#FFFFFF40%',
                     }}
-                  />
-                </IconButton>
+                  >
+                    <img
+                      src={v_dots}
+                      alt="Dots"
+                      style={{
+                        width: '3px',
+                        height: '12.5px',
+                        objectFit: 'contain',
+                        alignItems: 'center',
+                        color: '#FFFFFF',
+                      }}
+                    />
+                  </IconButton>
                 <div className={style["title-card"]}>
                   <Typography className={style[isMobile ? 'book-title-mob' : "book-title"]} >{item.title} </Typography>
                 </div>
@@ -149,29 +158,30 @@ const Books = () => {
               <div className={style["book-details"]}>
                 <div className={style["author"]}>
                   <div className={style["title"]}>
-                    <Typography style={{ fontSize: isMobile && '11px' }}>Author</Typography>
+                    <Typography style={{ fontSize: isMobile && '15px' }}>Author</Typography>
                   </div>
                   <div className={style["value"]}>
-                    <Typography style={{ fontSize: isMobile ? '10px' : "13px" }}>{item.user_id}</Typography>
+                    <Typography style={{ fontSize: isMobile ? '10px' : "13px" }}>{item.author}</Typography>
                   </div>
                 </div>
                 <div className={style["author"]}>
                   <div className={style["title"]}>
                     <Typography style={{
-                      fontSize: isMobile && '11px',
-                      whiteSpace: 'nowrap',
+                      fontSize: isMobile && '8px',
+                       whiteSpace: 'nowrap',
+                     
                     }}>Date of Publication</Typography>
                   </div>
                   <div className={style["value"]}>
-                    <Typography style={{ fontSize: isMobile ? '10px' : "13px" }}>{item.created_at?.split("T")[0]}</Typography>
+                    <Typography style={{ fontSize: isMobile ? '10px' : "12px" }}>{item.created_at?.split("T")[0]}</Typography>
                   </div>
                 </div>
                 <div className={style["author"]}>
                   <div className={style["title"]}>
-                    <Typography style={{ fontSize: isMobile && '11px' }}>Genre</Typography>
+                    <Typography style={{ fontSize: isMobile && '15px' }}>Genre</Typography>
                   </div>
                   <div className={style["value"]}>
-                    <Typography style={{ fontSize: isMobile ? '10px' : "13px" }}>{item.category}</Typography>
+                    <Typography style={{ fontSize: isMobile ? '10px' : "13px" }}>{item.genre}</Typography>
                   </div>
                 </div>
                 {/* <div className={style["author"]}>
@@ -184,16 +194,17 @@ const Books = () => {
       </div> */}
                 <div className={style["author"]}>
                   <div className={style["title"]}>
-                    <Typography style={{ fontSize: isMobile && '11px' }}>Status</Typography>
+                    <Typography style={{ fontSize: isMobile && '15px' }}>Status</Typography>
                   </div>
                   <div className={style["value"]}>
                     <Typography style={{ fontSize: isMobile ? '10px' : "13px" }}>{item.status}</Typography>
                   </div>
                 </div>
               </div>
+
             </div>)
         })}
-      </div > : <Box
+      </div> : <Box
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -203,9 +214,10 @@ const Books = () => {
         }}
       >
         <CircularProgress />
-      </Box>
-      }</>
+      </Box>}</>
+
   );
 };
 
 export default Books;
+
