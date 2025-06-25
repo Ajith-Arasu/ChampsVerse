@@ -178,7 +178,7 @@ const Books = () => {
                     <Typography style={{ fontSize: isMobile && '15px' }}>Genre</Typography>
                   </div>
                   <div className={style["value"]}>
-                    <Typography style={{ fontSize: isMobile ? '10px' : "13px" }}>{item.genre}</Typography>
+                    <Typography style={{ fontSize: isMobile ? '10px' : "13px" }}>{item.category}</Typography>
                   </div>
                 </div>
                 {/* <div className={style["author"]}>
