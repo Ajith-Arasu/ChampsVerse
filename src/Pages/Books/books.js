@@ -47,9 +47,7 @@ const Books = () => {
         const foundUser = userData.find(user => user.uid === book.user_id);
         if (foundUser) {
           book.author = foundUser.firstname || "Unknown";
-          book.genre = foundUser.genre || "N/A";
-          book.status = foundUser.status || "N/A";
-        }
+          }
 
         return book;
       });
@@ -132,8 +130,7 @@ const Books = () => {
                       right: 15,
                       backdropFilter: 'blur(25.24px)',
                       backgroundColor: 'rgba(0,0,0,0.2)',
-                      boxShadow: '0px 0px 8.41px 0px rgba(0, 0, 0, 0.2)',
-                      width: isMobile ? 20 : 25,
+                        width: isMobile ? 20 : 25,
                       height: isMobile ? 20 : 25,
                       zIndex: 2,
                       color: '#FFFFFF40%',
