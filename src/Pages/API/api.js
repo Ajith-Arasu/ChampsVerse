@@ -120,7 +120,7 @@ const ApiCall = () => {
   };
 
  const getBooksList = async (pageKey) => {
-  const url = `${BASE_URL}/api/v1/books/list?feed_id=${currentMonth}_${currentYear}&count=10&page=${pageKey}`;
+  const url = `${BASE_URL}/api/v1/books/list?feed_id=${currentMonth}_${currentYear}&count=16&page=${pageKey}`;
   const options = {
     headers: {
       "Content-Type": "application/json",
