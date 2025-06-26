@@ -7,7 +7,7 @@ import rejectBtn from "../../asserts/reject.png";
 import tabBtn from "../../asserts/tabSwitch.png";
 
 const Comments = () => {
-  const { getCommentsList, approveComments } = ApiCall();
+  const { getCommentsList, approveComments, getUserDetails } = ApiCall();
   const [isLoading, setIsLoading] = useState(false);
   const [nextPage, setNextPage] = useState(1);
   const [pageKey, setPageKey] = useState("");
@@ -34,8 +34,23 @@ const Comments = () => {
     setIsLoading(true);
     const type = selectedType === "unapproved" ? 0 : 1;
     try {
-      let result = await getCommentsList(type, pageKey);
-      setData((prev) => [...prev, ...result.data]);
+      const result = await getCommentsList(type, pageKey);
+      const userIds = result.data.map((item) => item.user_id).join(",");
+      const userData = await getUserDetails(userIds);
+      console.log("userData", userData);
+      const appendPost = result.data.map((item) => {
+        const user = userData.find((user) => user.uid === item.user_id);
+        return {
+          ...item,
+          ...(user && {
+            firstname: user.firstname,
+            defaultAvatar: user.defaultAvatar,
+            avatar: user.avatar,
+          }),
+        };
+      });
+      console.log("appendPost", appendPost);
+      setData((prev) => [...prev, ...appendPost]);
       if (result?.page) {
         setPageKey(result?.page);
       } else {
@@ -202,13 +217,20 @@ const Comments = () => {
             borderRadius: "10px",
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+
             px: 2,
             margin: "20px",
             backgroundColor: colorMap[item.apprv_sts],
           }}
         >
-          <Box sx={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "10px",
+              alignItems: "center",
+              width: "90%",
+            }}
+          >
             <Box
               sx={{
                 width: "25px",
@@ -241,11 +263,30 @@ const Comments = () => {
               display: "flex",
               alignItems: "center",
               gap: "10px",
-              marginRight: "5%",
+
+              width: "15%",
             }}
           >
-            <Avatar sx={{ width: "36px", height: "36px" }} />
-            <Typography color="white">Rubashree</Typography>
+            <Avatar
+              sx={{ width: "36px", height: "36px" }}
+              src={
+                item.defaultAvatar
+                  ? `${process.env.REACT_APP_CDN_URL}/APP/UserAvatars/${item.avatar}`
+                  : `${process.env.REACT_APP_CDN_URL}/${item.user_id}/PROFILE/IMAGES/filetype/${item.avatar}`
+              }
+            />
+            <Typography
+              color="white"
+              sx={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                maxWidth:  120,
+                display: "block",
+              }}
+            >
+              {item.firstname}
+            </Typography>
           </Box>
         </Box>
       ))}

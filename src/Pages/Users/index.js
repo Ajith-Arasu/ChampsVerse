@@ -1,4 +1,4 @@
-import { Typography, useMediaQuery } from "@mui/material";
+import { Typography, useMediaQuery, LinearProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 import storageContainer from "../../asserts/userStoragebg.png";
 import ApiCall from "../API/api";
@@ -76,63 +76,85 @@ const UsersStorageConsumption = () => {
 
   return (
     <Box>
+      <Typography
+        sx={{
+          fontSize: "32px",
+          fontWeight: 800,
+          fontFamily: "Baloo2",
+          color: 'white',
+          marginLeft: '2% '
+        }}
+      >
+        Users(1245)
+      </Typography>
       {data.map((item, index) => {
-        const progressValue = (item.storage * 1024 * 1024) / maxStorageInBytes * 100;
-        console.log("progressValue", progressValue)
+        const progressValue =
+          ((item.storage * 1024 * 1024) / maxStorageInBytes) * 100;
+
         return (
           <Box
             key={index}
-            style={{
+            sx={{
               position: "relative",
-              display: "inline-block",
-              margin: "0 5%",
+              width: "95%",
+              height: "55px",
+              margin: "20px auto",
+              borderRadius: "10px",
+              overflow: "hidden",
             }}
           >
-            {/* The image */}
-            <img
-              src={storageContainer}
-              style={{
-                width: "100%",
-                objectFit: "cover",
-                display: "block",
-              }}
-              alt="Storage"
-            />
-
-            {/* Overlayed header on top of the image */}
-            <Box
-              style={{
-                position: "absolute",
-                width: `${progressValue}%`,
-                top: "1px",
-                left: 0,
-                right: 0,
-                padding: "8px 16px",
-                height: "65px",
-                display: "flex",
-                borderRadius: "14px 0 0 14px",
-                alignItems: "center",
-                justifyContent: "space-between",
-                backgroundColor: "rgba(255, 255, 0, 0.85)",
-              }}
-            >
-              <Typography>{item.username}</Typography>
-            </Box>
-
-            <Box
+            {/* Background LinearProgress */}
+            <LinearProgress
+              variant="determinate"
+              value={progressValue}
               sx={{
                 position: "absolute",
-                left: "90%",
+                top: 0,
+                left: 0,
                 width: "100%",
-                right: "10px",
+                height: "100%",
+                backgroundColor: "transparent", // transparent track
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor: "yellow", // filled/progressed part
+                },
+              }}
+            />
+
+            {/* Foreground content with box shadow */}
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                boxShadow: `
+              inset 0 0 5px rgba(255, 255, 255, 0.2),
+              inset 0 0 10px rgba(255, 255, 255, 0.3),
+              inset 0 0 15px rgba(255, 255, 255, 0.4),
+              inset 0 0 20px rgba(255, 255, 255, 0.5)
+            `,
+                borderRadius: "10px",
                 display: "flex",
-                borderRadius: "14px 0 0 14px",
                 alignItems: "center",
                 justifyContent: "space-between",
-                top: "30%",
+                px: 2,
+                position: "relative",
+                zIndex: 1,
+                color: "white",
               }}
             >
-              <Typography>{`1GB`}</Typography>
+              <Typography
+                sx={{
+                  fontSize: "20px",
+                  fontWeight: 800,
+                  fontFamily: "Baloo2",
+                }}
+              >{`${index + 1}) ${item.username}`}</Typography>
+              <Typography
+                sx={{
+                  fontSize: "20px",
+                  fontWeight: 800,
+                  fontFamily: "Baloo2",
+                }}
+              >{`${item.storage}MB / 1GB`}</Typography>
             </Box>
           </Box>
         );

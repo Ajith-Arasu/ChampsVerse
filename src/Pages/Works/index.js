@@ -48,7 +48,7 @@ const Works = () => {
         const ids = result.data.map((item) => item.post_id).join(",");
         const userIds = result.data.map((item) => item.user_id).join(",");
         userData = await getUserDetails(userIds);
-        console.log("userData", userData);
+        
         if (result?.page) {
           setPageKey(result?.page);
         } else {

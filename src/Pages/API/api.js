@@ -453,7 +453,7 @@ const approveAchievement = async (requestBody) => {
 };
 
 const getLatestActivity = async (pageKey, month) => {
-  const url = `${BASE_URL}/api/v1/user/activities?count=&page=${pageKey}&month=${month}`;
+  const url = `${BASE_URL}/api/v1/user/activities?count=24&page=${pageKey}&month=${month}`;
   const options = {
     headers: {
       "Content-Type": "application/json",

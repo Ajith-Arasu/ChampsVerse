@@ -54,6 +54,7 @@ const AppContent = ({
   const isLatestWorks = location.pathname === "/latestworks";
   const isComments = location.pathname === "/comments";
   const isQuests = location.pathname === "/quests";
+  const isEvents = location.pathname === "/events";
 
   return (
     <>
@@ -64,7 +65,8 @@ const AppContent = ({
         !isQuestWorks &&
         !isLatestWorks &&
         !isComments &&
-        !isQuests && (
+        !isQuests && 
+        !isEvents&& (
           <Header userDetails={userDetails} profilePic={profilePic} />
         )}
       <Box
@@ -78,7 +80,7 @@ const AppContent = ({
           padding: 0,
         }}
       >
-        {(isWorksPage || isQuestWorks || isQuests) && <HeaderNew />}
+        {(isWorksPage || isQuestWorks || isQuests || isStorage || isEvents) && <HeaderNew />}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
