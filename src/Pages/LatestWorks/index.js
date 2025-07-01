@@ -121,7 +121,6 @@ const Work = ({ setUserDetails, setProfilePic }) => {
         post.defaultAvatar = foundItem.defaultAvatar;
         post.firstname = foundItem.firstname;
       }
-      console.log("post", post);
       return post;
     });
   };

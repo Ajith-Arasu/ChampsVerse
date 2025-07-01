@@ -11,7 +11,6 @@ const Profile =()=>{
   const [nextPage, setNextPage] = useState(1);
   const {userDetails} = location.state;
 
-  console.log("userDetails",userDetails)
 
   const {  getPostByUserId,getPost,getBadges,addBadges,getUserDetails } = ApiCall();  
 

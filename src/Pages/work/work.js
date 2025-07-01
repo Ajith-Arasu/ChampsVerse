@@ -34,22 +34,18 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
   };
 
   const fetchData = async () => {
-    console.log("fetch data calleed")
     if (isLoading || pageKey === null) return;
     setIsLoading(true);
     try {
       if (pageKey !== null) {
-        console.log("fetch datta");
         let userData;
         let res;
         let result;
-        console.log("entriesData.length", !entriesData);
         if (!entriesData) {
           result = await feedData(pageKey, count);
           const ids = result.data.map((item) => item.post_id).join(",");
           const userIds = result.data.map((item) => item.user_id).join(",");
           userData = await getUserDetails(userIds);
-          console.log('userdata',userData);
           if (result?.page) {
             setPageKey(result?.page);
           } else {
@@ -63,18 +59,14 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
             .filter((post) => post !== undefined);
           setData((prev) => [...prev, ...reorderedPostData]);
         } else {
-          console.log("entriesData0008", entriesData);
           const formatData = transformedData(
             result && result?.data ? result?.data : entriesData && entriesData
           );
-          console.log("formatData", formatData);
           const badgesData = await getBadges(formatData);
-          console.log("badgesData", badgesData);
           const updatedPosts = appendBadgesToEntries(
             entriesData,
             badgesData.data
           );
-          console.log("updatedPosts", updatedPosts);
           setData(updatedPosts);
         }
       }
@@ -125,7 +117,6 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
       const matchedBadge = badgesData.find(
         (badge) => badge.post_id === entry.postId
       );
-      console.log("matchedBadge", matchedBadge);
       if (matchedBadge && matchedBadge.badge) {
         entry.badge = matchedBadge.badge;
       }
@@ -135,7 +126,6 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
   };
 
   const transformedData = (data) => {
-    console.log("trans data", data);
     const transformed = {
       ids: data.map((item) => {
         return {
@@ -173,7 +163,6 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
   }, []);
 
   const handleClick = async (index, type) => {
-    console.log("badges - click");
     const resultBD = await addBadges(
       isQuestPage ? data[index].userID : data[index].user_id,
       isQuestPage ? data[index].postId : data[index].post_id,
@@ -182,9 +171,7 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
       isQuestPage,
       contestId
     );
-    console.log("resultBD", resultBD);
     if (resultBD.statusCode === 200) {
-      console.log("getBadges", getBadges);
       let requestbody = {
         ids: [
           {
@@ -208,7 +195,6 @@ const Work = ({ setUserDetails, setProfilePic, entriesData, contestId }) => {
         }
         return item;
       });
-      console.log("updatedData", updatedData);
       setData(updatedData);
     }
   };

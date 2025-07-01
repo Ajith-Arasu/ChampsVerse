@@ -26,7 +26,6 @@ const Contest = () => {
     setData([]);
   };
 
-  console.log("selectedTab", selectedTab);
   const getContests = async () => {
     if (isLoading || pageKey === null) return;
     setIsLoading(true);
@@ -46,7 +45,6 @@ const Contest = () => {
     }
   };
 
-  console.log("data-cont", data);
   useEffect(() => {
     if (selectedTab !== "new") {
       getContests();

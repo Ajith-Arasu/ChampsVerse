@@ -13,6 +13,8 @@ import DashboardCards from "../../component/sideMenu";
 import LatestWorks from "../LatestWorks/index";
 import Comments from "../comments/index";
 import Contests from '../../Pages/Contests/index';
+import CreateQuest from "../Quests/createQuest";
+import DeletePost from "../DeletedPost";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -22,6 +24,8 @@ const Home = () => {
   const isHome = location.pathname === "/home";
   const isComments = location.pathname === "/comments";
   const isContests = location.pathname === "/contests";
+  const isCreation = location.pathname === "/createContest/Quest";
+    const isDeletedPost = location.pathname === "/deletedpost";
 
   const statsData = [
     { label: "Total Users", value: "50,000", nav: null },
@@ -153,12 +157,14 @@ const Home = () => {
         {isHome && (
           <>
             <DashboardCards />
-            <QuestHome />
+            {/* <QuestHome /> */}
           </>
         )}
         {isComments && <Comments />}
         {isLatestWorks && <LatestWorks />}
         {isContests && <Contests/>}
+        {isCreation && <CreateQuest/>}
+        {isDeletedPost && <DeletePost/>}
       </Box>
     </Box>
   );

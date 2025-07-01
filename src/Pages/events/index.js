@@ -110,7 +110,6 @@ const Events = () => {
   };
 
   useEffect(() => {
-    console.log("useEffect called");
     fetchData();
   }, [nextPage, selectedType]);
 

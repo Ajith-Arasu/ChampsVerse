@@ -24,11 +24,9 @@ const Login = () => {
       return;
     }
 
-    console.log("credentials", credentials);
 
     login(credentials)
     .then((res) => {
-      console.log("Login successful:", res); // res should not be undefined
       alert("Login Successful");
       navigate('/home')
     })

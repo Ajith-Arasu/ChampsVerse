@@ -36,12 +36,12 @@ const Books = () => {
 
       const booksDetail = await getBooksById(bookDetailBody);
       const books = booksDetail?.data || [];
-      console.log('books', books);
+      
       if (books.length === 0) return;
       const userIds = [...new Set(books.map(book => book.user_id))].join(",");
       const usersRes = await getUserDetails(userIds);
       const userData = usersRes || [];
-      console.log('userdata', userData);
+      
 
       const mergedData = books.map((book) => {
         const foundUser = userData.find(user => user.uid === book.user_id);

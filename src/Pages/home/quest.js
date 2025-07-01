@@ -41,7 +41,6 @@ const Quests = () => {
     try {
       if (pageKey !== null) {
         const questData = await getQuestList(pageKey);
-        console.log("questData", questData.data);
         setData(questData.data);
       }
     } catch (error) {
@@ -87,10 +86,7 @@ const Quests = () => {
               const diffInMilliseconds = now.getTime() - createdAt.getTime();
               const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
               const isLessThan7DaysOld = diffInDays < 8;
-              console.log(
-                "imageurl",
-                `${process.env.REACT_APP_CDN_URL}/MICRO_CONTESTS/${item.contest_id}/IMAGES/medium/${item.ct_banner}}`
-              );
+             
               return (
                 <div
                   key={index}
