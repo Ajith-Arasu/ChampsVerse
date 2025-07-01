@@ -14,7 +14,7 @@ const ApiCall = () => {
   
   
    const data = async (pageKey, count) => {
-    console.log("token44555", token)
+    
     const url = `${BASE_URL}/api/v1/posts/list?feed_id=${currentMonth}_${currentYear}&count=${count}&page=${pageKey}`;
     const options = {
       headers: {
@@ -536,7 +536,7 @@ const getLatestActivity = async (pageKey, month) => {
     });
     const res = await response.json();
     setCookie("accessToken",res.data.accesstoken,3600);
-    console.log("res.data", res.data.accesstoken)
+    
     return res;
   };
 

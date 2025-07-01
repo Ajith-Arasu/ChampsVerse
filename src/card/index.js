@@ -22,7 +22,7 @@ const Card = ({
   const isMobile = useMediaQuery("(max-width:600px)");
 
 
-  console.log('data', data)
+  
   return (
 
 

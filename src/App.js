@@ -17,7 +17,7 @@ import StorageConsumption from "./Pages/Users/index";
 import Contests from "./Pages/Contests/index";
 import ContestDetail from "./Pages/Contests/contestDetail";
 import { useState } from "react";
-import DeletedPost from "./Pages/DeletedPost/deletedPost";
+import DeletedPost from "./Pages/DeletedPost/index";
 import DeletedUser from "./Pages/DeletedUser/index";
 import DeletedUserDetail from "./Pages/DeletedUser/deletedUserDetail";
 import DeletedUserWorks from "./Pages/DeletedUser/deletedUserWorks";
@@ -27,7 +27,7 @@ import Quests from "./Pages/Quests/index";
 import Comments from "./Pages/comments/index";
 import Achievement from "./Pages/Achievement";
 import Events from "./Pages/events";
-import CreateContest from "./Pages/Contests/createContest";
+import CreateContest from "./Pages/Quests/createQuest";
 import { ThemeProvider, CssBaseline, createTheme, Box } from "@mui/material";
 import "../src/font.css";
 import background from "./asserts/BGADMIN.png";
@@ -55,7 +55,9 @@ const AppContent = ({
   const isComments = location.pathname === "/comments";
   const isQuests = location.pathname === "/quests";
   const isEvents = location.pathname === "/events";
-  const isBooks = location.pathname === '/books';
+  const isBooks = location.pathname === "/books";
+  const isCreation = location.pathname === "/createContest/Quest";
+  const isDeletedPost = location.pathname === "/deletedpost";
 
   return (
     <>
@@ -66,9 +68,11 @@ const AppContent = ({
         !isQuestWorks &&
         !isLatestWorks &&
         !isComments &&
-        !isQuests && 
-        !isEvents&& 
-        !isBooks &&(
+        !isQuests &&
+        !isEvents &&
+        !isBooks &&
+        !isCreation &&
+        !isDeletedPost && (
           <Header userDetails={userDetails} profilePic={profilePic} />
         )}
       <Box
@@ -82,7 +86,12 @@ const AppContent = ({
           padding: 0,
         }}
       >
-        {(isWorksPage || isQuestWorks || isQuests || isStorage || isEvents || isBooks) && <HeaderNew />}
+        {(isWorksPage ||
+          isQuestWorks ||
+          isQuests ||
+          isStorage ||
+          isEvents ||
+          isBooks) && <HeaderNew />}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
@@ -102,7 +111,7 @@ const AppContent = ({
           <Route path="/storage-consumption" element={<StorageConsumption />} />
           <Route path="/contests" element={<Home />} />
           <Route path="/contestdetail" element={<ContestDetail />} />
-          <Route path="/deletedpost" element={<DeletedPost />} />
+          <Route path="/deletedpost" element={<Home />} />
           <Route path="/deleteduser" element={<DeletedUser />} />
           <Route path="/deleted-user/:userId" element={<DeletedUserDetail />} />
           <Route
@@ -115,7 +124,7 @@ const AppContent = ({
           <Route path="/comments" element={<Home />} />
           <Route path="/events" element={<Events />} />
           <Route path="/achievements" element={<Achievement />} />
-          <Route path="/createContest/Quest" element={<CreateContest />} />
+          <Route path="/createContest/Quest" element={<Home />} />
         </Routes>
       </Box>
     </>

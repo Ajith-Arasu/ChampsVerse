@@ -5,12 +5,15 @@ import viewIcon from "../../asserts/view-icon.png";
 import heartIcon from "../../asserts/heart-icon.png";
 import commentIcon from "../../asserts/comment-icon.png";
 import Loader from "../Loader/loader";
+import { useLocation } from "react-router-dom";
 
 const Works = () => {
+  const location = useLocation();
   const [data, setData] = useState([]);
   const [nextPage, setNextPage] = useState(1);
   const [pageKey, setPageKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [checkedItems, setCheckedItems] = useState([]);
   const {
     data: feedData,
     getPost,
@@ -21,7 +24,7 @@ const Works = () => {
     ApproveQuestWork,
   } = ApiCall();
 
-  console.log("data", data);
+  const isDeletedPost = location.pathname === "/deletedpost";
 
   const transformedData = (data) => {
     const transformed = {
@@ -36,6 +39,7 @@ const Works = () => {
   };
 
   const fetchData = async () => {
+    console.log("fetchData");
     if (isLoading || pageKey === null) return;
     setIsLoading(true);
     try {
@@ -44,11 +48,11 @@ const Works = () => {
         let res;
         let result;
 
-        result = await feedData(pageKey, 20);
+        result = await feedData(pageKey, 18);
         const ids = result.data.map((item) => item.post_id).join(",");
         const userIds = result.data.map((item) => item.user_id).join(",");
         userData = await getUserDetails(userIds);
-        
+
         if (result?.page) {
           setPageKey(result?.page);
         } else {
@@ -57,7 +61,6 @@ const Works = () => {
         res = await getPost(ids);
         const formatData = transformedData(result.data);
         const badgesData = await getBadges(formatData);
-        console.log("badgesData", badgesData.data);
 
         const reorderedPostData = result.data
           .map((feedItem) => {
@@ -117,7 +120,13 @@ const Works = () => {
     fetchData();
   }, [nextPage]);
 
-  console.log("data", data);
+  const handleSelectItem = (postId) => {
+    setCheckedItems((prev) =>
+      prev.includes(postId)
+        ? prev.filter((id) => id !== postId)
+        : [...prev, postId]
+    );
+  };
 
   return (
     <div style={{ marginLeft: "5%", marginTop: "3%" }}>
@@ -174,7 +183,7 @@ const Works = () => {
                   gap: "5px",
                   marginLeft: "5px",
                   boxShadow: "0 6px 10px rgba(0, 0, 0, 0.1)",
-                  width: '97%'
+                  width: "97%",
                 }}
               >
                 <Avatar
@@ -190,6 +199,35 @@ const Works = () => {
                 ></Avatar>
                 <Typography>{item.firstname}</Typography>
               </Box>
+              {isDeletedPost && (
+                <Box
+                  sx={{
+                    width: "25px",
+                    height: "25px",
+                    border: "2.7px solid rgba(31, 29, 58, 0.4)",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    top: "5px",
+                    right: "5px",
+                    position: "absolute",
+                  }}
+                  onClick={() => handleSelectItem(item.post_id)}
+                >
+                  <Box
+                    sx={{
+                      width: "17px",
+                      height: "17px",
+                      borderRadius: "50%",
+                      background: checkedItems.includes(item.post_id)
+                        ? "linear-gradient(232.05deg, #FFDD01 19.84%, #FFB82A 92.22%)"
+                        : "transparent",
+                    }}
+                  />
+                </Box>
+              )}
               <Box
                 style={{
                   backdropFilter: "blur(180px)",

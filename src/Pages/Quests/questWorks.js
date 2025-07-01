@@ -23,7 +23,6 @@ const QuestWorks = () => {
   const isProfilePage = location.pathname === "/profile";
 
   const transformedData = async (post, userData, result) => {
-    console.log("transformedData", transformedData);
     const data = post.map((post) => {
       const user = userData.find((user) => user.uid === post.user_id);
       const entry = result.data.find((item) => item.user_id === post.user_id);
@@ -39,7 +38,6 @@ const QuestWorks = () => {
         entry_status: entry.entry_status,
       };
     });
-    console.log("data", data);
     return data;
   };
 
@@ -57,7 +55,6 @@ const QuestWorks = () => {
         let users = await getUserDetails(userIds);
         let res = await getPost(ids);
         const entries = await transformedData(res.data, users, result);
-        console.log("entries", entries);
         const requestbody = {
           ids: entries.map((item) => ({
             user_id: item.userID,
@@ -66,7 +63,6 @@ const QuestWorks = () => {
         };
         const badgesData = await getBadges(requestbody);
 
-        console.log("singleItemBadge1111", badgesData.data);
 
         // Merge badge data into inputData
         const mergedData = entries.map((entry) => {
@@ -74,7 +70,6 @@ const QuestWorks = () => {
             (badge) =>
               badge.user_id === entry.userID && badge.post_id === entry.postId
           );
-          console.log("match", match);
           return {
             ...entry,
             badge: match?.badge || null,
@@ -82,8 +77,6 @@ const QuestWorks = () => {
           };
         });
 
-        console.log("mergedData", mergedData);
-        console.log("entries 000", entries);
 
         setEntriesData((prev) => [...prev, ...mergedData]);
 
@@ -115,7 +108,6 @@ const QuestWorks = () => {
   };
 
   const handleClick = async (index, type) => {
-    console.log("badges - click");
     const resultBD = await addBadges(
       entriesData[index].userID,
       entriesData[index].postId,
@@ -124,9 +116,7 @@ const QuestWorks = () => {
       true,
       contestId
     );
-    console.log("resultBD", resultBD);
     if (resultBD.statusCode === 200) {
-      console.log("getBadges", getBadges);
       let requestbody = {
         ids: [
           {
@@ -149,12 +139,10 @@ const QuestWorks = () => {
         }
         return item;
       });
-      console.log("updatedData", updatedData);
       setEntriesData(updatedData);
     }
   };
 
-  console.log("entriesData", entriesData);
   return (
     <div style={{ marginLeft: "5%", marginTop: "3%" }}>
       <Typography style={{ fontSize: "32px", fontWeight: 800, color: "white" , textAlign: 'center'}}>
@@ -173,7 +161,6 @@ const QuestWorks = () => {
           const avtimg = item.defaultAvatar
             ? `${process.env.REACT_APP_CDN_URL}/APP/UserAvatars/${item.avatar}`
             : `${process.env.REACT_APP_CDN_URL}/${item.userID}/PROFILE/IMAGES/medium/${item.avatar}`;
-          console.log("avtimg", avtimg);
           return (
             <div
               key={index}

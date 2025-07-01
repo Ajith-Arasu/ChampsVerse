@@ -37,7 +37,6 @@ const Comments = () => {
       const result = await getCommentsList(type, pageKey);
       const userIds = result.data.map((item) => item.user_id).join(",");
       const userData = await getUserDetails(userIds);
-      console.log("userData", userData);
       const appendPost = result.data.map((item) => {
         const user = userData.find((user) => user.uid === item.user_id);
         return {
@@ -49,7 +48,6 @@ const Comments = () => {
           }),
         };
       });
-      console.log("appendPost", appendPost);
       setData((prev) => [...prev, ...appendPost]);
       if (result?.page) {
         setPageKey(result?.page);

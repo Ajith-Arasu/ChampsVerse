@@ -72,7 +72,6 @@ const UsersStorageConsumption = () => {
     getData();
   }, [nextPage]);
 
-  console.log("data", data);
 
   return (
     <Box>
