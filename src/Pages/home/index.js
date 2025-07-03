@@ -15,7 +15,7 @@ import menuBG from "../../asserts/menuBg.png";
 import logo from "../../asserts/Logo-CV.png";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-// import DashboardCards from "../../component/sideMenu";
+import DashboardCards from "../../component/dashboardcards";
 // import LatestWorks from "../LatestWorks/index";
 // import Comments from "../comments/index";
 // import Contests from "../../Pages/Contests/index";
@@ -252,7 +252,7 @@ const Home = () => {
 
         {isHome && (
           <>
-            {/* <DashboardCards /> */}
+            <DashboardCards />
             <QuestHome />
           </>
         )}

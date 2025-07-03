@@ -1,7 +1,12 @@
 import * as React from "react";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import Login from "./Pages/Login/index";
-import Home from './Pages/home/index';
+import Home from "./Pages/home/index";
 import Work from "./Pages/work/work";
 import Header from "./Pages/Header/header";
 import Profile from "./Pages/profile/Profile";
@@ -24,7 +29,8 @@ import Events from "./Pages/events";
 import CreateContest from "./Pages/Contests/createContest";
 import { ThemeProvider, CssBaseline, createTheme, Box } from "@mui/material";
 import "../src/font.css";
-import background from './asserts/BGADMIN.png';
+import background from "./asserts/BGADMIN.png";
+import HeaderNew from './component/header';
 
 const theme = createTheme({
   typography: {
@@ -33,31 +39,46 @@ const theme = createTheme({
 });
 
 // Separate AppContent component to use useLocation hook
-const AppContent = ({ userDetails, setUserDetails, profilePic, setProfilePic }) => {
+const AppContent = ({
+  userDetails,
+  setUserDetails,
+  profilePic,
+  setProfilePic,
+}) => {
   const location = useLocation();
   const isLoginPage = location.pathname === "/";
   const isHomePage = location.pathname === "/home";
+  const isQuestWorks = location.pathname === "/quests-Works";
 
   return (
     <>
-      {!isLoginPage && !isHomePage && <Header userDetails={userDetails} profilePic={profilePic} />}
+      {!isLoginPage && !isHomePage &&!isQuestWorks&& (
+        <Header userDetails={userDetails} profilePic={profilePic} />
+      )}
       <Box
         sx={{
-          backgroundImage: !isLoginPage ?`url(${background})` : "none",
+          backgroundImage: !isLoginPage ? `url(${background})` : "none",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           minHeight: "100vh",
-          margin:0,
+          margin: 0,
           padding: 0,
         }}
       >
+        {(
+          isQuestWorks ) && <HeaderNew />}
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/home" element={<Home />}/>
+          <Route path="/home" element={<Home />} />
           <Route
             path="/work"
-            element={<Work setUserDetails={setUserDetails} setProfilePic={setProfilePic} />}
+            element={
+              <Work
+                setUserDetails={setUserDetails}
+                setProfilePic={setProfilePic}
+              />
+            }
           />
           <Route path="/profile" element={<Profile />} />
           <Route path="/books" element={<Books />} />
@@ -68,11 +89,19 @@ const AppContent = ({ userDetails, setUserDetails, profilePic, setProfilePic }) 
           <Route path="/deletedpost" element={<DeletedPost />} />
           <Route path="/deleteduser" element={<DeletedUser />} />
           <Route path="/deleted-user/:userId" element={<DeletedUserDetail />} />
-          <Route path="/deleted-user/:userId/works" element={<DeletedUserWorks />} />
+          <Route
+            path="/deleted-user/:userId/works"
+            element={<DeletedUserWorks />}
+          />
           <Route path="/quests-Works" element={<QuestDetail />} />
           <Route
             path="/latestworks"
-            element={<BotWorks setUserDetails={setUserDetails} setProfilePic={setProfilePic} />}
+            element={
+              <BotWorks
+                setUserDetails={setUserDetails}
+                setProfilePic={setProfilePic}
+              />
+            }
           />
           <Route path="/quests" element={<Quests />} />
           <Route path="/comments" element={<Comments />} />
