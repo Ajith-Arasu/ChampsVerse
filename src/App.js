@@ -27,10 +27,10 @@ import Comments from "./Pages/comments/comments";
 import Achievement from "./Pages/Achievement";
 import Events from "./Pages/events";
 import CreateContest from "./Pages/Contests/createContest";
-import { ThemeProvider, CssBaseline, createTheme, Box } from "@mui/material";
+import { ThemeProvider, CssBaseline, createTheme, Box,useMediaQuery } from "@mui/material";
 import "../src/font.css";
 import background from "./asserts/BGADMIN.png";
-import HeaderNew from './component/header';
+import HeaderNew from "./component/header";
 
 const theme = createTheme({
   typography: {
@@ -38,7 +38,6 @@ const theme = createTheme({
   },
 });
 
-// Separate AppContent component to use useLocation hook
 const AppContent = ({
   userDetails,
   setUserDetails,
@@ -49,10 +48,17 @@ const AppContent = ({
   const isLoginPage = location.pathname === "/";
   const isHomePage = location.pathname === "/home";
   const isQuestWorks = location.pathname === "/quests-Works";
+  const isComments = location.pathname === "/comments";
+   const isMobile = useMediaQuery("(max-width:600px)");
+
+   const ConditionalComponent = () => {
+  const isMobile = useMediaQuery("(max-width:600px)");
+  return isMobile ? <Comments /> : <Home />;
+}
 
   return (
     <>
-      {!isLoginPage && !isHomePage &&!isQuestWorks&& (
+      {!isLoginPage && !isHomePage && !isQuestWorks && !isComments && (
         <Header userDetails={userDetails} profilePic={profilePic} />
       )}
       <Box
@@ -66,8 +72,7 @@ const AppContent = ({
           padding: 0,
         }}
       >
-        {(
-          isQuestWorks ) && <HeaderNew />}
+        {(isQuestWorks || (isComments && isMobile)) && <HeaderNew />}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
@@ -104,7 +109,7 @@ const AppContent = ({
             }
           />
           <Route path="/quests" element={<Quests />} />
-          <Route path="/comments" element={<Comments />} />
+          <Route path="/comments" element={<ConditionalComponent />} />
           <Route path="/events" element={<Events />} />
           <Route path="/achievements" element={<Achievement />} />
           <Route path="/createContest/Quest" element={<CreateContest />} />

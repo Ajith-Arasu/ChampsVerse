@@ -131,7 +131,7 @@ const Comments = () => {
   }, []);
 
   return (
-    <Box sx={{ width: "100vw", overflowX: "hidden", px: isMobile ? 1 : 2, marginTop: isMobile && '10%' }}>
+    <Box sx={{ width: isMobile?"100vw":"100%", overflowX: "hidden", px: isMobile ? 1 : 2, marginTop: isMobile && '10%' }}>
       <Box
         sx={{
           display: "flex",

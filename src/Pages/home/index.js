@@ -19,7 +19,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DashboardCards from "../../component/dashboardcards";
 // import LatestWorks from "../LatestWorks/index";
-// import Comments from "../comments/index";
+ import Comments from "../comments/comments";
 // import Contests from "../../Pages/Contests/index";
 import menuIcon from "../../asserts/menuIcon.png";
 
@@ -324,8 +324,8 @@ const Home = () => {
             <QuestHome />
           </>
         )}
-        {/* {isComments && <Comments />}
-        {isLatestWorks && <LatestWorks />}
+         {isComments  &&  <Comments />}
+        {/*{isLatestWorks && <LatestWorks />}
         {isContests && <Contests />} */}
       </Box>
     </Box>
