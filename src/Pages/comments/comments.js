@@ -233,7 +233,8 @@ const Comments = () => {
             borderRadius: "10px",
             backgroundColor: colorMap[item.apprv_sts],
             display: "flex",
-            alignItems: "center",
+            alignItems: isMobile ? "" : "center",
+            flexDirection: isMobile ? "column" : "row",
             boxShadow: `
           inset 0 0 5px rgba(255, 255, 255, 0.2),
           inset 0 0 10px rgba(255, 255, 255, 0.3),
@@ -242,64 +243,135 @@ const Comments = () => {
         `,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1, flex: 1 }}>
-            <Box
-              onClick={() => handleSelectItem(item.comment_id)}
-              sx={{
-                width: "25px",
-                height: "25px",
-                border: "2.7px solid rgba(31, 29, 58, 0.4)",
-                borderRadius: "50%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-              }}
-            >
+          {isMobile && (
+            <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
               <Box
                 sx={{
-                  width: "17px",
-                  height: "17px",
-                  borderRadius: "50%",
-                  background: checkedItems.includes(item.comment_id)
-                    ? "linear-gradient(232.05deg, #FFDD01 19.84%, #FFB82A 92.22%)"
-                    : "transparent",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  minWidth: "100px",
                 }}
-              />
+              >
+                <Avatar
+                  sx={{ width: "25px", height: "25px" }}
+                  src={
+                    item.defaultAvatar
+                      ? `${process.env.REACT_APP_CDN_URL}/APP/UserAvatars/${item.avatar}`
+                      : `${process.env.REACT_APP_CDN_URL}/${item.user_id}/PROFILE/IMAGES/filetype/${item.avatar}`
+                  }
+                />
+                <Typography
+                  color="white"
+                  sx={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    maxWidth: 120,
+                    fontSize:  "12px"
+                  }}
+                >
+                  {item.firstname}
+                </Typography>
+              </Box>
+              {isMobile && (
+                <Box
+                  onClick={() => handleSelectItem(item.comment_id)}
+                  sx={{
+                    width: "17px",
+                    height: "17px",
+                    border: "2.7px solid rgba(31, 29, 58, 0.4)",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: "9px",
+                      height: "9px",
+                      borderRadius: "50%",
+                      background: checkedItems.includes(item.comment_id)
+                        ? "linear-gradient(232.05deg, #FFDD01 19.84%, #FFB82A 92.22%)"
+                        : "transparent",
+                    }}
+                  />
+                </Box>
+              )}
             </Box>
-            <Typography color="white" sx={{ flex: 1 }}>
-              {item.text}
-            </Typography>
-          </Box>
-
+          )}
           <Box
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: "10px",
-              minWidth: "100px",
+              gap: 1,
+              flex: 1,
+              justifyContent: isMobile ? "space-between" : "center",
             }}
           >
-            <Avatar
-              sx={{ width: "36px", height: "36px" }}
-              src={
-                item.defaultAvatar
-                  ? `${process.env.REACT_APP_CDN_URL}/APP/UserAvatars/${item.avatar}`
-                  : `${process.env.REACT_APP_CDN_URL}/${item.user_id}/PROFILE/IMAGES/filetype/${item.avatar}`
-              }
-            />
-            <Typography
-              color="white"
-              sx={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                maxWidth: 120,
-              }}
-            >
-              {item.firstname}
+            {!isMobile && (
+              <Box
+                onClick={() => handleSelectItem(item.comment_id)}
+                sx={{
+                  width: "25px",
+                  height: "25px",
+                  border: "2.7px solid rgba(31, 29, 58, 0.4)",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "17px",
+                    height: "17px",
+                    borderRadius: "50%",
+                    background: checkedItems.includes(item.comment_id)
+                      ? "linear-gradient(232.05deg, #FFDD01 19.84%, #FFB82A 92.22%)"
+                      : "transparent",
+                  }}
+                />
+              </Box>
+            )}
+            <Typography color="white" sx={{ flex: 1, fontSize: isMobile?'14px': '24px' }}>
+              {item.text}
             </Typography>
           </Box>
+
+          {!isMobile && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                minWidth: "100px",
+              }}
+            >
+              <Avatar
+                sx={{ width: "36px", height: "36px" }}
+                src={
+                  item.defaultAvatar
+                    ? `${process.env.REACT_APP_CDN_URL}/APP/UserAvatars/${item.avatar}`
+                    : `${process.env.REACT_APP_CDN_URL}/${item.user_id}/PROFILE/IMAGES/filetype/${item.avatar}`
+                }
+              />
+              <Typography
+                color="white"
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  maxWidth: 120,
+                }}
+              >
+                {item.firstname}
+              </Typography>
+            </Box>
+          )}
         </Box>
       ))}
       {isMobile && (
@@ -323,13 +395,21 @@ const Comments = () => {
             fontSize: "18px",
           }}
         >
-          <Box sx={{ display: "flex", gap: "5px", alignItems: 'center', justifyContent: 'center', bottom: '10px',
-            left: 0, }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "5px",
+              alignItems: "center",
+              justifyContent: "center",
+              bottom: "10px",
+              left: 0,
+            }}
+          >
             <Button onClick={() => handleApprove(1)}>
-              <img src={approveBtn} alt="approve"  style={{width: '150px'}}/>
+              <img src={approveBtn} alt="approve" style={{ width: "150px" }} />
             </Button>
             <Button onClick={() => handleApprove(0)}>
-              <img src={rejectBtn} alt="reject" style={{width: '150px'}}/>
+              <img src={rejectBtn} alt="reject" style={{ width: "150px" }} />
             </Button>
           </Box>
         </Box>
