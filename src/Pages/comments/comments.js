@@ -4,6 +4,7 @@ import ApiCall from "../API/api";
 import approveBtn from "../../asserts/approve.png";
 import rejectBtn from "../../asserts/reject.png";
 import tabBtn from "../../asserts/tabSwitch.png";
+import bottomSheetBG from "../../asserts/BottomSheetBG.png";
 
 const Comments = () => {
   const { getCommentsList, approveComments, getUserDetails } = ApiCall();
@@ -131,7 +132,15 @@ const Comments = () => {
   }, []);
 
   return (
-    <Box sx={{ width: isMobile?"100vw":"100%", overflowX: "hidden", px: isMobile ? 1 : 2, marginTop: isMobile && '10%' }}>
+    <Box
+      sx={{
+        width: isMobile ? "100vw" : "100%",
+        overflowX: "hidden",
+        px: isMobile ? 1 : 2,
+        marginTop: isMobile && "10%",
+        position: "relative",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -170,7 +179,7 @@ const Comments = () => {
               alignItems: "center",
               display: "flex",
               justifyContent: "center",
-              mt:isMobile?'3%': '3%'
+              mt: isMobile ? "3%" : "3%",
             }}
             onClick={() => handleTab("unapproved")}
           >
@@ -194,7 +203,7 @@ const Comments = () => {
               alignItems: "center",
               display: "flex",
               justifyContent: "center",
-              mt:isMobile?'3%': '3%'
+              mt: isMobile ? "3%" : "3%",
             }}
             onClick={() => handleTab("approved")}
           >
@@ -293,6 +302,38 @@ const Comments = () => {
           </Box>
         </Box>
       ))}
+      {isMobile && (
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            height: "80px", // Adjust height as needed
+            backgroundImage: `url(${bottomSheetBG})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            zIndex: 1000, // Ensure it's on top
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "white",
+            fontFamily: "Baloo2",
+            fontSize: "18px",
+          }}
+        >
+          <Box sx={{ display: "flex", gap: "5px", alignItems: 'center', justifyContent: 'center', bottom: '10px',
+            left: 0, }}>
+            <Button onClick={() => handleApprove(1)}>
+              <img src={approveBtn} alt="approve"  style={{width: '150px'}}/>
+            </Button>
+            <Button onClick={() => handleApprove(0)}>
+              <img src={rejectBtn} alt="reject" style={{width: '150px'}}/>
+            </Button>
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 };

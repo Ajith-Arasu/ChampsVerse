@@ -87,19 +87,19 @@ const Header = () => {
               <MenuItem key="work" onClick={() => handleClick("work")}>
                 Works
               </MenuItem>
-              ,
+              
               <MenuItem key="books" onClick={() => handleClick("books")}>
                 Books
               </MenuItem>
-              ,
+              
               <MenuItem key="contests" onClick={() => handleClick("contests")}>
                 Contests
               </MenuItem>
-              ,
+              
               <MenuItem key="quests" onClick={() => handleClick("quests")}>
                 Quest
               </MenuItem>
-              ,
+              
               <MenuItem
                 key="storage"
                 onClick={() => handleClick("storage-consumption")}
