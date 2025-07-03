@@ -75,17 +75,17 @@ const UsersStorageConsumption = () => {
   console.log("data", data);
 
   return (
-    <Box>
+    <Box sx={{marginTop: isMobile? "10%": "0"}}>
       <Typography
         sx={{
-          fontSize: "32px",
+          fontSize: isMobile? "21px":"32px",
           fontWeight: 800,
           fontFamily: "Baloo2",
           color: 'white',
-          marginLeft: '2% '
+          marginLeft: isMobile?"4%":'2%'
         }}
       >
-        Users(1245)
+        All Users (1245)
       </Typography>
       {data.map((item, index) => {
         const progressValue =
@@ -97,8 +97,8 @@ const UsersStorageConsumption = () => {
             sx={{
               position: "relative",
               width: "95%",
-              height: "55px",
-              margin: "20px auto",
+              height: isMobile?"40px":"55px",
+              margin: isMobile?"5px auto":"20px auto",
               borderRadius: "10px",
               overflow: "hidden",
             }}
@@ -143,14 +143,14 @@ const UsersStorageConsumption = () => {
             >
               <Typography
                 sx={{
-                  fontSize: "20px",
+                  fontSize: isMobile?"12px":"20px",
                   fontWeight: 800,
                   fontFamily: "Baloo2",
                 }}
               >{`${index + 1}) ${item.username}`}</Typography>
               <Typography
                 sx={{
-                  fontSize: "20px",
+                  fontSize: isMobile?"10px":"20px",
                   fontWeight: 800,
                   fontFamily: "Baloo2",
                 }}
