@@ -15,8 +15,14 @@ const QuestWorks = () => {
   const [isLoading, setIsLoading] = useState(false);
   const isMobile = useMediaQuery("(max-width:600px)");
   const [pageKey, setPageKey] = useState("");
-  const { getContestEntries, getUserDetails, getPost, addBadges, getBadges, ApproveQuestWork, } =
-    ApiCall();
+  const {
+    getContestEntries,
+    getUserDetails,
+    getPost,
+    addBadges,
+    getBadges,
+    ApproveQuestWork,
+  } = ApiCall();
   const [entriesData, setEntriesData] = useState([]);
   const location = useLocation();
   const { contestId, title } = location.state || {};
@@ -153,11 +159,16 @@ const QuestWorks = () => {
       setEntriesData(updatedData);
     }
   };
-
-  console.log("entriesData", entriesData);
   return (
-    <div style={{ marginLeft: "5%", marginTop: "3%" }}>
-      <Typography style={{ fontSize: "32px", fontWeight: 800, color: "white" , textAlign: 'center'}}>
+    <div style={{ marginLeft: "5%", marginTop: isMobile?"10%":"3%" }}>
+      <Typography
+        style={{
+          fontSize: isMobile ? "21px" : "32px",
+          fontWeight: 800,
+          color: "white",
+          textAlign: "center",
+        }}
+      >
         {title}
       </Typography>
       {isLoading && <Loader />}
@@ -165,7 +176,7 @@ const QuestWorks = () => {
         style={{
           display: "flex",
           flexWrap: "wrap",
-          gap: isMobile?"8px":"12px",
+          gap: isMobile ? "8px" : "12px",
           marginTop: "2%",
         }}
       >
@@ -178,11 +189,13 @@ const QuestWorks = () => {
             <div
               key={index}
               style={{
-                flex: isMobile?"1 1 calc(50% - 18px)":"1 1 calc(100% / 5 - 35px)",
-                maxWidth: isMobile?"calc(50% - 18px)":"calc(100% / 5 - 35px)",
+                flex: isMobile
+                  ? "1 1 calc(50% - 18px)"
+                  : "1 1 calc(100% / 5 - 35px)",
+                maxWidth: isMobile ? "" : "calc(100% / 5 - 35px)",
                 textAlign: "center",
-                height: isMobile?"272":"390px",
-                width: isMobile?"170":"360px",
+                height: isMobile ? "272" : "390px",
+                width: isMobile ? "150" : "360px",
 
                 borderRadius: "20px",
                 position: "relative",
@@ -236,7 +249,7 @@ const QuestWorks = () => {
                   backgroundPosition: "center",
                   paddingTop: "10px",
                   paddingBottom: "10px",
-                  marginTop: isMobile?"-25%":"-15%",
+                  marginTop: isMobile ? "-25%" : "-15%",
                 }}
               >
                 <Box sx={{ display: "flex", gap: "8px", marginTop: "15px" }}>
@@ -268,8 +281,8 @@ const QuestWorks = () => {
                               ["mp", "wnd", "hof"].includes(item.badge))
                               ? 1.0
                               : 0.2,
-                          width: isMobile?"30px":"45px",
-                          height: isMobile?"30px":"45px",
+                          width: isMobile ? "30px" : "45px",
+                          height: isMobile ? "30px" : "45px",
                         }}
                       />
                     </Button>
@@ -291,8 +304,8 @@ const QuestWorks = () => {
                       style={{
                         cursor: "pointer",
                         opacity: item.badge === "mp" ? 1.0 : 0.2,
-                        width: isMobile?"30px":"45px",
-                        height: isMobile?"30px":"45px",
+                        width: isMobile ? "30px" : "45px",
+                        height: isMobile ? "30px" : "45px",
                       }}
                     />
                   </Button>
@@ -309,8 +322,8 @@ const QuestWorks = () => {
                       style={{
                         cursor: "pointer",
                         opacity: item.badge === "wnd" ? 1.0 : 0.2,
-                        width:isMobile?"30px": "45px",
-                        height: isMobile?"30px":"45px",
+                        width: isMobile ? "30px" : "45px",
+                        height: isMobile ? "30px" : "45px",
                       }}
                     />
                   </Button>
@@ -327,8 +340,8 @@ const QuestWorks = () => {
                       style={{
                         cursor: "pointer",
                         opacity: item.badge === "hof" ? 1.0 : 0.2,
-                        width: isMobile?"30px":"45px",
-                        height: isMobile?"30px":"45px",
+                        width: isMobile ? "30px" : "45px",
+                        height: isMobile ? "30px" : "45px",
                       }}
                     />
                   </Button>
@@ -349,7 +362,7 @@ const QuestWorks = () => {
                           <img
                             src={approveBtn}
                             alt="Approve"
-                            style={{ width: isMobile? "80px":"110px" }}
+                            style={{ width: isMobile ? "80px" : "110px" }}
                           />
                         </Button>
                         <Button
@@ -362,12 +375,17 @@ const QuestWorks = () => {
                           <img
                             src={rejBtn}
                             alt="Reject"
-                            style={{ width: isMobile? "80px":"110px" }}
+                            style={{ width: isMobile ? "80px" : "110px" }}
                           />
                         </Button>
                       </>
                     )}
-                    {item.entry_status === 3 && <img src={approvedImg} style={{width: isMobile? "90px": 'auto'}}></img>}
+                    {item.entry_status === 3 && (
+                      <img
+                        src={approvedImg}
+                        style={{ width: isMobile ? "90px" : "auto" }}
+                      ></img>
+                    )}
                   </Box>
                 }
               </Box>
