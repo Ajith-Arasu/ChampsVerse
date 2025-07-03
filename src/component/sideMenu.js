@@ -1,9 +1,16 @@
-import { Box, TextField, Button, Typography } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import menuCard from "../asserts/menu-card.png";
 import cardIcon from "../asserts/cardIcon.png";
 const DashboardCards = () => {
   const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width:600px)");
   const statsData = [
     { label: "Total Users", value: "50,000", nav: null },
     { label: "Total Works", value: "8,000", nav: "works" },
@@ -21,20 +28,32 @@ const DashboardCards = () => {
     <Box>
       <Typography
         style={{
-          fontSize: "32px",
+          fontSize: isMobile? "19px":"32px",
           fontFamily: "Baloo2",
           fontWeight: 800,
           color: "white",
+          margin: isMobile && '8% 3%'
         }}
       >
         Dashboard
       </Typography>
-      <Box style={{ display: "flex", gap: "10px" }}>
+      <Box
+        style={{
+          display: "flex",
+          flexWrap: "wrap", // allow items to wrap to next row
+          gap: isMobile ? "5px" : "10px",
+          justifyContent: isMobile ? "center" : "flex-start",
+          margin: "0 10px",
+          width: isMobile && "120%",
+        }}
+      >
         {statsData.map((stat, index) => (
           <Box
+            key={index}
             sx={{
-              width: "220px", // Set appropriate width
-              height: "152px", // Set appropriate height
+              width: isMobile ? "220px" : "220px",
+              maxWidth: isMobile ? "calc(100% / 2 - 5px)" : "220px",
+              height: isMobile? "130px":"152px",
               backgroundImage: `url(${menuCard})`,
               backgroundSize: "100% 100%",
               backgroundRepeat: "no-repeat",
@@ -57,12 +76,14 @@ const DashboardCards = () => {
                   marginLeft: "30px",
                   marginRight: 0,
                   marginBottom: 0,
+                  height:isMobile && '26px',
+                  width: isMobile && '26px'
                 }}
-              ></img>
+              />
               <Typography
                 style={{
                   marginTop: "40px",
-                  fontSize: "12px",
+                  fontSize:isMobile? '8px': "12px",
                   color: "white",
                   marginLeft: "15%",
                 }}
@@ -72,7 +93,7 @@ const DashboardCards = () => {
               <Typography
                 style={{
                   marginLeft: "30px",
-                  fontSize: "12px",
+                  fontSize: isMobile ? "8px":"12px",
                   fontWeight: "500",
                   color: "white",
                 }}
@@ -82,7 +103,7 @@ const DashboardCards = () => {
               <Typography
                 style={{
                   marginLeft: "30px",
-                  fontSize: "32px",
+                  fontSize: isMobile ? "20px":"32px",
                   fontWeight: "800",
                   color: "white",
                 }}

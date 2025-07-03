@@ -1,4 +1,10 @@
-import { Box, TextField, Button, Typography } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import searchbar from "../../asserts/searchBar.png";
 import searchBtn from "../../asserts/searchBtn.png";
 import menuCard from "../../asserts/menu-card.png";
@@ -12,7 +18,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import DashboardCards from "../../component/sideMenu";
 import LatestWorks from "../LatestWorks/index";
 import Comments from "../comments/index";
-import Contests from '../../Pages/Contests/index';
+import Contests from "../../Pages/Contests/index";
+import menuIcon from "../../asserts/menuIcon.png";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -22,6 +29,8 @@ const Home = () => {
   const isHome = location.pathname === "/home";
   const isComments = location.pathname === "/comments";
   const isContests = location.pathname === "/contests";
+
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const statsData = [
     { label: "Total Users", value: "50,000", nav: null },
@@ -54,101 +63,192 @@ const Home = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "row" }}>
-      <Box sx={{ width: "25%" }}>
-        <Box
-          sx={{
-            width: "125%", // Set appropriate width
-            height: "750px", // Set appropriate height
-            backgroundImage: `url(${menuBG})`,
-            backgroundSize: "100% 109%",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-            marginLeft: "-15%",
-          }}
-        >
-          <Box
-            component="img"
-            src={logo}
-            alt="Logo"
-            sx={{ width: "200px", marginTop: "5%", marginLeft: "15%" }}
-          />
-          <Box
-            sx={{
-              marginLeft: "30%",
-              display: "flex",
-              flexDirection: "column",
-              color: "white",
-              fontSize: "12px",
-              gap: "20px",
-              marginTop: "15%",
-            }}
-          >
-            {tabs.map((tab) => (
-              <Typography
-                key={tab}
-                onClick={() => handleTab(tab.value)}
-                sx={{
-                  color: activeTab === tab.value ? "yellow" : "white",
-                  cursor: "pointer",
-                  fontWeight: activeTab === tab.value ? "bold" : "normal",
-                }}
-              >
-                {tab.display}
-              </Typography>
-            ))}
-          </Box>
-        </Box>
-      </Box>
-      <Box sx={{ width: "80%" }}>
-        <Box
-          sx={{ display: "flex", gap: "3px", justifyContent: "space-between" }}
-        >
-          <Box style={{ display: "flex" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: isMobile ? "column" : "row",
+        minHeight: "100vh",
+      }}
+    >
+      <Box
+        sx={{
+          width: isMobile ? "100%" : "25%",
+          height: isMobile ? "30%" : "100%",
+          display: isMobile && "flex",
+          justifyContent: isMobile && "space-between",
+          alignItems: isMobile && "center",
+          flexDirection: isMobile && "column",
+        }}
+      >
+        {isMobile && (
+          <>
+            <Box sx={{ display: "flex" }}>
+              <Box
+                component="img"
+                src={logo}
+                alt="Logo"
+                sx={{ width: "200px", height: "20%", marginTop: "15px" }}
+              />
+
+              <Box
+                component="img"
+                src={menuIcon}
+                alt="menuIcon"
+                sx={{ width: "100px" }}
+              />
+            </Box>
             <Box
-              sx={{
-                width: "550px", // Set appropriate width
-                height: "40px", // Set appropriate height
-                backgroundImage: `url(${searchbar})`,
-                backgroundSize: "contain",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                mt: 3,
-                textAlign: "center",
+              style={{
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                boxShadow: `
+      inset 0 0 5px rgba(255, 255, 255, 0.2),
+      inset 0 0 10px rgba(255, 255, 255, 0.3),
+      inset 0 0 15px rgba(255, 255, 255, 0.4),
+      inset 0 0 20px rgba(255, 255, 255, 0.5)
+    `,
+                borderRadius: "12px",
+                margin: "-10px 0%",
+                height: "50px",
               }}
             >
-              <TextField
-                placeholder="Search Something"
-                variant="standard"
-                value={searchKey}
-                onChange={(e) => setSearchKey(e.target.value)}
-                fullWidth
-                InputProps={{
-                  disableUnderline: true,
-                  sx: {
-                    fontSize: "16px",
-                    color: "white",
-                    padding: "30px",
-                  },
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  textAlign: "center",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "15px",
                 }}
-              ></TextField>
+              >
+                <TextField
+                  placeholder="Search Something"
+                  variant="standard"
+                  value={searchKey}
+                  onChange={(e) => setSearchKey(e.target.value)}
+                  fullWidth
+                  InputProps={{
+                    disableUnderline: true,
+                    sx: {
+                      fontSize: "12px",
+                      color: "white",
+                      padding: "15px",
+                    },
+                  }}
+                />
+              </Box>
+              <Button>
+                <img
+                  src={searchBtn}
+                  style={{ height: "auto", width: "100px" }}
+                ></img>
+              </Button>
             </Box>
-            <Button>
-              <img
-                src={searchBtn}
-                style={{ height: "auto", width: "135px" }}
-              ></img>
-            </Button>
+          </>
+        )}
+        {!isMobile && (
+          <Box
+            sx={{
+              width: "125%",
+              height: "750px",
+              backgroundImage: `url(${menuBG})`,
+              backgroundSize: "100% 109%",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              marginLeft: "-15%",
+            }}
+          >
+            <Box
+              component="img"
+              src={logo}
+              alt="Logo"
+              sx={{ width: "160px", marginTop: "5%", marginLeft: "15%" }}
+            />
+            <Box
+              sx={{
+                marginLeft: "30%",
+                display: "flex",
+                flexDirection: "column",
+                color: "white",
+                fontSize: "12px",
+                gap: "20px",
+                marginTop: "15%",
+              }}
+            >
+              {tabs.map((tab) => (
+                <Typography
+                  key={tab}
+                  onClick={() => handleTab(tab.value)}
+                  sx={{
+                    color: activeTab === tab.value ? "yellow" : "white",
+                    cursor: "pointer",
+                    fontWeight: activeTab === tab.value ? "bold" : "normal",
+                  }}
+                >
+                  {tab.display}
+                </Typography>
+              ))}
+            </Box>
           </Box>
+        )}
+      </Box>
 
-          <img
-            src={profileIcon}
-            style={{ width: "52px", height: "52px", margin: "20px 10px" }}
-          ></img>
-        </Box>
+      <Box sx={{ width: "80%" }}>
+        {!isMobile && (
+          <Box
+            sx={{
+              display: "flex",
+              gap: "3px",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box style={{ display: "flex" }}>
+              <Box
+                sx={{
+                  width: "550px",
+                  height: "40px",
+                  backgroundImage: `url(${searchbar})`,
+                  backgroundSize: "contain",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center",
+                  mt: 3,
+                  textAlign: "center",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <TextField
+                  placeholder="Search Something"
+                  variant="standard"
+                  value={searchKey}
+                  onChange={(e) => setSearchKey(e.target.value)}
+                  fullWidth
+                  InputProps={{
+                    disableUnderline: true,
+                    sx: {
+                      fontSize: "16px",
+                      color: "white",
+                      padding: "30px",
+                    },
+                  }}
+                ></TextField>
+              </Box>
+              <Button>
+                <img
+                  src={searchBtn}
+                  style={{ height: "auto", width: "135px" }}
+                ></img>
+              </Button>
+            </Box>
+
+            <img
+              src={profileIcon}
+              style={{ width: "52px", height: "52px", margin: "20px 10px" }}
+            ></img>
+          </Box>
+        )}
 
         {isHome && (
           <>
@@ -158,7 +258,7 @@ const Home = () => {
         )}
         {isComments && <Comments />}
         {isLatestWorks && <LatestWorks />}
-        {isContests && <Contests/>}
+        {isContests && <Contests />}
       </Box>
     </Box>
   );
