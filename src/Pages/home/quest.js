@@ -25,12 +25,8 @@ const Quests = () => {
   const Expert =
     " radial-gradient(96.46% 96.46% at 50% 50%, rgba(213, 0, 0, 0.8) 0%, rgba(255, 0, 0, 0.8) 100%)";
 
-  const handleClick = (quest) => {
-    setSelectedQuest(quest);
-    setDialogOpen(true);
-    navigate(`/quest?q=${quest.contest_code}`, {
-      state: { quest },
-    });
+  const handleClick = (contestId, title) => {
+    navigate("/quests-Works", { state: { contestId, title } });
   };
 
   const difficultyLabels = ["Easy", "Moderate", "Advanced", "Expert"];
@@ -59,13 +55,43 @@ const Quests = () => {
 
   return (
     <>
-      <div>
-        <Box style={{display: 'flex', justifyContent: 'space-between', marginTop: '2%', alignItems: 'center'}}>
+      <div
+        style={{
+          width: isMobile ? "100vw" : "100%", // ✅ doesn't include scrollbar width
+          overflowX: "hidden",
+          overflowY: "hidden", // ✅ if you want to hide vertical scrollbar
+          boxSizing: "border-box",
+        }}
+      >
+        <Box
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: "2%",
+            alignItems: "center",
+          }}
+        >
           <Typography
-            style={{ fontSize: "32px", fontWeight: 800, color: "white" }}
+            style={{
+              fontSize: isMobile ? "21px" : "32px",
+              fontWeight: 800,
+              color: "white",
+              marginLeft: isMobile ? "5%" : 0,
+            }}
           >{`Quests (12)`}</Typography>
 
-          <Typography style={{fontSize: "12px", fontWeight: 400, color: "white", marginRight: '8%', cursor: 'pointer'}} onClick={() => navigate("/quests")}>View All</Typography>
+          <Typography
+            style={{
+              fontSize: isMobile ? "9px" : "12px",
+              fontWeight: 400,
+              color: "white",
+              marginRight: "8%",
+              cursor: "pointer",
+            }}
+            onClick={() => navigate("/quests")}
+          >
+            View All
+          </Typography>
         </Box>
         {isLoading && <Loader />}
         <div>
@@ -96,14 +122,14 @@ const Quests = () => {
               return (
                 <div
                   key={index}
-                  onClick={() => handleClick(item)}
+                  onClick={() => handleClick(item.contest_id, item.title)}
                   style={{
                     display: "flex",
                     flexDirection: "column",
                     height: isMobile ? "250px" : "350px",
                     width: isMobile ? "150px" : "220px",
                     flexShrink: 0,
-                    cursor: 'pointer'
+                    cursor: "pointer",
                   }}
                 >
                   <div
@@ -251,8 +277,8 @@ const Quests = () => {
                           height: isMobile ? "20%" : "30%",
                         }}
                       >
-                        {item.description.length > (isMobile ? 60 : 100)
-                          ? item.description.slice(0, isMobile ? 60 : 100) +
+                        {item.description.length > (isMobile ? 60 : 60)
+                          ? item.description.slice(0, isMobile ? 60 : 60) +
                             "..."
                           : item.description}
                       </Typography>
