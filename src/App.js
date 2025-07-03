@@ -49,9 +49,9 @@ const AppContent = ({
   const isHomePage = location.pathname === "/home";
   const isQuestWorks = location.pathname === "/quests-Works";
   const isComments = location.pathname === "/comments";
-   const isMobile = useMediaQuery("(max-width:600px)");
+  const isMobile = useMediaQuery("(max-width:600px)");
 
-   const ConditionalComponent = () => {
+  const ConditionalComponent = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
   return isMobile ? <Comments /> : <Home />;
 }

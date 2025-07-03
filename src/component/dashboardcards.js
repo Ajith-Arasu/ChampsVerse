@@ -12,7 +12,7 @@ const DashboardCards = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width:600px)");
   const statsData = [
-    { label: "Total Users", value: "50,000", nav: null },
+    { label: "Total Users", value: "50,000", nav: "storage-consumption" },
     { label: "Total Works", value: "8,000", nav: "works" },
     { label: "Total Books", value: "10,000", nav: "books" },
     { label: "Total Achievements", value: "2,500", nav: "achievements" },

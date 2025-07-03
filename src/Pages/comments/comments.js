@@ -20,6 +20,8 @@ const Comments = () => {
 
   const handleTab = (tab) => {
     setSelectedType(tab);
+    setData([]);
+    setPageKey("");
   };
 
   const handleSelectItem = (commentId) => {
@@ -274,7 +276,7 @@ const Comments = () => {
                   {item.firstname}
                 </Typography>
               </Box>
-              {isMobile && (
+              {(isMobile && selectedType === "unapproved") &&(
                 <Box
                   onClick={() => handleSelectItem(item.comment_id)}
                   sx={{
@@ -311,7 +313,7 @@ const Comments = () => {
               justifyContent: isMobile ? "space-between" : "center",
             }}
           >
-            {!isMobile && (
+            {(!isMobile && selectedType === "unapproved")&&(
               <Box
                 onClick={() => handleSelectItem(item.comment_id)}
                 sx={{

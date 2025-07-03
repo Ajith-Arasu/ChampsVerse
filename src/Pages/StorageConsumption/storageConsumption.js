@@ -1,18 +1,17 @@
-import { Typography,useMediaQuery } from "@mui/material";
+import { Typography, useMediaQuery, LinearProgress } from "@mui/material";
 import Box from "@mui/material/Box";
-import LinearProgress from "@mui/material/LinearProgress";
-import style from "../StorageConsumption/style.module.css";
+import storageContainer from "../../asserts/userStoragebg.png";
 import ApiCall from "../API/api";
 import { useEffect, useState } from "react";
 
-const StorageConsumption = () => {
+const UsersStorageConsumption = () => {
   const [pageKey, setPageKey] = useState("");
   const { getStorageConsumption, getUserDetails } = ApiCall();
   const [isLoading, setIsLoading] = useState(false);
   const [nextPage, setNextPage] = useState(1);
   const [data, setData] = useState([]);
   const maxStorageInBytes = 1024 * 1024 * 1024;
-  const isMobile = useMediaQuery('(max-width:600px)');
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const getData = async () => {
     if (isLoading || pageKey === null) return;
@@ -26,7 +25,7 @@ const StorageConsumption = () => {
 
         const StorageData = formatData(result.data, userData);
         setData((prev) => [...prev, ...StorageData]);
-        
+
         if (result?.page) {
           setPageKey(result?.page);
         } else {
@@ -71,54 +70,96 @@ const StorageConsumption = () => {
 
   useEffect(() => {
     getData();
-  }, [nextPage]); 
+  }, [nextPage]);
 
-  useEffect(() => {
-    getData();
-  }, []);
+  console.log("data", data);
 
   return (
-    <>
+    <Box sx={{marginTop: isMobile? "10%": "0"}}>
+      <Typography
+        sx={{
+          fontSize: isMobile? "21px":"32px",
+          fontWeight: 800,
+          fontFamily: "Baloo2",
+          color: 'white',
+          marginLeft: isMobile?"4%":'2%'
+        }}
+      >
+        All Users (1245)
+      </Typography>
       {data.map((item, index) => {
-        const progressValue = (item.storage * 1024 * 1024) / maxStorageInBytes * 100;
+        const progressValue =
+          ((item.storage * 1024 * 1024) / maxStorageInBytes) * 100;
+
         return (
-          <Box className={style["bar"]} key={index}>
-            <Box className={style["bar-span"]}>
-              <LinearProgress
-                variant="determinate"
-                color="inherit"
-                value={progressValue}
+          <Box
+            key={index}
+            sx={{
+              position: "relative",
+              width: "95%",
+              height: isMobile?"40px":"55px",
+              margin: isMobile?"5px auto":"20px auto",
+              borderRadius: "10px",
+              overflow: "hidden",
+            }}
+          >
+            {/* Background LinearProgress */}
+            <LinearProgress
+              variant="determinate"
+              value={progressValue}
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                backgroundColor: "transparent", // transparent track
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor: "yellow", // filled/progressed part
+                },
+              }}
+            />
+
+            {/* Foreground content with box shadow */}
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                boxShadow: `
+              inset 0 0 5px rgba(255, 255, 255, 0.2),
+              inset 0 0 10px rgba(255, 255, 255, 0.3),
+              inset 0 0 15px rgba(255, 255, 255, 0.4),
+              inset 0 0 20px rgba(255, 255, 255, 0.5)
+            `,
+                borderRadius: "10px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                px: 2,
+                position: "relative",
+                zIndex: 1,
+                color: "white",
+              }}
+            >
+              <Typography
                 sx={{
-                  height: isMobile? '40px':"52px",
-                  backgroundColor: "#E8D5FF", // unused bar color
-                  "& .MuiLinearProgress-bar": {
-                    backgroundColor: "#7E31E1", // used bar color
-                  },
+                  fontSize: isMobile?"12px":"20px",
+                  fontWeight: 800,
+                  fontFamily: "Baloo2",
                 }}
-              />
-              <Box
+              >{`${index + 1}) ${item.username}`}</Typography>
+              <Typography
                 sx={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "0 10px",
-                  color: "white",
+                  fontSize: isMobile?"10px":"20px",
+                  fontWeight: 800,
+                  fontFamily: "Baloo2",
                 }}
-              >
-                <Typography style={{fontSize: isMobile? "16px": '22px'}}>{item.username}</Typography>
-                <Typography style={{fontSize: isMobile? "12px": '18px'}}>{`${item.storage}Mb / 1GB`}</Typography>
-              </Box>
+              >{`${item.storage}MB / 1GB`}</Typography>
             </Box>
           </Box>
         );
       })}
-    </>
+    </Box>
   );
 };
-
-export default StorageConsumption;
+export default UsersStorageConsumption;
