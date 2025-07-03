@@ -6,6 +6,8 @@ import {
   Button,
   Typography,
   useMediaQuery,
+    Menu,
+  MenuItem,
 } from "@mui/material";
 import profileIcon from "../asserts/adminProfileIcon.png";
 import { useState } from "react";
@@ -19,6 +21,21 @@ const Header = () => {
   const location = useLocation();
   const isLatestWorks = location.pathname === "/latestworks";
   const isMobile = useMediaQuery("(max-width:600px)");
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleOpenMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+   const handleClick = (page) => {
+    navigate(`/${page}`);
+    handleCloseMenu();
+  };
+
   return (
     <Box>
       {" "}
@@ -56,7 +73,60 @@ const Header = () => {
               src={menuIcon}
               alt="menuIcon"
               sx={{ width: isMobile ? "80px" : "100px" }}
+              onClick={handleOpenMenu}
             ></Box>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleCloseMenu}
+              id="basic-menu"
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem key="work" onClick={() => handleClick("work")}>
+                Works
+              </MenuItem>
+              ,
+              <MenuItem key="books" onClick={() => handleClick("books")}>
+                Books
+              </MenuItem>
+              ,
+              <MenuItem key="contests" onClick={() => handleClick("contests")}>
+                Contests
+              </MenuItem>
+              ,
+              <MenuItem key="quests" onClick={() => handleClick("quests")}>
+                Quest
+              </MenuItem>
+              ,
+              <MenuItem
+                key="storage"
+                onClick={() => handleClick("storage-consumption")}
+              >
+                Storage consumption
+              </MenuItem>
+              ,
+              <MenuItem onClick={() => handleClick("deleteduser")}>
+                Deleted User
+              </MenuItem>
+              <MenuItem onClick={() => handleClick("deletedpost")}>
+                Deleted Post
+              </MenuItem>
+              <MenuItem onClick={() => handleClick("latestworks")}>
+                Latest Works
+              </MenuItem>
+              <MenuItem onClick={() => handleClick("comments")}>
+                Comments
+              </MenuItem>
+              <MenuItem onClick={() => handleClick("achievements")}>
+                Achievements
+              </MenuItem>
+              <MenuItem onClick={() => handleClick("events")}>Events</MenuItem>
+              <MenuItem onClick={() => handleClick("createContest/Quest")}>
+                Create Contest / Quest
+              </MenuItem>
+            </Menu>
           </Box>
           <Box
             style={{
