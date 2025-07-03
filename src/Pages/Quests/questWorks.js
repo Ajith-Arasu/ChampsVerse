@@ -165,7 +165,7 @@ const QuestWorks = () => {
         style={{
           display: "flex",
           flexWrap: "wrap",
-          gap: "12px",
+          gap: isMobile?"8px":"12px",
           marginTop: "2%",
         }}
       >
@@ -178,11 +178,11 @@ const QuestWorks = () => {
             <div
               key={index}
               style={{
-                flex: "1 1 calc(100% / 5 - 35px)",
-                maxWidth: "calc(100% / 5 - 35px)",
+                flex: isMobile?"1 1 calc(50% - 18px)":"1 1 calc(100% / 5 - 35px)",
+                maxWidth: isMobile?"calc(50% - 18px)":"calc(100% / 5 - 35px)",
                 textAlign: "center",
-                height: "390px",
-                width: "360px",
+                height: isMobile?"272":"390px",
+                width: isMobile?"170":"360px",
 
                 borderRadius: "20px",
                 position: "relative",
@@ -236,7 +236,7 @@ const QuestWorks = () => {
                   backgroundPosition: "center",
                   paddingTop: "10px",
                   paddingBottom: "10px",
-                  marginTop: "-15%",
+                  marginTop: isMobile?"-25%":"-15%",
                 }}
               >
                 <Box sx={{ display: "flex", gap: "8px", marginTop: "15px" }}>
@@ -268,8 +268,8 @@ const QuestWorks = () => {
                               ["mp", "wnd", "hof"].includes(item.badge))
                               ? 1.0
                               : 0.2,
-                          width: "45px",
-                          height: "45px",
+                          width: isMobile?"30px":"45px",
+                          height: isMobile?"30px":"45px",
                         }}
                       />
                     </Button>
@@ -291,8 +291,8 @@ const QuestWorks = () => {
                       style={{
                         cursor: "pointer",
                         opacity: item.badge === "mp" ? 1.0 : 0.2,
-                        width: "45px",
-                        height: "45px",
+                        width: isMobile?"30px":"45px",
+                        height: isMobile?"30px":"45px",
                       }}
                     />
                   </Button>
@@ -309,8 +309,8 @@ const QuestWorks = () => {
                       style={{
                         cursor: "pointer",
                         opacity: item.badge === "wnd" ? 1.0 : 0.2,
-                        width: "45px",
-                        height: "45px",
+                        width:isMobile?"30px": "45px",
+                        height: isMobile?"30px":"45px",
                       }}
                     />
                   </Button>
@@ -327,8 +327,8 @@ const QuestWorks = () => {
                       style={{
                         cursor: "pointer",
                         opacity: item.badge === "hof" ? 1.0 : 0.2,
-                        width: "45px",
-                        height: "45px",
+                        width: isMobile?"30px":"45px",
+                        height: isMobile?"30px":"45px",
                       }}
                     />
                   </Button>
@@ -349,7 +349,7 @@ const QuestWorks = () => {
                           <img
                             src={approveBtn}
                             alt="Approve"
-                            style={{ width: "110px" }}
+                            style={{ width: isMobile? "80px":"110px" }}
                           />
                         </Button>
                         <Button
@@ -362,12 +362,12 @@ const QuestWorks = () => {
                           <img
                             src={rejBtn}
                             alt="Reject"
-                            style={{ width: "110px" }}
+                            style={{ width: isMobile? "80px":"110px" }}
                           />
                         </Button>
                       </>
                     )}
-                    {item.entry_status === 3 && <img src={approvedImg}></img>}
+                    {item.entry_status === 3 && <img src={approvedImg} style={{width: isMobile? "90px": 'auto'}}></img>}
                   </Box>
                 }
               </Box>
