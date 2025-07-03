@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { Typography, Box, Avatar, Button, useMediaQuery } from "@mui/material";
+import { useEffect, useState } from "react";
 import ApiCall from "../API/api";
-import { Typography, Button, Checkbox, useMediaQuery } from "@mui/material";
-import Loader from "../Loader/loader";
+import approveBtn from "../../asserts/approve.png";
+import rejectBtn from "../../asserts/reject.png";
+import tabBtn from "../../asserts/tabSwitch.png";
 
 const Comments = () => {
-  const { getCommentsList, approveComments } = ApiCall();
+  const { getCommentsList, approveComments, getUserDetails } = ApiCall();
   const [isLoading, setIsLoading] = useState(false);
   const [nextPage, setNextPage] = useState(1);
   const [pageKey, setPageKey] = useState("");
@@ -13,9 +15,13 @@ const Comments = () => {
   const [checkedItems, setCheckedItems] = useState([]);
   const [disable, setDisable] = useState(false);
   const [selectedType, setSelectedType] = useState("unapproved");
-  const isMobile = useMediaQuery('(max-width:600px)');
+  const isMobile = useMediaQuery("(max-width:600px)");
 
-  const handleSelect = (commentId) => {
+  const handleTab = (tab) => {
+    setSelectedType(tab);
+  };
+
+  const handleSelectItem = (commentId) => {
     setCheckedItems((prev) =>
       prev.includes(commentId)
         ? prev.filter((id) => id !== commentId)
@@ -28,8 +34,23 @@ const Comments = () => {
     setIsLoading(true);
     const type = selectedType === "unapproved" ? 0 : 1;
     try {
-      let result = await getCommentsList(type, pageKey);
-      setData((prev) => [...prev, ...result.data]);
+      const result = await getCommentsList(type, pageKey);
+      const userIds = result.data.map((item) => item.user_id).join(",");
+      const userData = await getUserDetails(userIds);
+      console.log("userData", userData);
+      const appendPost = result.data.map((item) => {
+        const user = userData.find((user) => user.uid === item.user_id);
+        return {
+          ...item,
+          ...(user && {
+            firstname: user.firstname,
+            defaultAvatar: user.defaultAvatar,
+            avatar: user.avatar,
+          }),
+        };
+      });
+      console.log("appendPost", appendPost);
+      setData((prev) => [...prev, ...appendPost]);
       if (result?.page) {
         setPageKey(result?.page);
       } else {
@@ -48,7 +69,16 @@ const Comments = () => {
       const ids = checkedItems.join(",");
       const type = "post";
       const response = await approveComments(ids, state, type);
+
       setCheckedItems([]);
+
+      setPageKey("");
+      setNextPage(1);
+      setData([]);
+
+      setTimeout(() => {
+        fetchData();
+      }, 0);
     } catch (error) {
       console.error("Error during approval:", error);
     } finally {
@@ -57,16 +87,16 @@ const Comments = () => {
   };
 
   const colorMap = {
-    0: '#BB00BB',
-    1: '#4CAF50',
-    2: '#009688',
-    3: '#FF9800',
-    4: '#F44336',
-    5: '#C62828',
-    6: '#8E24AA',
-    7: '#6A1B9A',
-    8: '#D3D3D3',
-    9: 'grey'
+    0: "#BB00BB",
+    1: "#4CAF50",
+    2: "#009688",
+    3: "#FF9800",
+    4: "#F44336",
+    5: "#C62828",
+    6: "#8E24AA",
+    7: "#6A1B9A",
+    8: "#D3D3D3",
+    9: "grey",
   };
 
   const changeCommentType = (event) => {
@@ -77,7 +107,7 @@ const Comments = () => {
 
   useEffect(() => {
     fetchData();
-  }, [nextPage, selectedType]);
+  }, [nextPage, selectedType, checkedItems]);
 
   const handleScroll = () => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -101,115 +131,169 @@ const Comments = () => {
   }, []);
 
   return (
-    <div>
-      <div style={{ marginTop: "3%" }}>
-        <label>
-          <input
-            type="radio"
-            onChange={changeCommentType}
-            value="approved"
-            checked={selectedType === "approved"}
-          ></input>
-          Approved comments
-        </label>
-        <label style={{ paddingLeft: "10px" }}>
-          <input
-            onChange={changeCommentType}
-            type="radio"
-            value="unapproved"
-            checked={selectedType === "unapproved"}
-          ></input>
-          Pending Approval comments
-        </label>
-      </div>
-      <Typography
-        sx={{ textAlign: "center", fontSize: isMobile ? '24px' : "52px", color: "black" }}
+    <Box sx={{ width: "100vw", overflowX: "hidden", px: isMobile ? 1 : 2, marginTop: isMobile && '10%' }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
       >
-        Comments
-      </Typography>
-      {isLoading && <Loader />}
-      {checkedItems.length > 1 && (
-        <div
-          style={{
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Typography
+            sx={{
+              fontSize: isMobile ? "19px" : "32px",
+              fontFamily: "Baloo2",
+              color: "white",
+              mt: "6px",
+            }}
+          >
+            Comments{" "}
+            <span style={{ fontSize: isMobile ? "15px" : "24px" }}>(23)</span>
+          </Typography>
+          <Button
+            sx={{
+              backgroundImage:
+                selectedType === "unapproved" ? `url(${tabBtn})` : "none",
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              width: isMobile ? "80px" : "133px",
+              height: isMobile ? "45px" : "71px",
+              color: "white",
+              fontFamily: "Baloo2",
+              fontSize: isMobile ? "12px" : "18px",
+              textTransform: "none",
+              boxShadow: "none",
+              cursor: "pointer",
+              alignItems: "center",
+              display: "flex",
+              justifyContent: "center",
+              mt:isMobile?'3%': '3%'
+            }}
+            onClick={() => handleTab("unapproved")}
+          >
+            Pending
+          </Button>
+          <Button
+            sx={{
+              backgroundImage:
+                selectedType === "approved" ? `url(${tabBtn})` : "none",
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              width: isMobile ? "85px" : "133px",
+              height: isMobile ? "45px" : "71px",
+              color: "white",
+              fontFamily: "Baloo2",
+              fontSize: isMobile ? "12px" : "18px",
+              textTransform: "none",
+              boxShadow: "none",
+              cursor: "pointer",
+              alignItems: "center",
+              display: "flex",
+              justifyContent: "center",
+              mt:isMobile?'3%': '3%'
+            }}
+            onClick={() => handleTab("approved")}
+          >
+            Approved
+          </Button>
+        </Box>
+        {!isMobile && (
+          <Box sx={{ display: "flex", gap: "5px" }}>
+            <Button onClick={() => handleApprove(1)}>
+              <img src={approveBtn} alt="approve" />
+            </Button>
+            <Button onClick={() => handleApprove(0)}>
+              <img src={rejectBtn} alt="reject" />
+            </Button>
+          </Box>
+        )}
+      </Box>
+
+      {data.map((item, index) => (
+        <Box
+          key={item.comment_id}
+          sx={{
+            width: "100%",
+            px: isMobile ? 1 : 2,
+            py: 1,
+            my: 2,
+            borderRadius: "10px",
+            backgroundColor: colorMap[item.apprv_sts],
             display: "flex",
-            gap: "20px",
-            position: "absolute",
-            right: isMobile ? '4%' : "10%",
-            top: isMobile ? "27%" : "18%",
+            alignItems: "center",
+            boxShadow: `
+          inset 0 0 5px rgba(255, 255, 255, 0.2),
+          inset 0 0 10px rgba(255, 255, 255, 0.3),
+          inset 0 0 15px rgba(255, 255, 255, 0.4),
+          inset 0 0 20px rgba(255, 255, 255, 0.5)
+        `,
           }}
         >
-          <Button
-            variant="outlined"
-            color="success"
-            onClick={() => handleApprove(1)}
-          >
-            Approve
-          </Button>
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={() => handleApprove(0)}
-          >
-            Reject
-          </Button>
-        </div>
-      )}
-      {data.length === 0 && <Typography sx={{ textAlign: "center", marginTop: '10%' }}>No comments to approve</Typography>}
-      <div style={{ marginTop: isMobile && '12%' }}>
-        {data.map(item => {
-          const bgColor = colorMap[item.apprv_sts];
-          return (
-            <div
-              style={{
-                margin: isMobile ? '0 3%' : "0 10% ",
-                border: "1px solid rgb(0, 0, 0,0.7)",
-                padding: "10px",
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, flex: 1 }}>
+            <Box
+              onClick={() => handleSelectItem(item.comment_id)}
+              sx={{
+                width: "25px",
+                height: "25px",
+                border: "2.7px solid rgba(31, 29, 58, 0.4)",
+                borderRadius: "50%",
                 display: "flex",
-                justifyContent: "space-between",
-                backgroundColor: bgColor,
-
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
               }}
             >
-              <div style={{ display: "flex", gap: isMobile ? '5px' : "20px" }}>
-                {selectedType === "unapproved" && (
-                  <Checkbox
-                    {...label}
-                    checked={checkedItems.includes(item.comment_id)}
-                    onChange={() => handleSelect(item.comment_id)}
-                  />
-                )}
-                <Typography style={{ overflowWrap: "break-word" }}>
-                  {item.text}
-                </Typography>
-              </div>
-              {checkedItems.includes(item.comment_id) &&
-                checkedItems.length <= 1 && (
-                  <div style={{ display: "flex", gap: isMobile ? '5px' : "20px" }}>
-                    <Button
-                      variant="outlined"
-                      color="success"
-                      size="small"
-                      disabled={checkedItems.length === 0}
-                      onClick={() => handleApprove(1)}
-                    >
-                      Approve
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      size="small"
-                      disabled={checkedItems.length === 0}
-                      onClick={() => handleApprove(0)}
-                    >
-                      Reject
-                    </Button>
-                  </div>
-                )}
-            </div>
-          )
-        })}
-      </div>
-    </div>
+              <Box
+                sx={{
+                  width: "17px",
+                  height: "17px",
+                  borderRadius: "50%",
+                  background: checkedItems.includes(item.comment_id)
+                    ? "linear-gradient(232.05deg, #FFDD01 19.84%, #FFB82A 92.22%)"
+                    : "transparent",
+                }}
+              />
+            </Box>
+            <Typography color="white" sx={{ flex: 1 }}>
+              {item.text}
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              minWidth: "100px",
+            }}
+          >
+            <Avatar
+              sx={{ width: "36px", height: "36px" }}
+              src={
+                item.defaultAvatar
+                  ? `${process.env.REACT_APP_CDN_URL}/APP/UserAvatars/${item.avatar}`
+                  : `${process.env.REACT_APP_CDN_URL}/${item.user_id}/PROFILE/IMAGES/filetype/${item.avatar}`
+              }
+            />
+            <Typography
+              color="white"
+              sx={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                maxWidth: 120,
+              }}
+            >
+              {item.firstname}
+            </Typography>
+          </Box>
+        </Box>
+      ))}
+    </Box>
   );
 };
 export default Comments;
