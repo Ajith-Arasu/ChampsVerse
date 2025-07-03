@@ -1,4 +1,4 @@
-import { Typography, Box, Avatar, Button } from "@mui/material";
+import { Typography, Box, Avatar, Button, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import ApiCall from "../API/api";
 import CommentBg from "../../asserts/commentBg.png";
@@ -16,6 +16,7 @@ const Comments = () => {
   const [checkedItems, setCheckedItems] = useState([]);
   const [disable, setDisable] = useState(false);
   const [selectedType, setSelectedType] = useState("unapproved");
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const handleTab = (tab) => {
     setSelectedType(tab);
@@ -131,19 +132,26 @@ const Comments = () => {
   }, []);
 
   return (
-    <Box sx={{ margin: "0 0", overflow: "hidden" }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Box sx={{ display: "flex" }}>
+    <Box sx={{ width: "100vw", overflowX: "hidden", px: isMobile ? 1 : 2, marginTop: isMobile && '10%' }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <Typography
             sx={{
-              fontSize: "32px",
+              fontSize: isMobile ? "19px" : "32px",
               fontFamily: "Baloo2",
-              marginTop: "6px",
               color: "white",
+              mt: "6px",
             }}
           >
-            Pending Comments{" "}
-            <span sx={{ fontSize: "24px", fontFamily: "Baloo2" }}>(23)</span>
+            Comments{" "}
+            <span style={{ fontSize: isMobile ? "15px" : "24px" }}>(23)</span>
           </Typography>
           <Button
             sx={{
@@ -152,23 +160,23 @@ const Comments = () => {
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
-              width: "133px",
-              height: "71px",
+              width: isMobile ? "80px" : "133px",
+              height: isMobile ? "45px" : "71px",
               color: "white",
               fontFamily: "Baloo2",
-              fontSize: "18px",
+              fontSize: isMobile ? "12px" : "18px",
               textTransform: "none",
               boxShadow: "none",
               cursor: "pointer",
               alignItems: "center",
               display: "flex",
               justifyContent: "center",
+              mt:isMobile?'3%': 0
             }}
             onClick={() => handleTab("unapproved")}
           >
             Pending
           </Button>
-
           <Button
             sx={{
               backgroundImage:
@@ -176,62 +184,59 @@ const Comments = () => {
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
-              width: "133px",
-              height: "71px",
+              width: isMobile ? "85px" : "133px",
+              height: isMobile ? "45px" : "71px",
               color: "white",
               fontFamily: "Baloo2",
-              fontSize: "18px", // Optional: Customize text size
-              textTransform: "none", // Keeps the label as-is (no uppercase)
-              boxShadow: "none", // Remove default MUI shadow
+              fontSize: isMobile ? "12px" : "18px",
+              textTransform: "none",
+              boxShadow: "none",
               cursor: "pointer",
               alignItems: "center",
               display: "flex",
               justifyContent: "center",
+              mt:isMobile?'3%': 0
             }}
             onClick={() => handleTab("approved")}
           >
             Approved
           </Button>
         </Box>
-        <Box sx={{ display: "flex", gap: "5px" }}>
-          <Button onClick={() => handleApprove(1)}>
-            <img src={approveBtn}></img>
-          </Button>
-          <Button onClick={() => handleApprove(0)}>
-            <img src={rejectBtn}></img>
-          </Button>
-        </Box>
+        {!isMobile && (
+          <Box sx={{ display: "flex", gap: "5px" }}>
+            <Button onClick={() => handleApprove(1)}>
+              <img src={approveBtn} alt="approve" />
+            </Button>
+            <Button onClick={() => handleApprove(0)}>
+              <img src={rejectBtn} alt="reject" />
+            </Button>
+          </Box>
+        )}
       </Box>
 
       {data.map((item, index) => (
         <Box
+          key={item.comment_id}
           sx={{
-            width: "95%",
-            height: "54px",
-            boxShadow: `
-      inset 0 0 5px rgba(255, 255, 255, 0.2),
-      inset 0 0 10px rgba(255, 255, 255, 0.3),
-      inset 0 0 15px rgba(255, 255, 255, 0.4),
-      inset 0 0 20px rgba(255, 255, 255, 0.5)
-    `,
+            width: "100%",
+            px: isMobile ? 1 : 2,
+            py: 1,
+            my: 2,
             borderRadius: "10px",
+            backgroundColor: colorMap[item.apprv_sts],
             display: "flex",
             alignItems: "center",
-
-            px: 2,
-            margin: "20px",
-            backgroundColor: colorMap[item.apprv_sts],
+            boxShadow: `
+          inset 0 0 5px rgba(255, 255, 255, 0.2),
+          inset 0 0 10px rgba(255, 255, 255, 0.3),
+          inset 0 0 15px rgba(255, 255, 255, 0.4),
+          inset 0 0 20px rgba(255, 255, 255, 0.5)
+        `,
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              gap: "10px",
-              alignItems: "center",
-              width: "90%",
-            }}
-          >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, flex: 1 }}>
             <Box
+              onClick={() => handleSelectItem(item.comment_id)}
               sx={{
                 width: "25px",
                 height: "25px",
@@ -242,7 +247,6 @@ const Comments = () => {
                 justifyContent: "center",
                 cursor: "pointer",
               }}
-              onClick={() => handleSelectItem(item.comment_id)}
             >
               <Box
                 sx={{
@@ -255,7 +259,9 @@ const Comments = () => {
                 }}
               />
             </Box>
-            <Typography color="white">{item.text}</Typography>
+            <Typography color="white" sx={{ flex: 1 }}>
+              {item.text}
+            </Typography>
           </Box>
 
           <Box
@@ -263,8 +269,7 @@ const Comments = () => {
               display: "flex",
               alignItems: "center",
               gap: "10px",
-
-              width: "15%",
+              minWidth: "100px",
             }}
           >
             <Avatar
@@ -281,8 +286,7 @@ const Comments = () => {
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
-                maxWidth:  120,
-                display: "block",
+                maxWidth: 120,
               }}
             >
               {item.firstname}
