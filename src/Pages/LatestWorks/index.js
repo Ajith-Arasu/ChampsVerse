@@ -71,7 +71,7 @@ const Work = ({ setUserDetails, setProfilePic }) => {
           setPageKey(result?.page);
         } else {
           setPageKey(null);
-        }
+        } 
 
         let res = await getPost(ids);
         const formatData = transformedData(result.data);
