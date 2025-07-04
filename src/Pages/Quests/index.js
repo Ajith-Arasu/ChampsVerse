@@ -20,7 +20,7 @@ import Moderate from "../../asserts/moderate.png";
 import ApiCall from "../API/api";
 import { useEffect, useState } from "react";
 import threeDotsIcon from "../../asserts/icons8-three-dots-30.png";
-import synBg from '../../asserts/tabSwitch.png'
+import synBg from "../../asserts/tabSwitch.png";
 
 const Quests = () => {
   const location = useLocation();
@@ -100,51 +100,50 @@ const Quests = () => {
   };
 
   return (
-    <div style={{marginBottom: '10px'}}>
+    <div style={{ marginBottom: "60px" ,margin: '10% 5%' }}>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography
           style={{
             fontFamily: "Baloo2",
-            fontSize: isMobile ? "24px" : "32px",
+            fontSize: isMobile ? "21px" : "32px",
             fontWeight: 800,
             color: "white",
-            margin: '1% 2%'
+            margin: "1% 2%",
           }}
         >
           Quests(16)
         </Typography>
 
-      
         <Button
-            sx={{
-              backgroundImage: `url(${synBg})`,
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
-              width: "163px",
-              height: "81px",
-              color: "white",
-              fontFamily: "Baloo2",
-              fontSize: "18px",
-              textTransform: "none",
-              boxShadow: "none",
-              cursor: "pointer",
-              alignItems: "center",
-              display: "flex",
-              justifyContent: "center",
-            }}
-            onClick={() => handleOpen()}
-          >
-            Sync Quests
-          </Button>
+          sx={{
+            backgroundImage: `url(${synBg})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            width: isMobile ? "90px" : "163px",
+            height: isMobile ? "auto" : "81px",
+            color: "white",
+            fontFamily: "Baloo2",
+            fontSize: isMobile?"9px":"18px",
+            textTransform: "none",
+            boxShadow: "none",
+            cursor: "pointer",
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
+          }}
+          onClick={() => handleOpen()}
+        >
+          Sync Quests
+        </Button>
       </Box>
 
       <div
         style={{
           display: "flex",
           flexWrap: "wrap",
-          gap: isMobile ? "28px" : "25px",
-          margin: isMobile ? "5% 10%" : "2% 2%",
+          gap: isMobile ? "10px" : "25px",
+          margin: isMobile ? "5% 2%" : "2% 2%",
         }}
       >
         {quest.map((item, index) => (
@@ -152,10 +151,10 @@ const Quests = () => {
             key={index}
             style={{
               flex: isMobile
-                ? "flex: 1 1 calc(100% / 2 - 10px) "
+                ? "flex: 1 1 calc(100% / 2 - 5px) "
                 : "1 1 calc(100% / 6 - 21px)",
               maxWidth: isMobile
-                ? "calc(100% / 2 - 16px)"
+                ? "calc(100% / 2 - 5px)"
                 : "calc(100% / 6 - 16px)",
               textAlign: "center",
               height: isMobile ? "250px" : "330px",
@@ -207,13 +206,12 @@ const Quests = () => {
                 <img
                   onClick={(e) => handleOpenMenu(e, item)}
                   src={threeDotsIcon}
-                  style={{ position: "absolute", right: "5px" }}
+                  style={{ position: "absolute", right: "5px", width: isMobile && '20px'}}
                 />
                 <Menu
                   anchorEl={menuState.anchorEl}
                   open={Boolean(menuState.anchorEl)}
                   onClose={handleCloseMenu}
-                  
                 >
                   <MenuItem
                     onClick={(e) => {
