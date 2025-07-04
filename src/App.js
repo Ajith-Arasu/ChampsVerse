@@ -21,17 +21,23 @@ import DeletedUser from "./Pages/DeletedUser/index";
 import DeletedUserDetail from "./Pages/DeletedUser/deletedUserDetail";
 import DeletedUserWorks from "./Pages/DeletedUser/deletedUserWorks";
 import QuestDetail from "./Pages/Quests/questDetail";
-import BotWorks from "./Pages/Bot Wroks/work";
+
 import Quests from "./Pages/Quests/index";
 import Comments from "./Pages/comments/comments";
 import Achievement from "./Pages/Achievement";
 import Events from "./Pages/events";
 import CreateContest from "./Pages/Contests/createContest";
-import { ThemeProvider, CssBaseline, createTheme, Box,useMediaQuery } from "@mui/material";
+import {
+  ThemeProvider,
+  CssBaseline,
+  createTheme,
+  Box,
+  useMediaQuery,
+} from "@mui/material";
 import "../src/font.css";
 import background from "./asserts/BGADMIN.png";
 import HeaderNew from "./component/header";
-import Works from './Pages/Works/index';
+import Works from "./Pages/Works/index";
 
 const theme = createTheme({
   typography: {
@@ -51,20 +57,28 @@ const AppContent = ({
   const isWorksPage = location.pathname === "/works";
   const isAllQuestsPage = location.pathname === "/quests";
   const isQuestWorks = location.pathname === "/quests-Works";
+  const isLatestWorks = location.pathname === "/latestworks";
   const isComments = location.pathname === "/comments";
   const isMobile = useMediaQuery("(max-width:600px)");
-  const isStorage = location.pathname === "/storage-consumption"
+  const isStorage = location.pathname === "/storage-consumption";
 
   const ConditionalComponent = () => {
-  const isMobile = useMediaQuery("(max-width:600px)");
-  return isMobile ? <Comments /> : <Home />;
-}
+    const isMobile = useMediaQuery("(max-width:600px)");
+    return isMobile ? <Comments /> : <Home />;
+  };
 
   return (
     <>
-      {!isLoginPage && !isHomePage && !isQuestWorks && !isComments &&  !isStorage && !isWorksPage && !isAllQuestsPage &&(
-        <Header userDetails={userDetails} profilePic={profilePic} />
-      )}
+      {!isLoginPage &&
+        !isHomePage &&
+        !isQuestWorks &&
+        !isComments &&
+        !isStorage &&
+        !isWorksPage &&
+        !isAllQuestsPage && 
+        !isLatestWorks &&(
+          <Header userDetails={userDetails} profilePic={profilePic} />
+        )}
       <Box
         sx={{
           backgroundImage: !isLoginPage ? `url(${background})` : "none",
@@ -76,7 +90,11 @@ const AppContent = ({
           padding: 0,
         }}
       >
-        {(isQuestWorks || (isComments && isMobile) || isStorage || isWorksPage || isAllQuestsPage) && <HeaderNew />}
+        {(isQuestWorks ||
+          (isComments && isMobile) ||
+          isStorage ||
+          isWorksPage ||
+          isAllQuestsPage) && <HeaderNew />}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
@@ -104,15 +122,7 @@ const AppContent = ({
             element={<DeletedUserWorks />}
           />
           <Route path="/quests-Works" element={<QuestDetail />} />
-          <Route
-            path="/latestworks"
-            element={
-              <BotWorks
-                setUserDetails={setUserDetails}
-                setProfilePic={setProfilePic}
-              />
-            }
-          />
+          <Route path="/latestworks" element={<Home />} />
           <Route path="/quests" element={<Quests />} />
           <Route path="/comments" element={<ConditionalComponent />} />
           <Route path="/events" element={<Events />} />
