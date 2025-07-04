@@ -5,6 +5,7 @@ import CommentBg from "../../asserts/commentBg.png";
 import approveBtn from "../../asserts/approve.png";
 import rejectBtn from "../../asserts/reject.png";
 import tabBtn from "../../asserts/tabSwitch.png";
+import { useNavigate } from "react-router-dom";
 
 const Comments = () => {
   const { getCommentsList, approveComments, getUserDetails } = ApiCall();
@@ -17,6 +18,7 @@ const Comments = () => {
   const [disable, setDisable] = useState(false);
   const [selectedType, setSelectedType] = useState("unapproved");
   const isMobile = useMediaQuery("(max-width:600px)");
+  const navigate = useNavigate();
 
   const handleTab = (tab) => {
     setSelectedType(tab);
@@ -131,8 +133,17 @@ const Comments = () => {
     };
   }, []);
 
+  console.log("data- comments", data);
+
   return (
-    <Box sx={{ width: "100vw", overflowX: "hidden", px: isMobile ? 1 : 2, marginTop: isMobile && '10%' }}>
+    <Box
+      sx={{
+        width: "100vw",
+        overflowX: "hidden",
+        px: isMobile ? 1 : 2,
+        marginTop: isMobile && "10%",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -171,7 +182,7 @@ const Comments = () => {
               alignItems: "center",
               display: "flex",
               justifyContent: "center",
-              mt:isMobile?'3%': 0
+              mt: isMobile ? "3%" : 0,
             }}
             onClick={() => handleTab("unapproved")}
           >
@@ -195,7 +206,7 @@ const Comments = () => {
               alignItems: "center",
               display: "flex",
               justifyContent: "center",
-              mt:isMobile?'3%': 0
+              mt: isMobile ? "3%" : 0,
             }}
             onClick={() => handleTab("approved")}
           >
@@ -270,6 +281,9 @@ const Comments = () => {
               alignItems: "center",
               gap: "10px",
               minWidth: "100px",
+            }}
+            onClick={() => {
+              navigate("/profile", { state: { userId: item.user_id } });
             }}
           >
             <Avatar

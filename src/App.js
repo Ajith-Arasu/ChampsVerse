@@ -10,7 +10,7 @@ import Home from "./Pages/home/index";
 import HeaderNew from "./component/header";
 import Work from "./Pages/work/work";
 import Header from "./Pages/Header/header";
-import Profile from "./Pages/profile/Profile";
+import Profile from "./Pages/profile/index";
 import Books from "./Pages/Books/books";
 import Detail from "./Pages/Books/detail";
 import StorageConsumption from "./Pages/Users/index";
@@ -56,6 +56,8 @@ const AppContent = ({
   const isQuests = location.pathname === "/quests";
   const isEvents = location.pathname === "/events";
   const isBooks = location.pathname === '/books';
+  const isProfile = location.pathname === '/profile';
+
 
   return (
     <>
@@ -68,7 +70,8 @@ const AppContent = ({
         !isComments &&
         !isQuests && 
         !isEvents&& 
-        !isBooks &&(
+        !isBooks &&
+        !isProfile &&(
           <Header userDetails={userDetails} profilePic={profilePic} />
         )}
       <Box
@@ -82,7 +85,7 @@ const AppContent = ({
           padding: 0,
         }}
       >
-        {(isWorksPage || isQuestWorks || isQuests || isStorage || isEvents || isBooks) && <HeaderNew />}
+        {(isWorksPage || isQuestWorks || isQuests || isStorage || isEvents || isBooks || isProfile) && <HeaderNew />}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
