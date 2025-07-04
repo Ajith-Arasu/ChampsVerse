@@ -121,7 +121,7 @@ const Home = () => {
                   "aria-labelledby": "basic-button",
                 }}
               >
-                <MenuItem key="work" onClick={() => handleClick("work")}>
+                <MenuItem key="work" onClick={() => handleClick("works")}>
                   Works
                 </MenuItem>
                 <MenuItem key="books" onClick={() => handleClick("books")}>

@@ -31,6 +31,7 @@ import { ThemeProvider, CssBaseline, createTheme, Box,useMediaQuery } from "@mui
 import "../src/font.css";
 import background from "./asserts/BGADMIN.png";
 import HeaderNew from "./component/header";
+import Works from './Pages/Works/index';
 
 const theme = createTheme({
   typography: {
@@ -47,6 +48,8 @@ const AppContent = ({
   const location = useLocation();
   const isLoginPage = location.pathname === "/";
   const isHomePage = location.pathname === "/home";
+  const isWorksPage = location.pathname === "/works";
+  const isAllQuestsPage = location.pathname === "/quests";
   const isQuestWorks = location.pathname === "/quests-Works";
   const isComments = location.pathname === "/comments";
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -59,7 +62,7 @@ const AppContent = ({
 
   return (
     <>
-      {!isLoginPage && !isHomePage && !isQuestWorks && !isComments &&  !isStorage &&(
+      {!isLoginPage && !isHomePage && !isQuestWorks && !isComments &&  !isStorage && !isWorksPage && !isAllQuestsPage &&(
         <Header userDetails={userDetails} profilePic={profilePic} />
       )}
       <Box
@@ -73,7 +76,7 @@ const AppContent = ({
           padding: 0,
         }}
       >
-        {(isQuestWorks || (isComments && isMobile) || isStorage) && <HeaderNew />}
+        {(isQuestWorks || (isComments && isMobile) || isStorage || isWorksPage || isAllQuestsPage) && <HeaderNew />}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
@@ -86,6 +89,7 @@ const AppContent = ({
               />
             }
           />
+          <Route path="/works" element={<Works />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/books" element={<Books />} />
           <Route path="/booksdetail/:userId/:bookId" element={<Detail />} />
