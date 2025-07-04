@@ -13,7 +13,6 @@ import {
 import style from "../Bot Wroks/style.module.css";
 import SideMenu from "../../component/sideMenu";
 
-
 const Work = ({ setUserDetails, setProfilePic }) => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
@@ -211,20 +210,20 @@ const Work = ({ setUserDetails, setProfilePic }) => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "row" }}>
-    
-      <div style={{ marginLeft: "2%", marginTop: "3%", }}>
+      <div style={{ marginLeft: isMobile?"5%":"2%", marginTop: isMobile?"10%":"3%" }}>
         <Typography
-          style={{ fontSize: "32px", fontWeight: 800, color: "white" }}
+          style={{ fontSize: isMobile?"21px":"32px", fontWeight: 800, color: "white" }}
         >
-          Latest Works 
+          Latest Works
         </Typography>
         {isLoading && <Loader />}
         <div
           style={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "15px",
+            gap: isMobile ? "5px" : "15px",
             marginTop: "2%",
+            width: isMobile? "100vw":'100%'
           }}
         >
           {data.map((item, index) => {
@@ -237,10 +236,14 @@ const Work = ({ setUserDetails, setProfilePic }) => {
               <div
                 key={index}
                 style={{
-                  flex: "1 1 calc(100% / 5 - 21px)",
-                  maxWidth: "calc(100% / 5 - 16px)",
+                  flex: isMobile
+                    ? "1 1 calc(50% - 10px)"
+                    : "1 1 calc(100% / 5 - 21px)",
+                  maxWidth: isMobile
+                    ? "calc(50% - 10px)"
+                    : "calc(100% / 5 - 16px)",
                   textAlign: "center",
-                  height: "208px",
+                  height: isMobile?"180px":"208px",
                   width: "201px",
                   boxShadow: "0 6px 10px rgba(0, 0, 0, 0.1)",
                   borderRadius: "20px",
@@ -280,11 +283,11 @@ const Work = ({ setUserDetails, setProfilePic }) => {
                         : `${process.env.REACT_APP_CDN_URL}/${item.user_id}/PROFILE/IMAGES/filetype/${item.avatar}`
                     }
                     sx={{
-                      height: 30,
-                      width: 30,
+                      height: isMobile?20:30,
+                      width: isMobile?20:30,
                     }}
                   ></Avatar>
-                  <Typography>{item.firstname}</Typography>
+                  <Typography sx={{fontSize: isMobile && '12px'}}>{item.firstname}</Typography>
                 </Box>
                 <Box
                   style={{
