@@ -9,6 +9,7 @@ import {
   DialogContentText,
   DialogActions,
   Button,
+  Box,
 } from "@mui/material";
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -19,6 +20,7 @@ import Moderate from "../../asserts/moderate.png";
 import ApiCall from "../API/api";
 import { useEffect, useState } from "react";
 import threeDotsIcon from "../../asserts/icons8-three-dots-30.png";
+import synBg from "../../asserts/tabSwitch.png";
 
 const Quests = () => {
   const location = useLocation();
@@ -88,48 +90,60 @@ const Quests = () => {
       setIsLoading(false);
     }
   };
-  
+
   useEffect(() => {
     getPost();
   }, []);
-
- 
-
-  
 
   const handleOpen = () => {
     setOpenSyncConfirm(true);
   };
 
   return (
-    <div>
-      <Typography
-        style={{
-          fontFamily: "Baloo2",
-          fontSize: isMobile ? "24px" : "48px",
-          fontWeight: 800,
-          color: "black",
-          textAlign: "center",
-          paddingBottom: "40px",
-        }}
-      >
-        ALL QUESTS
-      </Typography>
+    <div style={{ marginBottom: "60px" ,margin: '10% 5%' }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography
+          style={{
+            fontFamily: "Baloo2",
+            fontSize: isMobile ? "21px" : "32px",
+            fontWeight: 800,
+            color: "white",
+            margin: "1% 2%",
+          }}
+        >
+          Quests(16)
+        </Typography>
 
-      <Button
-        variant="contained"
-        style={{ position: "absolute", right: "5%" }}
-        onClick={() => handleOpen()}
-      >
-        Sync Quests
-      </Button>
+        <Button
+          sx={{
+            backgroundImage: `url(${synBg})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            width: isMobile ? "90px" : "163px",
+            height: isMobile ? "auto" : "81px",
+            color: "white",
+            fontFamily: "Baloo2",
+            fontSize: isMobile?"9px":"18px",
+            textTransform: "none",
+            boxShadow: "none",
+            cursor: "pointer",
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
+          }}
+          onClick={() => handleOpen()}
+        >
+          Sync Quests
+        </Button>
+      </Box>
 
       <div
         style={{
           display: "flex",
           flexWrap: "wrap",
-          gap: isMobile ? "28px" : "25px",
-          margin: isMobile ? "5% 10%" : "5% 5%",
+          gap: isMobile ? "10px" : "25px",
+          margin: isMobile ? "5% 2%" : "2% 2%",
         }}
       >
         {quest.map((item, index) => (
@@ -137,14 +151,14 @@ const Quests = () => {
             key={index}
             style={{
               flex: isMobile
-                ? "flex: 1 1 calc(100% / 2 - 10px) "
-                : "1 1 calc(100% / 4 - 21px)",
+                ? "flex: 1 1 calc(100% / 2 - 5px) "
+                : "1 1 calc(100% / 6 - 21px)",
               maxWidth: isMobile
-                ? "calc(100% / 2 - 16px)"
-                : "calc(100% / 4 - 16px)",
+                ? "calc(100% / 2 - 5px)"
+                : "calc(100% / 6 - 16px)",
               textAlign: "center",
-              height: isMobile ? "250px" : "440px",
-              width: isMobile ? "400px" : "200px",
+              height: isMobile ? "250px" : "330px",
+              width: isMobile ? "400px" : "250px",
             }}
           >
             <div
@@ -184,7 +198,7 @@ const Quests = () => {
                   sx={{
                     fontFamily: "Baloo2",
                     fontWeight: 800,
-                    fontSize: isMobile ? "14px" : "21px",
+                    fontSize: isMobile ? "14px" : "18px",
                     color: "white",
                   }}
                 >{`${item.winning_points} Points`}</Typography>
@@ -192,7 +206,7 @@ const Quests = () => {
                 <img
                   onClick={(e) => handleOpenMenu(e, item)}
                   src={threeDotsIcon}
-                  style={{ position: "absolute", right: "5px" }}
+                  style={{ position: "absolute", right: "5px", width: isMobile && '20px'}}
                 />
                 <Menu
                   anchorEl={menuState.anchorEl}
@@ -203,7 +217,7 @@ const Quests = () => {
                     onClick={(e) => {
                       e.stopPropagation();
                       handleClickOpen(menuState.item.contest_id);
-                      handleCloseMenu(); 
+                      handleCloseMenu();
                     }}
                   >
                     Trigger Activity Notification
@@ -260,7 +274,7 @@ const Quests = () => {
                   style={{
                     position: "relative",
                     color: "black",
-                    fontSize: isMobile ? "12px" : "22px",
+                    fontSize: isMobile ? "12px" : "16px",
                     fontWeight: "500",
                     textAlign: "center",
                     fontFamily: "Baloo2",
@@ -285,7 +299,7 @@ const Quests = () => {
                   style={{
                     fontFamily: "Baloo2",
                     color: "white",
-                    fontSize: isMobile ? "16px" : "29px",
+                    fontSize: isMobile ? "16px" : "18px",
                     fontWeight: "800",
                     textAlign: "center",
                     padding: "15px 0 0 0",
@@ -307,10 +321,36 @@ const Quests = () => {
                     whiteSpace: "normal",
                   }}
                 >
-                  {item.description.length > 140
-                    ? item.description.slice(0, 140) + "..."
+                  {item.description.length > 40
+                    ? item.description.slice(0, 40) + "..."
                     : item.description}
                 </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backdropFilter: "blur(180px)", // ✅ apply blur to background
+                    backgroundColor: "rgba(255, 255, 255, 0.1)", // ✅ semi-transparent white
+                    borderRadius: "20px",
+                    padding: "5px 10px",
+                    width: "40%",
+                    margin: "0 30%",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontFamily: "Baloo2",
+                      color: "white",
+                      fontSize: isMobile ? "8px" : "12px",
+                      fontWeight: 500,
+                      textAlign: "center",
+                      whiteSpace: "normal",
+                    }}
+                  >
+                    {item.category}
+                  </Typography>
+                </Box>
               </div>
             </div>
           </div>
