@@ -141,7 +141,7 @@ const Header = ({ userDetails }) => {
 
             <Box sx={{ flexGrow: 1 }} />
 
-            {isProfilePage && (
+            {/* {isProfilePage && (
               <Box
                 className="profile-info"
                 display="flex"
@@ -161,7 +161,7 @@ const Header = ({ userDetails }) => {
                   {userDetails[0].firstname}
                 </Typography>
               </Box>
-            )}
+            )} */}
 
             <Box sx={{ marginLeft: "auto" }}>
               <Button onClick={handleOpenMenu}>

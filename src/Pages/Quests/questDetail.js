@@ -10,6 +10,7 @@ import { display } from "@mui/system";
 import approveBtn from "../../asserts/aprvBtn.png";
 import rejBtn from "../../asserts/rejBtn.png";
 import approvedImg from "../../asserts/approvedImg.png";
+import { useNavigate } from "react-router-dom";
 
 const QuestWorks = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +28,7 @@ const QuestWorks = () => {
   const location = useLocation();
   const { contestId, title } = location.state || {};
   const isProfilePage = location.pathname === "/profile";
+  const navigate = useNavigate()
 
   const transformedData = async (post, userData, result) => {
     console.log("transformedData", transformedData);
@@ -224,6 +226,9 @@ const QuestWorks = () => {
                   boxShadow: "0 6px 10px rgba(0, 0, 0, 0.1)",
                   width: "97%",
                 }}
+                  onClick={() => {
+              navigate("/profile", { state: { userId:item.user_id } })
+            }}
               >
                 <Avatar
                   src={

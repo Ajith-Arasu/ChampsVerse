@@ -5,6 +5,7 @@ import viewIcon from "../../asserts/view-icon.png";
 import heartIcon from "../../asserts/heart-icon.png";
 import commentIcon from "../../asserts/comment-icon.png";
 import Loader from "../Loader/loader";
+import { useNavigate } from "react-router-dom";
 
 const Works = () => {
   const [data, setData] = useState([]);
@@ -12,6 +13,7 @@ const Works = () => {
   const [pageKey, setPageKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const isMobile = useMediaQuery("(max-width:600px)");
+  const navigate = useNavigate();
   const {
     data: feedData,
     getPost,
@@ -117,7 +119,7 @@ const Works = () => {
   }, [nextPage]);
 
   return (
-    <div style={{ marginLeft: "5%", marginTop: isMobile?"10%":"3%" }}>
+    <div style={{ marginLeft: "5%", marginTop: isMobile ? "10%" : "3%" }}>
       <Typography
         style={{
           fontSize: isMobile ? "21px" : "32px",
@@ -151,7 +153,7 @@ const Works = () => {
                   ? "calc(50% - 10px)"
                   : "calc(100% / 6 - 16px)",
                 textAlign: "center",
-                height: isMobile?"160px":"208px",
+                height: isMobile ? "160px" : "208px",
                 width: "201px",
                 boxShadow: "0 6px 10px rgba(0, 0, 0, 0.1)",
                 borderRadius: "20px",
@@ -183,6 +185,9 @@ const Works = () => {
                   boxShadow: "0 6px 10px rgba(0, 0, 0, 0.1)",
                   width: "97%",
                 }}
+                onClick={() => {
+                  navigate("/profile", { state: { userId: item.user_id } });
+                }}
               >
                 <Avatar
                   src={
@@ -191,11 +196,13 @@ const Works = () => {
                       : `${process.env.REACT_APP_CDN_URL}/${item.user_id}/PROFILE/IMAGES/filetype/${item.avatar}`
                   }
                   sx={{
-                    height: isMobile?20:30,
-                    width: isMobile?20:30,
+                    height: isMobile ? 20 : 30,
+                    width: isMobile ? 20 : 30,
                   }}
                 ></Avatar>
-                <Typography sx={{fontSize:isMobile && '12px'}}>{item.firstname}</Typography>
+                <Typography sx={{ fontSize: isMobile && "12px" }}>
+                  {item.firstname}
+                </Typography>
               </Box>
               <Box
                 style={{
@@ -209,16 +216,31 @@ const Works = () => {
                 }}
               >
                 <Box sx={{ display: "flex", gap: "5px" }}>
-                  <img src={viewIcon} style={{ width: isMobile?"20px":"25px" }}></img>
-                  <Typography sx={{fontSize:isMobile && '12px'}}>{item.badges.views}</Typography>
+                  <img
+                    src={viewIcon}
+                    style={{ width: isMobile ? "20px" : "25px" }}
+                  ></img>
+                  <Typography sx={{ fontSize: isMobile && "12px" }}>
+                    {item.badges.views}
+                  </Typography>
                 </Box>
                 <Box sx={{ display: "flex", gap: "5px" }}>
-                  <img src={heartIcon} style={{ width: isMobile?"20px":"25px" }}></img>
-                  <Typography sx={{fontSize:isMobile && '12px'}}>{item.badges.likes}</Typography>
+                  <img
+                    src={heartIcon}
+                    style={{ width: isMobile ? "20px" : "25px" }}
+                  ></img>
+                  <Typography sx={{ fontSize: isMobile && "12px" }}>
+                    {item.badges.likes}
+                  </Typography>
                 </Box>
                 <Box sx={{ display: "flex", gap: "5px" }}>
-                  <img src={commentIcon} style={{ width: isMobile?"20px":"25px" }}></img>
-                  <Typography sx={{fontSize:isMobile && '12px'}}>{item.badges.comments}</Typography>
+                  <img
+                    src={commentIcon}
+                    style={{ width: isMobile ? "20px" : "25px" }}
+                  ></img>
+                  <Typography sx={{ fontSize: isMobile && "12px" }}>
+                    {item.badges.comments}
+                  </Typography>
                 </Box>
               </Box>
             </div>

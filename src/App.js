@@ -9,7 +9,7 @@ import Login from "./Pages/Login/index";
 import Home from "./Pages/home/index";
 import Work from "./Pages/work/work";
 import Header from "./Pages/Header/header";
-import Profile from "./Pages/profile/Profile";
+import Profile from "./Pages/profile/index";
 import Books from "./Pages/Books/books";
 import Detail from "./Pages/Books/detail";
 import StorageConsumption from "./Pages/StorageConsumption/storageConsumption";
@@ -61,6 +61,7 @@ const AppContent = ({
   const isComments = location.pathname === "/comments";
   const isMobile = useMediaQuery("(max-width:600px)");
   const isStorage = location.pathname === "/storage-consumption";
+  const isProfile = location.pathname === "/profile"
 
   const ConditionalComponent = () => {
     const isMobile = useMediaQuery("(max-width:600px)");
@@ -76,7 +77,8 @@ const AppContent = ({
         !isStorage &&
         !isWorksPage &&
         !isAllQuestsPage && 
-        !isLatestWorks &&(
+        !isLatestWorks &&
+        !isProfile &&(
           <Header userDetails={userDetails} profilePic={profilePic} />
         )}
       <Box
@@ -94,7 +96,7 @@ const AppContent = ({
           (isComments && isMobile) ||
           isStorage ||
           isWorksPage ||
-          isAllQuestsPage) && <HeaderNew />}
+          isAllQuestsPage ||isProfile) && <HeaderNew />}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />

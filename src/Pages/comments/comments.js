@@ -5,7 +5,7 @@ import approveBtn from "../../asserts/approve.png";
 import rejectBtn from "../../asserts/reject.png";
 import tabBtn from "../../asserts/tabSwitch.png";
 import bottomSheetBG from "../../asserts/BottomSheetBG.png";
-
+import { useNavigate } from "react-router-dom";
 const Comments = () => {
   const { getCommentsList, approveComments, getUserDetails } = ApiCall();
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +17,7 @@ const Comments = () => {
   const [disable, setDisable] = useState(false);
   const [selectedType, setSelectedType] = useState("unapproved");
   const isMobile = useMediaQuery("(max-width:600px)");
+  const navigate = useNavigate()
 
   const handleTab = (tab) => {
     setSelectedType(tab);
@@ -254,6 +255,9 @@ const Comments = () => {
                   gap: "10px",
                   minWidth: "100px",
                 }}
+                  onClick={() => {
+              navigate("/profile", { state: { userId:item.user_id } })
+            }}
               >
                 <Avatar
                   sx={{ width: "25px", height: "25px" }}
@@ -352,6 +356,9 @@ const Comments = () => {
                 gap: "10px",
                 minWidth: "100px",
               }}
+                onClick={() => {
+              navigate("/profile", { state: { userId:item.user_id } })
+            }}
             >
               <Avatar
                 sx={{ width: "36px", height: "36px" }}
