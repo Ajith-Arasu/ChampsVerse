@@ -1,4 +1,4 @@
-import { Typography, Box, Avatar } from "@mui/material";
+import { Typography, Box, Avatar, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import ApiCall from "../API/api";
 import viewIcon from "../../asserts/view-icon.png";
@@ -11,6 +11,7 @@ const Works = () => {
   const [nextPage, setNextPage] = useState(1);
   const [pageKey, setPageKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const isMobile = useMediaQuery("(max-width:600px)");
   const {
     data: feedData,
     getPost,
@@ -20,8 +21,6 @@ const Works = () => {
     addWinnersCategory,
     ApproveQuestWork,
   } = ApiCall();
-
-  console.log("data", data);
 
   const transformedData = (data) => {
     const transformed = {
@@ -48,7 +47,7 @@ const Works = () => {
         const ids = result.data.map((item) => item.post_id).join(",");
         const userIds = result.data.map((item) => item.user_id).join(",");
         userData = await getUserDetails(userIds);
-        
+
         if (result?.page) {
           setPageKey(result?.page);
         } else {
@@ -117,11 +116,15 @@ const Works = () => {
     fetchData();
   }, [nextPage]);
 
-  console.log("data", data);
-
   return (
-    <div style={{ marginLeft: "5%", marginTop: "3%" }}>
-      <Typography style={{ fontSize: "32px", fontWeight: 800, color: "white" }}>
+    <div style={{ marginLeft: "5%", marginTop: isMobile?"10%":"3%" }}>
+      <Typography
+        style={{
+          fontSize: isMobile ? "21px" : "32px",
+          fontWeight: 800,
+          color: "white",
+        }}
+      >
         Works ({data.length})
       </Typography>
       {isLoading && <Loader />}
@@ -141,10 +144,14 @@ const Works = () => {
             <div
               key={index}
               style={{
-                flex: "1 1 calc(100% / 6 - 21px)",
-                maxWidth: "calc(100% / 6 - 16px)",
+                flex: isMobile
+                  ? "1 1 calc(50% - 10px)"
+                  : "1 1 calc(100% / 6 - 21px)",
+                maxWidth: isMobile
+                  ? "calc(50% - 10px)"
+                  : "calc(100% / 6 - 16px)",
                 textAlign: "center",
-                height: "208px",
+                height: isMobile?"160px":"208px",
                 width: "201px",
                 boxShadow: "0 6px 10px rgba(0, 0, 0, 0.1)",
                 borderRadius: "20px",
@@ -174,7 +181,7 @@ const Works = () => {
                   gap: "5px",
                   marginLeft: "5px",
                   boxShadow: "0 6px 10px rgba(0, 0, 0, 0.1)",
-                  width: '97%'
+                  width: "97%",
                 }}
               >
                 <Avatar
@@ -184,11 +191,11 @@ const Works = () => {
                       : `${process.env.REACT_APP_CDN_URL}/${item.user_id}/PROFILE/IMAGES/filetype/${item.avatar}`
                   }
                   sx={{
-                    height: 30,
-                    width: 30,
+                    height: isMobile?20:30,
+                    width: isMobile?20:30,
                   }}
                 ></Avatar>
-                <Typography>{item.firstname}</Typography>
+                <Typography sx={{fontSize:isMobile && '12px'}}>{item.firstname}</Typography>
               </Box>
               <Box
                 style={{
@@ -202,16 +209,16 @@ const Works = () => {
                 }}
               >
                 <Box sx={{ display: "flex", gap: "5px" }}>
-                  <img src={viewIcon} style={{ width: "25px" }}></img>
-                  <Typography>{item.badges.views}</Typography>
+                  <img src={viewIcon} style={{ width: isMobile?"20px":"25px" }}></img>
+                  <Typography sx={{fontSize:isMobile && '12px'}}>{item.badges.views}</Typography>
                 </Box>
                 <Box sx={{ display: "flex", gap: "5px" }}>
-                  <img src={heartIcon} style={{ width: "25px" }}></img>
-                  <Typography>{item.badges.likes}</Typography>
+                  <img src={heartIcon} style={{ width: isMobile?"20px":"25px" }}></img>
+                  <Typography sx={{fontSize:isMobile && '12px'}}>{item.badges.likes}</Typography>
                 </Box>
                 <Box sx={{ display: "flex", gap: "5px" }}>
-                  <img src={commentIcon} style={{ width: "25px" }}></img>
-                  <Typography>{item.badges.comments}</Typography>
+                  <img src={commentIcon} style={{ width: isMobile?"20px":"25px" }}></img>
+                  <Typography sx={{fontSize:isMobile && '12px'}}>{item.badges.comments}</Typography>
                 </Box>
               </Box>
             </div>
