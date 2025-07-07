@@ -11,8 +11,12 @@ import {
 import { useEffect, useState } from "react";
 import ApiCall from "../API/api";
 import Loader from "../Loader/loader";
+import style from "../Achievement/style.module.css";
 
 const Achievement = () => {
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [isAllSelected, setIsAllSelected] = useState(false);
+  const [selectedTab, setSelectedTab] = useState("ongoing");
   const isMobile = useMediaQuery("(max-width:600px)");
   const [pagekey, setPagekey] = useState("");
   const { achievementsList, getUserDetails, getPost, approveAchievement } =
@@ -119,29 +123,170 @@ const Achievement = () => {
     setOpenConfirmAlert(false);
     setSelected([]);
   };
+  const handleClick = (tab) => {
+    setSelectedTab(tab);
+  }
+  const handleSelect = (item) => {
+    setSelectedItems((prevSelected) =>
+      prevSelected.includes(item)
+        ? prevSelected.filter((uid) => uid !== item) // Deselect
+        : [...prevSelected, item] // Select
+    );
+  };
+  const handleSelectAllToggle = () => {
+    if (isAllSelected) {
+      // unselect all
+      setSelectedItems([]);
+      setIsAllSelected(false);
+    } else {
+      // select all items by their IDs or keys
+      const allItemKeys = data.map(
+        (item, index) => item.id || `${item.user_id}-${item.files[0]?.name || index}`
+      );
+      setSelectedItems(allItemKeys);
+      setIsAllSelected(true);
+    }
+  };
+
 
   return (
     <>
-      <Typography
+      <div
         style={{
-          fontSize: isMobile ? "21px" : "48px",
-          fontWeight: 800,
-          textAlign: "center",
-        }}
-      >
-        Achievements
-      </Typography>
+          padding: isMobile ? '70px 20px 0px 20px' : '100px 80px 0px 80px',
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+        <div className={style["achievement-title"]}>
+          <Typography
+            variant="h6"
+            style={{
+              fontFamily: 'Baloo2',
+              fontWeight: '800',
+              color: '#FFFFFF',
+              fontSize: isMobile ? '20px' : '32px',
+              display: 'inline',
+              whiteSpace: 'nowrap',
+
+            }}
+          >
+            All ACHIEVEMENTS{" "}
+            <Typography
+              component="span"
+              style={{
+                fontSize: isMobile ? '16px' : '24px',
+                fontWeight: '600',
+                color: '#FFFFFF',
+                display: 'inline',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              ({data.length})
+            </Typography>
+          </Typography>
+          <div className={style["button-group"]}>
+            {isMobile ? (
+              // Mobile View: show "Select All" with circular checkbox
+              <div
+                className={style["select-all-wrapper"]}
+                onClick={handleSelectAllToggle} // implement this function
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  cursor: "pointer",
+                  padding: "10px",
+                }}
+              >
+                {/* Round Checkbox */}
+                <div
+                  style={{
+                    height: isMobile ? "16px" : "24px",
+                    width: isMobile ? "16px" : "24px",
+                    borderRadius: isMobile ? "10" : "25",
+                    border: "1.5px solid #1F1D3A",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                </div>
+                <Typography
+                  sx={{
+                    fontFamily: "Baloo2",
+                    fontWeight: "800",
+                    fontSize: isMobile ? "13px" : "15px",
+                    alignItems: "center",
+                    lineHeight: "100%",
+                    background: "linear-gradient(to right, #ffdd01, #ffb82a)",
+                    boxShadow: "0px 2.22px 2.22px 0px rgba(158, 22, 53, 0.25)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent"
+                  }}
+                >Select All</Typography>
+              </div>
+            ) : (
+
+              <>          <div
+                className={style[isMobile ? "section-mob" : "section"]}
+                onClick={() => handleClick("ongoing")}
+              >
+                <img
+                  src={
+                    selectedTab === "ongoing"
+                      ? "/button-normal.png"
+                      : "/emptySection.png"
+                  }
+                ></img>
+                <Typography
+                  className={
+                    selectedTab === "ongoing"
+                      ? style["center-alligned"]
+                      : style["unselected-item"]
+                  }
+                >
+                  clearCDN
+                </Typography>
+              </div>
+                <div
+                  className={style[isMobile ? "section-mob" : "section"]}
+                  onClick={() => handleClick("ongoing")}
+                >
+                  <img
+                    src={
+                      selectedTab === "ongoing"
+                        ? "/button-normal.png"
+                        : "/emptySection.png"
+                    }
+                  ></img>
+                  <Typography
+                    className={
+                      selectedTab === "ongoing"
+                        ? style["center-alligned"]
+                        : style["unselected-item"]
+                    }
+                  >
+                    clear.json
+                  </Typography>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
       {isLoading && <Loader />}
       <div
         style={{
           display: "flex",
           flexWrap: "wrap",
           gap: isMobile ? "21px" : "21px",
-          margin: isMobile ? "5% 2%" : "5% 5%",
+          margin: isMobile ? "5% 2% 0% 2%" : "5% 5% 0% 5%",
+          marginTop: "83px"
+
         }}
       >
-        {data.map((item) => (
-          <div
+        {data.map((item, index) => (
+          <div key={index}
             style={{
               flex: isMobile
                 ? "1 1 calc(100% / 2 - 10px)"
@@ -157,7 +302,7 @@ const Achievement = () => {
           >
             <div
               style={{
-                height: "80%",
+                height: "100%",
                 width: "100%",
                 position: "relative",
               }}
@@ -167,56 +312,41 @@ const Achievement = () => {
                 style={{ height: "100%", width: "100%", objectFit: "cover" }}
                 alt=""
               />
-            </div>
-            <div
-              style={{
-                display: "flex",
-                margin: "5px",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <Avatar
-                src={
-                  item.defaultAvatar
-                    ? `${CDN_URL}/APP/UserAvatars/${item.avatar}`
-                    : `${CDN_URL}/${item.user_id}/PROFILE/IMAGES/filetype/${item.avatar}`
-                }
-                sx={{
-                  height: isMobile ? 30 : 40,
-                  width: isMobile ? 30 : 40,
+              <button
+                onClick={() => handleSelect(item.id)}
+                style={{
+                  position: "absolute",
+                  top: isMobile?"19px":"29px",
+                  right: isMobile?"15px":"24px",
+                  height:isMobile?"21px":"32px",
+                  width: isMobile?"21px":"32px",
+                  border: isMobile?"2px solid #FFFFFF":"3px solid #FFFFFF",
+                  background: "transparent",
+                  borderRadius: isMobile?"13px":"50%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  cursor: "pointer",
                 }}
-              />
-              <Typography
-                sx={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  maxWidth: isMobile ? 80 : 120,
-                  display: "block",
-                }}
+                title="Select"
               >
-                {item.name}
-              </Typography>
-
-              {item.is_approved === 0 && (
-                <Button
-                  variant="contained"
-                  size="small"
-                  sx={{
-                    padding: isMobile ? "2px 6px" : "6px 12px",
-                    fontSize: isMobile ? "10px" : "14px",
-                    minWidth: isMobile ? "auto" : "64px",
-                  }}
-                  onClick={() => {
-                    handleShownToPublic(item);
-                  }}
-                >
-                  public
-                </Button>
-              )}
+                {/* Yellow inner dot when selected */}
+                {selectedItems.includes(item.id) && (
+                  <span
+                    style={{
+                      height: isMobile?"6px":"16px",
+                      width: isMobile?"6px":"16px",
+                      borderRadius: isMobile?"6px":"10px",
+                      background: "linear-gradient(135deg, #FFDD01, #FFB828)",
+                    }}
+                  />
+                )}
+              </button>
             </div>
+
+
           </div>
+
         ))}
       </div>
 
