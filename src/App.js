@@ -62,6 +62,7 @@ const AppContent = ({
   const isMobile = useMediaQuery("(max-width:600px)");
   const isStorage = location.pathname === "/storage-consumption";
   const isProfile = location.pathname === "/profile"
+  const isCreateQuest = location.pathname === "/createQuest";
 
   const ConditionalComponent = () => {
     const isMobile = useMediaQuery("(max-width:600px)");
@@ -78,7 +79,8 @@ const AppContent = ({
         !isWorksPage &&
         !isAllQuestsPage && 
         !isLatestWorks &&
-        !isProfile &&(
+        !isProfile &&
+        !isCreateQuest &&(
           <Header userDetails={userDetails} profilePic={profilePic} />
         )}
       <Box
@@ -129,7 +131,7 @@ const AppContent = ({
           <Route path="/comments" element={<ConditionalComponent />} />
           <Route path="/events" element={<Events />} />
           <Route path="/achievements" element={<Achievement />} />
-          <Route path="/createContest/Quest" element={<CreateContest />} />
+          <Route path="/createQuest" element={<Home />} />
         </Routes>
       </Box>
     </>

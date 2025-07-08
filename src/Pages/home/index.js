@@ -19,9 +19,10 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DashboardCards from "../../component/dashboardcards";
 import LatestWorks from "../LatestWorks/index";
- import Comments from "../comments/comments";
+import Comments from "../comments/comments";
 // import Contests from "../../Pages/Contests/index";
 import menuIcon from "../../asserts/menuIcon.png";
+import CreateQuest from "../../Pages/Creation/quest";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ const Home = () => {
   const isContests = location.pathname === "/contests";
   const isMobile = useMediaQuery("(max-width:600px)");
   const [anchorEl, setAnchorEl] = useState(null);
+  const isCreateQuest = location.pathname === "/createQuest";
 
   const handleOpenMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -324,8 +326,9 @@ const Home = () => {
             <QuestHome />
           </>
         )}
-         {isComments  &&  <Comments />}
+        {isComments && <Comments />}
         {isLatestWorks && <LatestWorks />}
+        {isCreateQuest && <CreateQuest />}
         {/*{isContests && <Contests />} */}
       </Box>
     </Box>
