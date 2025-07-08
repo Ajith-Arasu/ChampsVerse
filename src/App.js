@@ -27,7 +27,7 @@ import Quests from "./Pages/Quests/index";
 import Comments from "./Pages/comments/index";
 import Achievement from "./Pages/Achievement";
 import Events from "./Pages/events";
-import CreateContest from "./Pages/Contests/createContest";
+import CreateContest from "./Pages/Creation/createQuest.js";
 import { ThemeProvider, CssBaseline, createTheme, Box } from "@mui/material";
 import "../src/font.css";
 import background from "./asserts/BGADMIN.png";
@@ -57,6 +57,7 @@ const AppContent = ({
   const isEvents = location.pathname === "/events";
   const isBooks = location.pathname === '/books';
   const isProfile = location.pathname === '/profile';
+  const isCreateQuest = location.pathname === '/createQuest';
 
 
   return (
@@ -71,7 +72,8 @@ const AppContent = ({
         !isQuests && 
         !isEvents&& 
         !isBooks &&
-        !isProfile &&(
+        !isProfile &&
+        !isCreateQuest && (
           <Header userDetails={userDetails} profilePic={profilePic} />
         )}
       <Box
@@ -118,7 +120,7 @@ const AppContent = ({
           <Route path="/comments" element={<Home />} />
           <Route path="/events" element={<Events />} />
           <Route path="/achievements" element={<Achievement />} />
-          <Route path="/createContest/Quest" element={<CreateContest />} />
+          <Route path="/createQuest" element={<Home />} />
         </Routes>
       </Box>
     </>

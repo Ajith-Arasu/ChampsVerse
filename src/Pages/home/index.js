@@ -20,6 +20,8 @@ import LatestWorks from "../LatestWorks/index";
 import Comments from "../comments/index";
 import Contests from "../../Pages/Contests/index";
 import menuIcon from "../../asserts/menuIcon.png";
+import btnBg from "../../asserts/btnBg.png";
+import CreateQuest from '../../Pages/Creation/createQuest';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -29,7 +31,7 @@ const Home = () => {
   const isHome = location.pathname === "/home";
   const isComments = location.pathname === "/comments";
   const isContests = location.pathname === "/contests";
-
+  const isCreateQuest = location.pathname === "/createQuest";
   const isMobile = useMediaQuery("(max-width:600px)");
 
   const statsData = [
@@ -190,6 +192,28 @@ const Home = () => {
                 </Typography>
               ))}
             </Box>
+
+            <Box
+              sx={{
+                width: "140px",
+                height: "47px",
+                backgroundImage: `url(${btnBg})`,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                margin: "5% 25%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+                cursor: 'pointer'
+              }}
+              onClick={() => {
+                navigate("/createQuest");
+              }}
+            >
+              + create
+            </Box>
           </Box>
         )}
       </Box>
@@ -259,6 +283,7 @@ const Home = () => {
         {isComments && <Comments />}
         {isLatestWorks && <LatestWorks />}
         {isContests && <Contests />}
+        {isCreateQuest && <CreateQuest />}
       </Box>
     </Box>
   );
