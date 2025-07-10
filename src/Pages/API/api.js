@@ -10,11 +10,11 @@ const ApiCall = () => {
   const currentYear = currentDate.getFullYear();
 
   const token = getCookie("accessToken");
-  const pageId = getCookie("pageId")
+  const pageId = getCookie("pageId");
   console.log("pageId", pageId);
 
   const data = async (pageKey, count) => {
-    const url = `${BASE_URL}/api/v1/posts/list?feed_id=${currentMonth}_${currentYear}&count=${count}&page=${pageKey}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/posts/list?feed_id=${currentMonth}_${currentYear}&count=${count}&page=${pageKey}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +25,7 @@ const ApiCall = () => {
   };
 
   const getPost = async (postIds) => {
-    const url = `${BASE_URL}/api/v1/posts?targetIds=${postIds}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/posts?targetIds=${postIds}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +65,7 @@ const ApiCall = () => {
       };
     }
 
-    const url = `${BASE_URL}/api/v1/user/${userId}/post/${postId}?page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/user/${userId}/post/${postId}?${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "PATCH",
       headers: {
@@ -79,7 +79,7 @@ const ApiCall = () => {
   };
 
   const getBadges = async (requestBody) => {
-    const url = `${BASE_URL}/api/v1/user/post/counters?&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/user/post/counters?&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "POST",
       headers: {
@@ -93,7 +93,7 @@ const ApiCall = () => {
   };
 
   const getPostByUserId = async (userId) => {
-    const url = `${BASE_URL}/api/v1/user/actions/post?userId=${userId}&page=&count=20&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/user/actions/post?userId=${userId}&page=&count=20&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -106,7 +106,7 @@ const ApiCall = () => {
   };
 
   const getUserDetails = async (userIds) => {
-    const url = `${BASE_URL}/api/v1/users/getbyIds?ids=${userIds}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/users/getbyIds?ids=${userIds}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -119,7 +119,7 @@ const ApiCall = () => {
   };
 
   const getBooksList = async (pageKey) => {
-    const url = `${BASE_URL}/api/v1/books/list?feed_id=${currentMonth}_${currentYear}&count=10&page=${pageKey}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/books/list?feed_id=${currentMonth}_${currentYear}&count=10&page=${pageKey}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -130,7 +130,7 @@ const ApiCall = () => {
   };
 
   const getBooksById = async (requestBody) => {
-    const url = `${BASE_URL}/api/v1/books&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/books&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "POST",
       headers: {
@@ -143,7 +143,7 @@ const ApiCall = () => {
   };
 
   const bookPublish = async (userId, bookId, status) => {
-    const url = `${BASE_URL}/api/v1/book/${bookId}/user/${userId}/status&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/book/${bookId}/user/${userId}/status&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "PATCH",
       headers: {
@@ -156,7 +156,7 @@ const ApiCall = () => {
   };
 
   const getStorageConsumption = async (pageKey) => {
-    const url = `${BASE_URL}/api/v1/users/storage/utilizations?count=10&page=${pageKey}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/users/storage/utilizations?count=10&page=${pageKey}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -167,7 +167,7 @@ const ApiCall = () => {
   };
 
   const getContestList = async (tab, pageKey, type) => {
-    const url = `${BASE_URL}/api/v1/contests?state=${tab}&count=10&page=${pageKey}&contest_type=${type}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/contests?state=${tab}&count=10&page=${pageKey}&contest_type=${type}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -178,7 +178,7 @@ const ApiCall = () => {
   };
 
   const getContestEntries = async (contestId, pageKey, type) => {
-    const url = `${BASE_URL}/api/v1/contest/${contestId}/entries?count=&page=${pageKey}&contest_type=${type}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/contest/${contestId}/entries?count=&page=${pageKey}&contest_type=${type}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -189,7 +189,7 @@ const ApiCall = () => {
   };
 
   const addWinnersCategory = async (contestId, body, type) => {
-    const url = `${BASE_URL}/api/v1/contest/${contestId}/winners/assign?contest_type=${type}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/contest/${contestId}/winners/assign?contest_type=${type}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "PATCH",
       headers: {
@@ -202,7 +202,7 @@ const ApiCall = () => {
   };
 
   const announceContestResult = async (contestId, type) => {
-    const url = `${BASE_URL}/api/v1/contest/${contestId}/result/announce?contest_type=${type}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/contest/${contestId}/result/announce?contest_type=${type}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "PATCH",
       headers: {
@@ -214,7 +214,7 @@ const ApiCall = () => {
   };
 
   const bookPublic = async (bookId, userId, body) => {
-    const url = `${BASE_URL}/api/v1/book/${bookId}/user/${userId}/public?page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/book/${bookId}/user/${userId}/public?${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "PATCH",
       headers: {
@@ -227,7 +227,7 @@ const ApiCall = () => {
   };
 
   const createContest = async (requestBody) => {
-    const url = `${BASE_URL}/api/v1/contest?page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/contest?${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "POST",
       headers: {
@@ -246,7 +246,7 @@ const ApiCall = () => {
     uploadType,
     contestType
   ) => {
-    const url = `${BASE_URL}/api/v1/s3/upload-url?upload_type=${uploadType}&type=IMAGES&extension=${extension}&name=_${name}&contest_id=${contestId}&contest_type=${contestType}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/s3/upload-url?upload_type=${uploadType}&type=IMAGES&extension=${extension}&name=_${name}&contest_id=${contestId}&contest_type=${contestType}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -269,7 +269,7 @@ const ApiCall = () => {
   };
 
   const updateContestStatus = async (contestId, type) => {
-    const url = `${BASE_URL}/api/v1/contest/${contestId}?contest_type=${type}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/contest/${contestId}?contest_type=${type}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "PATCH",
       headers: {
@@ -282,7 +282,7 @@ const ApiCall = () => {
   };
 
   const getDeletedPost = async (pageKey) => {
-    const url = `${BASE_URL}/api/v1/posts/deleted?count=20&page=${pageKey}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/posts/deleted?count=20&page=${pageKey}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -293,7 +293,7 @@ const ApiCall = () => {
   };
 
   const deleteS3Post = async (ids, workType) => {
-    const url = `${BASE_URL}/api/v1/posts/delete?ids=${ids}&delete_files=true&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/posts/delete?ids=${ids}&delete_files=true&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "DELETE",
       headers: {
@@ -305,7 +305,7 @@ const ApiCall = () => {
   };
 
   const deletedUserS3Post = async (userId, type, ids, body) => {
-    const url = `${BASE_URL}/api/v1/user/${userId}/delete?type=${type}&delete_files=true&ids=${ids}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/user/${userId}/delete?type=${type}&delete_files=true&ids=${ids}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "DELETE",
       headers: {
@@ -318,7 +318,7 @@ const ApiCall = () => {
   };
 
   const deletedUserPostJson = async (userId, type, ids, body) => {
-    const url = `${BASE_URL}/api/v1/user/${userId}/delete?type=${type}&ids=${ids}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/user/${userId}/delete?type=${type}&ids=${ids}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "DELETE",
       headers: {
@@ -331,7 +331,7 @@ const ApiCall = () => {
   };
 
   const deletePostJson = async (ids) => {
-    const url = `${BASE_URL}/api/v1/posts/delete?ids=${ids}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/posts/delete?ids=${ids}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "DELETE",
       headers: {
@@ -343,7 +343,7 @@ const ApiCall = () => {
   };
 
   const getDeletedUser = async (pageKey) => {
-    const url = `${BASE_URL}/api/v1/users/deleted?count=20&page=${pageKey}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/users/deleted?count=20&page=${pageKey}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -354,7 +354,7 @@ const ApiCall = () => {
   };
 
   const getDeletedUserPost = async (pageKey, userId, workType) => {
-    const url = `${BASE_URL}/api/v1/user/${userId}/works/${workType}?page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/user/${userId}/works/${workType}?${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -366,7 +366,7 @@ const ApiCall = () => {
 
   const getQuestList = async (pageKey) => {
     console.log("pageId-quest", pageId);
-    const url = `${BASE_URL}/api/v1/contests?contest_type=MICRO_CONTEST&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/contests?contest_type=MICRO_CONTEST&${pageId ? `&${pageId ? `&page_id=${pageId}` : ""}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -377,7 +377,7 @@ const ApiCall = () => {
   };
 
   const sendRating = async (requestBody) => {
-    const url = `${BASE_URL}/api/v1/trigger/bots/process?&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/trigger/bots/process?&${pageId ? `&${pageId ? `&page_id=${pageId}` : ""}` : ""}`;
     const options = {
       method: "POST",
       headers: {
@@ -390,7 +390,7 @@ const ApiCall = () => {
   };
 
   const triggerActivityApi = async (requestBody) => {
-    const url = `${BASE_URL}/api/v1/trigger/user/activity?page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/trigger/user/activity?${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "POST",
       headers: {
@@ -403,7 +403,7 @@ const ApiCall = () => {
   };
 
   const getCommentsList = async (type, pageKey) => {
-    const url = `${BASE_URL}/api/v1/reaction/comments?type=post&count=20&is_approved=${type}&page=${pageKey}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/reaction/comments?type=post&count=20&is_approved=${type}&page=${pageKey}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -414,7 +414,7 @@ const ApiCall = () => {
   };
 
   const approveComments = async (ids, state, type) => {
-    const url = `${BASE_URL}/api/v1/reaction/comments/approve?ids=${ids}&approve=${state}&type=${type}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/reaction/comments/approve?ids=${ids}&approve=${state}&type=${type}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "PATCH",
       headers: {
@@ -426,7 +426,7 @@ const ApiCall = () => {
   };
 
   const achievementsList = async (pagekey) => {
-    const url = `${BASE_URL}/api/v1/posts/list?feed_id=10_2024&count=12&page=${pagekey}&type=achievement&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/posts/list?feed_id=10_2024&count=12&page=${pagekey}&type=achievement&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -437,7 +437,7 @@ const ApiCall = () => {
   };
 
   const approveAchievement = async (requestBody) => {
-    const url = `${BASE_URL}/api/v1/achievement/approve?page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/achievement/approve?${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       method: "PATCH",
       headers: {
@@ -450,7 +450,7 @@ const ApiCall = () => {
   };
 
   const getLatestActivity = async (pageKey, month) => {
-    const url = `${BASE_URL}/api/v1/user/activities?count=&page=${pageKey}&month=${month}&page_id=${pageId}`;
+    const url = `${BASE_URL}/api/v1/user/activities?count=&page=${pageKey}&month=${month}&${pageId ? `&page_id=${pageId}` : ""}`;
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -465,7 +465,7 @@ const ApiCall = () => {
       cdns: ["homeMicroContests"],
     };
     const response = await fetch(
-      `${BASE_URL}/api/v1/sync/cdns?page_id=${pageId}`,
+      `${BASE_URL}/api/v1/sync/cdns?${pageId ? `&page_id=${pageId}` : ""}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -481,7 +481,7 @@ const ApiCall = () => {
 
   const getSponsorList = async (pageKey) => {
     const response = await fetch(
-      `${BASE_URL}/api/v1/sponsors?count=10&page=${pageKey}&page_id=${pageId}`,
+      `${BASE_URL}/api/v1/sponsors?count=10&page=${pageKey}&${pageId ? `&page_id=${pageId}` : ""}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -495,7 +495,7 @@ const ApiCall = () => {
 
   const updateQuest = async (questId, requestBody) => {
     const response = await fetch(
-      `${BASE_URL}/api/v1/contest/${questId}?contest_type=MICRO_CONTEST&page_id=${pageId}`,
+      `${BASE_URL}/api/v1/contest/${questId}?contest_type=MICRO_CONTEST&${pageId ? `&page_id=${pageId}` : ""}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -511,7 +511,7 @@ const ApiCall = () => {
 
   const ApproveQuestWork = async (contestId, type, body) => {
     const response = await fetch(
-      `${BASE_URL}/api/v1/contest/entry/approve?contest_id=${contestId}&contest_type=${type}&page_id=${pageId}`,
+      `${BASE_URL}/api/v1/contest/entry/approve?contest_id=${contestId}&contest_type=${type}&${pageId ? `&page_id=${pageId}` : ""}`,
       {
         method: "PATCH",
         headers: {
@@ -535,7 +535,7 @@ const ApiCall = () => {
     });
     const res = await response.json();
     setCookie("accessToken", res.data.accesstoken, 3600);
-    setCookie("pageId", res.data.pageId, 3600);
+    setCookie("pageId", res.data.pageId ? res.data.pageId : "", 3600);
     console.log("res.data.pageId", res.data.pageId);
     return res;
   };
