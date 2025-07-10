@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import ApiCall from "../API/api";
 import Loader from "../Loader/loader";
 import style from "../Achievement/style.module.css";
+import frame from "../../asserts/achievement-Frame.png";
 
 const Achievement = () => {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -55,7 +56,6 @@ const Achievement = () => {
                 post.defaultAvatar = foundItem.defaultAvatar;
                 post.name = foundItem.firstname;
               }
-
               // Append feed_id from feedItem
               post.feed_id = feedItem.feed_id;
               post.is_approved = feedItem.is_approved;
@@ -167,7 +167,6 @@ const Achievement = () => {
               fontSize: isMobile ? '20px' : '32px',
               display: 'inline',
               whiteSpace: 'nowrap',
-
             }}
           >
             All ACHIEVEMENTS{" "}
@@ -186,10 +185,11 @@ const Achievement = () => {
           </Typography>
           <div className={style["button-group"]}>
             {isMobile ? (
+
               // Mobile View: show "Select All" with circular checkbox
               <div
                 className={style["select-all-wrapper"]}
-                onClick={handleSelectAllToggle} // implement this function
+                onClick={handleSelectAllToggle}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -203,7 +203,7 @@ const Achievement = () => {
                   style={{
                     height: isMobile ? "16px" : "24px",
                     width: isMobile ? "16px" : "24px",
-                    borderRadius: isMobile ? "10" : "25",
+                    borderRadius: "20px",
                     border: "1.5px solid #1F1D3A",
                     display: "flex",
                     alignItems: "center",
@@ -295,34 +295,33 @@ const Achievement = () => {
                 ? "calc(100% / 2 - 16px)"
                 : "calc(100% / 4 - 16px)",
               textAlign: "center",
-              height: isMobile ? "150px" : "250px",
-              width: isMobile ? "80px" : "150px",
-              border: "2px solid black",
+              height: isMobile ? "200px" : "250px",
+              width: isMobile ? "110px" : "150px",
+              backgroundImage: `url(${frame})`,
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              padding: isMobile ? "20px" : "20px",
+              boxSizing: "border-box",
+              position: "relative",
             }}
           >
-            <div
-              style={{
-                height: "100%",
-                width: "100%",
-                position: "relative",
-              }}
-            >
+            <div className={style["book-image"]}>
               <img
                 src={`${CDN_URL}/${item.user_id}/WORKS/IMAGES/medium/${item.files[0].name}`}
-                style={{ height: "100%", width: "100%", objectFit: "cover" }}
-                alt=""
+                alt="acheivementimage"
               />
               <button
                 onClick={() => handleSelect(item.id)}
                 style={{
                   position: "absolute",
-                  top: isMobile?"19px":"29px",
-                  right: isMobile?"15px":"24px",
-                  height:isMobile?"21px":"32px",
-                  width: isMobile?"21px":"32px",
-                  border: isMobile?"2px solid #FFFFFF":"3px solid #FFFFFF",
+                  top: isMobile ? "6px" : "8px",
+                  right: isMobile ? "6px" : "8px",
+                  height: isMobile ? "21px" : "32px",
+                  width: isMobile ? "21px" : "32px",
+                  border: isMobile ? "2px solid #FFFFFF" : "3px solid #FFFFFF",
                   background: "transparent",
-                  borderRadius: isMobile?"13px":"50%",
+                  borderRadius: isMobile ? "13px" : "50%",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
@@ -330,23 +329,20 @@ const Achievement = () => {
                 }}
                 title="Select"
               >
-                {/* Yellow inner dot when selected */}
+
                 {selectedItems.includes(item.id) && (
                   <span
                     style={{
-                      height: isMobile?"6px":"16px",
-                      width: isMobile?"6px":"16px",
-                      borderRadius: isMobile?"6px":"10px",
+                      height: isMobile ? "6px" : "16px",
+                      width: isMobile ? "6px" : "16px",
+                      borderRadius: isMobile ? "6px" : "10px",
                       background: "linear-gradient(135deg, #FFDD01, #FFB828)",
                     }}
                   />
                 )}
               </button>
             </div>
-
-
           </div>
-
         ))}
       </div>
 
