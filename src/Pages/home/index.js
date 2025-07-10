@@ -24,6 +24,7 @@ import Comments from "../comments/comments";
 import menuIcon from "../../asserts/menuIcon.png";
 import CreateQuest from "../../Pages/Creation/quest";
 import btnBg from "../../asserts/btnBg.png";
+import DeletedPost from "../DeletedPost/deletedPost";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const Home = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
   const [anchorEl, setAnchorEl] = useState(null);
   const isCreateQuest = location.pathname === "/createQuest";
+  const isDeletedPost = location.pathname === "/deletedpost";
 
   const handleOpenMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -352,6 +354,7 @@ const Home = () => {
         {isLatestWorks && <LatestWorks />}
         {isCreateQuest && <CreateQuest />}
         {/*{isContests && <Contests />} */}
+        {isDeletedPost && <DeletedPost />}
       </Box>
     </Box>
   );

@@ -16,12 +16,10 @@ import StorageConsumption from "./Pages/StorageConsumption/storageConsumption";
 import Contests from "./Pages/Contests/contests";
 import ContestDetail from "./Pages/Contests/contestDetail";
 import { useState } from "react";
-import DeletedPost from "./Pages/DeletedPost/deletedPost";
 import DeletedUser from "./Pages/DeletedUser/index";
 import DeletedUserDetail from "./Pages/DeletedUser/deletedUserDetail";
 import DeletedUserWorks from "./Pages/DeletedUser/deletedUserWorks";
 import QuestDetail from "./Pages/Quests/questDetail";
-
 import Quests from "./Pages/Quests/index";
 import Comments from "./Pages/comments/comments";
 import Achievement from "./Pages/Achievement";
@@ -63,6 +61,7 @@ const AppContent = ({
   const isStorage = location.pathname === "/storage-consumption";
   const isProfile = location.pathname === "/profile"
   const isCreateQuest = location.pathname === "/createQuest";
+  const isDeletedPost = location.pathname === "/deletedpost";
 
   const ConditionalComponent = () => {
     const isMobile = useMediaQuery("(max-width:600px)");
@@ -80,7 +79,9 @@ const AppContent = ({
         !isAllQuestsPage && 
         !isLatestWorks &&
         !isProfile &&
-        !isCreateQuest &&(
+        !isCreateQuest &&
+        !isDeletedPost&&
+        (
           <Header userDetails={userDetails} profilePic={profilePic} />
         )}
       <Box
@@ -118,7 +119,7 @@ const AppContent = ({
           <Route path="/storage-consumption" element={<StorageConsumption />} />
           <Route path="/contests" element={<Contests />} />
           <Route path="/contestdetail" element={<ContestDetail />} />
-          <Route path="/deletedpost" element={<DeletedPost />} />
+          <Route path="/deletedpost" element={<Home />} />
           <Route path="/deleteduser" element={<DeletedUser />} />
           <Route path="/deleted-user/:userId" element={<DeletedUserDetail />} />
           <Route
