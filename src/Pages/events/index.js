@@ -1,4 +1,4 @@
-import { Radio, Typography, useMediaQuery } from "@mui/material";
+import { Radio, Typography, useMediaQuery, Box, Button } from "@mui/material";
 import React from "react";
 import ApiCall from "../API/api";
 import { useEffect, useState } from "react";
@@ -27,6 +27,8 @@ const Events = () => {
     REACT_L3: { name: "Reacted", color: "#F48FB1" },
     REACT_L4: { name: "Reacted", color: "#F48FB1" },
     CON_SUB: { name: "contest Submitted", color: "#4CAF50" },
+    LOGIN: { name: "Loggend In", color: "green" },
+    LOGOUT: { name: "Logged out", color: "grey" },
   };
 
   const months = [
@@ -132,81 +134,108 @@ const Events = () => {
     };
   }, []);
 
+  const handleViewWorks = () => {};
+
   return (
-    <div>
+    <Box sx={{ margin: "3%" }}>
       <Typography
-        style={{ fontSize: "48px", textAlign: "center", margin: "2% 0" }}
+        style={{
+          fontSize: isMobile ? "21px" : "32px",
+          margin: isMobile ? "5% 2%" : "3% 0",
+          color: "white",
+        }}
       >
         Latest Events
       </Typography>
       {isLoading && <Loader></Loader>}
-      <div style={{ margin: "0 5%" }}>
-        <label>
-          <input
-            type="radio"
-            value={previousMonthName}
-            checked={selectedType === previousMonthName}
-            onChange={changeMonth}
-          ></input>
-          {previousMonthName}
-        </label>
-        <label style={{ padding: "5px" }}>
-          <input
-            type="radio"
-            value={currentMonthName}
-            checked={selectedType === currentMonthName}
-            onChange={changeMonth}
-          ></input>
-          {currentMonthName}
-        </label>
-      </div>
-      <div
-        style={{
+
+      <Box
+        sx={{
           display: "flex",
           flexWrap: "wrap",
-          gap: isMobile ? "28px" : "12px",
-          margin: isMobile ? "0 10%" : "5% 5%",
+          gap: "10px",
+          marginTop: "2%",
         }}
       >
         {data.map((item) => (
-          <div
-            style={{
+          <Box
+            sx={{
+              boxShadow: `
+  inset 0 0 30px rgba(225, 225, 225, 0.5),
+  inset 0 0 40px rgba(225, 225, 225, 0.3)
+`,
+              width: "202px",
+              height: isMobile ? "140px" : "157px",
+              borderRadius: "40px",
               flex: isMobile
                 ? "flex: 1 1 calc(100% / 2 - 10px) "
-                : "1 1 calc(100% / 6 - 21px)",
+                : "1 1 calc(100% / 6 - 10px)",
               maxWidth: isMobile
-                ? "calc(100% / 2 - 12px)"
-                : "calc(100% / 6 - 12px)",
-              textAlign: "center",
-              height: isMobile ? "100px" : "120px",
-              width: isMobile ? "400px" : "120px",
-              backgroundColor: ACTION_MESSAGES[item.act_type]?.color,
-              borderRadius: "12px",
+                ? "calc(100% / 2 - 16px)"
+                : "calc(100% / 6 - 10px)",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               flexDirection: "column",
+              gap: "5px",
+              backgroundColor: ACTION_MESSAGES[item.act_type]?.color,
             }}
           >
-            <Typography style={{ textAlign: "center", color: "black" }}>
+            <Typography
+              style={{
+                textAlign: "center",
+                color: "white",
+                fontSize: "17px",
+                fontFamily: "Baloo2",
+                fontWeight: 800,
+                marginTop: "5%",
+              }}
+            >
               {`${item.firstname} `}
             </Typography>
-            <Typography style={{ textAlign: "center", color: "black" }}>
+            <Typography
+              style={{
+                textAlign: "center",
+                background:
+                  "linear-gradient(232.05deg, #FFDD01 19.84%, #FFB82A 92.22%)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                fontWeight: 800,
+                fontFamily: "Baloo2",
+                fontSize: "17px",
+              }}
+            >
               {ACTION_MESSAGES[item.act_type]?.name}
             </Typography>
-
             <a
-              href={`https://champsverse.com/work/${item.work_id}`}
-              style={{ color: "black" }}
+              style={{
+                mt: "5%",
+                backdropFilter: "blur(80px)",
+                backgroundColor: "tranparent",
+                borderRadius: "20px",
+                color: "white",
+                px: 3,
+                py: 1,
+                boxShadow: `
+      inset 0 0 15px rgba(255, 255, 255, 0.1),
+      inset 0 0 25px rgba(255, 255, 255, 0.05)
+    `,
+                padding: "5px",
+                fontFamily: "Baloo2",
+                fontSize: "10px",
+                border: "1px solid rgba(255, 255, 255, 0.3)",
+              }}
+              href={`${process.env.REACT_APP_PUBLIC_URL}/work/${item.work_id}`}
               target="_blank"
               rel="noopener noreferrer"
             >
               View Works
             </a>
-          </div>
+          </Box>
         ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 export default Events;
