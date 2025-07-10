@@ -480,6 +480,7 @@ const getLatestActivity = async (pageKey, month) => {
     return result;
   };
 
+  console.log("token",token)
   const getSponsorList = async (pageKey) => {
     const response = await fetch(
       `${BASE_URL}/api/v1/sponsors?count=10&page=${pageKey}`,

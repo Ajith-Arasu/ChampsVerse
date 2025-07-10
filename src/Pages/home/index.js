@@ -23,6 +23,7 @@ import Comments from "../comments/comments";
 // import Contests from "../../Pages/Contests/index";
 import menuIcon from "../../asserts/menuIcon.png";
 import CreateQuest from "../../Pages/Creation/quest";
+import btnBg from "../../asserts/btnBg.png";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -259,6 +260,27 @@ const Home = () => {
                   {tab.display}
                 </Typography>
               ))}
+            </Box>
+            <Box
+              sx={{
+                width: "140px",
+                height: "47px",
+                backgroundImage: `url(${btnBg})`,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                margin: "5% 25%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                navigate("/createQuest");
+              }}
+            >
+              + create
             </Box>
           </Box>
         )}

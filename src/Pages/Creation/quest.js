@@ -11,9 +11,13 @@ import {
 } from "@mui/material";
 import { IconButton } from "@mui/material";
 import CloseIcon from "../../asserts/close.png";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import dropdown from "../../asserts/dropDown.png";
 import createQuestBtn from "../../asserts/createQuestBtn.png";
+import bottomSheetBG from "../../asserts/BottomSheetBG.png";
+import mobCreateQuestBtn from "../../asserts/createQuestBtn.png";
+import ApiCall from "../API/api";
+import { fromBlob, blobToURL } from "image-resize-compress";
 
 const CreateQuest = () => {
   const [tags, setTags] = useState([]);
@@ -22,13 +26,19 @@ const CreateQuest = () => {
   const fileInputRef = useRef(null);
   const isMobile = useMediaQuery("(max-width:600px)");
   const [preview, setPreview] = useState(null);
+  const [selectedSponsors, setSelectedSponsors] = useState([]);
+  const [sponsorOptions, setSponsorOptions] = useState([]);
+  const [allSponsors, setAllSponsors] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const { createContest, getUrlContestImage, getSponsorList, updateQuest } =
+    ApiCall();
   const [formData, setFormData] = useState({
-    points: "",
-    age: "",
+    winning_points: "",
+    h_age: "",
     category: "",
     title: "",
     description: "",
-    supportingUrl: "",
+    ref_link: "",
   });
 
   const handleInputChange = (e) => {
@@ -42,31 +52,137 @@ const CreateQuest = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+    console.log("file", file);
     if (file) {
       setPreview(URL.createObjectURL(file));
+      setSelectedFile(file);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log({
       ...formData,
-      tags,
-      level,
-      selectedSponsors,
+      winning_points:
+        formData.winning_points && parseInt(formData.winning_points, 10),
+      difficulty_level: level && parseInt(level, 10),
+      tags: tags.map((tag) => ({ name: tag })),
+      difficulty_level: level,
+      sponsors: selectedSponsors,
       image: preview,
+      type: "MICRO_CONTEST",
+      work_type: "POST",
+      l_age: 0,
+      h_age: formData.h_age,
     });
+
+    console.log("selectedSponsors", selectedSponsors);
+    const data = {
+      ...formData,
+      winning_points:
+        formData.winning_points && parseInt(formData.winning_points, 10),
+      difficulty_level: level && parseInt(level, 10),
+      h_age: formData.h_age && parseInt(formData.h_age, 10),
+      tags: tags.map((tag) => ({ name: tag })),
+      sponsors: selectedSponsors,
+      type: "MICRO_CONTEST",
+      work_type: "POST",
+      l_age: 0,
+    };
+    const createContestresult = await createContest(data);
+    
+    const lastDotIndex = selectedFile.name.lastIndexOf(".");
+
+    const name = selectedFile.name.substring(0, lastDotIndex);
+    const extension = selectedFile.name.substring(lastDotIndex + 1);
+
+    const imageURl = await getUrlContestImage(
+      extension,
+      name,
+      createContestresult.data.contest_id,
+      `MICRO_CONTESTS`,
+      "MICRO_CONTEST"
+    );
+
+    const formats = [
+      { label: "preSignedUrlThumb", quality: 30, width: 240, height: 320 },
+      {
+        label: "preSignedUrlMedium",
+        quality: 50,
+        width: 720,
+        height: 1080,
+      },
+      { label: "preSignedUrlRaw", quality: 80, width: 1920, height: 1080 },
+    ];
+
+    const processAndUploadImage = async ({ label, quality, width, height }) => {
+      const fileFormat = selectedFile.type.split("/")[1];
+      const resizedBlob = await fromBlob(
+        selectedFile,
+        quality,
+        width,
+        height,
+        extension
+      );
+      const uploadUrl = imageURl.data[label];
+      const response = await fetch(uploadUrl, {
+        method: "PUT",
+        body: resizedBlob,
+        headers: { "Content-Type": resizedBlob.type },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to upload ${label}: ${response.statusText}`);
+      }
+    };
+
+    for (const format of formats) {
+      await processAndUploadImage(format);
+    }
+    window.location.reload();
+     setFormData([]);
   };
 
   const handleDelete = (indexToDelete) => {
     setTags((prev) => prev.filter((_, i) => i !== indexToDelete));
   };
-  const [selectedSponsors, setSelectedSponsors] = useState([]);
 
   const handleChangeSponsor = (event) => {
-    setSelectedSponsors(event.target.value);
+    const selectedCodes = event.target.value;
+
+    setSelectedSponsors(selectedCodes);
+
+    const sponsors = allSponsors
+      .filter((sponsor) => selectedCodes.includes(sponsor.sponsor_code))
+      .map((sponsor) => ({
+        code: sponsor.sponsor_code,
+        avatar: sponsor.sponsor_avatar,
+      }));
+
+    console.log("selectedCodes", selectedCodes);
+    console.log("sponsors", sponsors);
+    setSelectedSponsors(sponsors);
   };
 
+  useEffect(() => {
+    const fetchSponsors = async () => {
+      try {
+        const data = await getSponsorList("");
+
+        const item = data.data.map((item) => ({
+          label: item.sponsor_code,
+          value: item.sponsor_code,
+        }));
+        setSponsorOptions(item);
+        setAllSponsors(data.data);
+      } catch (error) {
+        console.error("Error fetching sponsors:", error);
+      }
+    };
+    fetchSponsors();
+  }, []);
+
+  console.log("sponsoroptions", sponsorOptions);
   const handleAddTag = (e) => {
     if (e.key === "Enter" && inputValue.trim()) {
       if (tags.length < 5) {
@@ -76,8 +192,10 @@ const CreateQuest = () => {
     }
   };
   const handleChange = (event) => {
+    console.log("event.target.value", event.target.value);
     setLevel(event.target.value);
   };
+
   const sponsorsList = ["Apple", "Google", "Amazon", "Meta", "Microsoft"];
   return (
     <form
@@ -102,7 +220,10 @@ const CreateQuest = () => {
         </Typography>
         {!isMobile && (
           <Button type="submit">
-            <img src={createQuestBtn} style={{ width: "220px",height: '90px' }}></img>
+            <img
+              src={createQuestBtn}
+              style={{ width: "220px", height: "90px" }}
+            ></img>
           </Button>
         )}
       </Box>
@@ -187,8 +308,8 @@ const CreateQuest = () => {
                 }}
               >
                 <TextField
-                  name="points"
-                  value={formData.points}
+                  name="winning_points"
+                  value={formData.winning_points}
                   onChange={handleInputChange}
                   variant="standard"
                   InputProps={{
@@ -241,8 +362,8 @@ const CreateQuest = () => {
                 }}
               >
                 <TextField
-                  name="age"
-                  value={formData.age}
+                  name="h_age"
+                  value={formData.h_age}
                   onChange={handleInputChange}
                   variant="standard"
                   InputProps={{
@@ -294,7 +415,7 @@ const CreateQuest = () => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    textAlign: level && "center"
+                    textAlign: level && "center",
                   }}
                 >
                   <TextField
@@ -317,7 +438,7 @@ const CreateQuest = () => {
                               display: "flex",
                               alignItems: "center",
                               gap: "5px",
-                              textAlign: level && "center"
+                              textAlign: level && "center",
                             }}
                           >
                             Choose Difficulty Level
@@ -327,7 +448,7 @@ const CreateQuest = () => {
                       style: {
                         color: "white",
                         fontSize: "18px",
-                        textAlign: level && "center"
+                        textAlign: level && "center",
                       },
                     }}
                     SelectProps={{
@@ -364,10 +485,10 @@ const CreateQuest = () => {
                       width: "100%",
                     }}
                   >
-                    <MenuItem value="easy">Easy</MenuItem>
-                    <MenuItem value="medium">Moderate</MenuItem>
-                    <MenuItem value="hard">Hard</MenuItem>
-                    <MenuItem value="advanced">Advanced</MenuItem>
+                    <MenuItem value="1">Easy</MenuItem>
+                    <MenuItem value="2">Moderate</MenuItem>
+                    <MenuItem value="3">Hard</MenuItem>
+                    <MenuItem value="4">Advanced</MenuItem>
                   </TextField>
                 </Box>
               )}
@@ -419,7 +540,7 @@ const CreateQuest = () => {
                     style: {
                       color: "white",
                       fontSize: isMobile ? "10px" : "18px",
-                      textAlign: level && "center"
+                      textAlign: level && "center",
                     },
                   }}
                   SelectProps={{
@@ -456,10 +577,10 @@ const CreateQuest = () => {
                     width: "100%",
                   }}
                 >
-                  <MenuItem value="easy">Easy</MenuItem>
-                  <MenuItem value="medium">Moderate</MenuItem>
-                  <MenuItem value="hard">Hard</MenuItem>
-                  <MenuItem value="advanced">Advanced</MenuItem>
+                  <MenuItem value="1">Easy</MenuItem>
+                  <MenuItem value="2">Moderate</MenuItem>
+                  <MenuItem value="3">Hard</MenuItem>
+                  <MenuItem value="4">Advanced</MenuItem>
                 </TextField>
               </Box>
             )}
@@ -911,73 +1032,13 @@ const CreateQuest = () => {
             multiple
             value={selectedSponsors}
             onChange={handleChangeSponsor}
-            displayEmpty
-            disableUnderline
-            startAdornment={
-              <InputAdornment position="start">
-                <Box
-                  sx={{
-                    color: "white",
-                    fontWeight: "bold",
-                    fontSize: isMobile ? "12px" : "18px",
-                    minWidth: "80px",
-                  }}
-                >
-                  Sponsors:
-                </Box>
-              </InputAdornment>
-            }
             renderValue={(selected) =>
               selected.length === 0 ? "Select sponsors" : selected.join(", ")
             }
-            sx={{
-              color: "white",
-              fontSize: "18px",
-              width: "100%",
-              "& .MuiSelect-select": {
-                padding: 0,
-              },
-              "& .MuiSelect-icon": {
-                color: "white",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                border: "none",
-              },
-              "&.MuiOutlinedInput-root": {
-                "& fieldset": {
-                  border: "none",
-                },
-                "&:hover fieldset": {
-                  border: "none",
-                },
-                "&.Mui-focused fieldset": {
-                  border: "none",
-                },
-              },
-            }}
-            MenuProps={{
-              PaperProps: {
-                sx: {
-                  backgroundColor: "#333",
-                  color: "white",
-                },
-              },
-            }}
           >
-            {sponsorsList.map((name) => (
-              <MenuItem
-                key={name}
-                value={name}
-                sx={{
-                  "&.Mui-selected": {
-                    backgroundColor: "#444",
-                  },
-                  "&.Mui-selected:hover": {
-                    backgroundColor: "#555",
-                  },
-                }}
-              >
-                {name}
+            {allSponsors.map((sponsor) => (
+              <MenuItem key={sponsor.sponsor_code} value={sponsor.sponsor_code}>
+                {sponsor.sponsor_code}
               </MenuItem>
             ))}
           </Select>
@@ -1000,8 +1061,8 @@ const CreateQuest = () => {
           }}
         >
           <TextField
-            name="supportingUrl"
-            value={formData.supportingUrl}
+            name="ref_link"
+            value={formData.ref_link}
             onChange={handleInputChange}
             variant="standard"
             InputProps={{
@@ -1034,6 +1095,43 @@ const CreateQuest = () => {
           />
         </Box>
       </Box>
+      {isMobile && (
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            height: "80px",
+            backgroundImage: `url(${bottomSheetBG})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            zIndex: 1000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "white",
+            fontFamily: "Baloo2",
+            fontSize: "18px",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              gap: "5px",
+              alignItems: "center",
+              justifyContent: "center",
+              bottom: "10px",
+              left: 0,
+            }}
+          >
+            <Button type="submit">
+              <img src={mobCreateQuestBtn} style={{ width: "150px" }} />
+            </Button>
+          </Box>
+        </Box>
+      )}
     </form>
   );
 };

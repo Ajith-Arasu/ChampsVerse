@@ -84,6 +84,9 @@ const Header = () => {
                 "aria-labelledby": "basic-button",
               }}
             >
+              <MenuItem key="work" onClick={() => handleClick("createQuest")}>
+                Create Quest
+              </MenuItem>
               <MenuItem key="work" onClick={() => handleClick("works")}>
                 Works
               </MenuItem>
