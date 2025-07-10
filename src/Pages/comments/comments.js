@@ -17,7 +17,7 @@ const Comments = () => {
   const [disable, setDisable] = useState(false);
   const [selectedType, setSelectedType] = useState("unapproved");
   const isMobile = useMediaQuery("(max-width:600px)");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleTab = (tab) => {
     setSelectedType(tab);
@@ -245,17 +245,24 @@ const Comments = () => {
           }}
         >
           {isMobile && (
-            <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                cursor: "pointer",
+              }}
+            >
               <Box
                 sx={{
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
                   minWidth: "100px",
+                  cursor: "pointer",
                 }}
-                  onClick={() => {
-              navigate("/profile", { state: { userId:item.user_id } })
-            }}
+                onClick={() => {
+                  navigate("/profile", { state: { userId: item.user_id } });
+                }}
               >
                 <Avatar
                   sx={{ width: "25px", height: "25px" }}
@@ -272,13 +279,13 @@ const Comments = () => {
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
                     maxWidth: 120,
-                    fontSize:  "12px"
+                    fontSize: "12px",
                   }}
                 >
                   {item.firstname}
                 </Typography>
               </Box>
-              {(isMobile && selectedType === "unapproved") &&(
+              {isMobile && selectedType === "unapproved" && (
                 <Box
                   onClick={() => handleSelectItem(item.comment_id)}
                   sx={{
@@ -315,7 +322,7 @@ const Comments = () => {
               justifyContent: isMobile ? "space-between" : "center",
             }}
           >
-            {(!isMobile && selectedType === "unapproved")&&(
+            {!isMobile && selectedType === "unapproved" && (
               <Box
                 onClick={() => handleSelectItem(item.comment_id)}
                 sx={{
@@ -341,7 +348,10 @@ const Comments = () => {
                 />
               </Box>
             )}
-            <Typography color="white" sx={{ flex: 1, fontSize: isMobile?'14px': '24px' }}>
+            <Typography
+              color="white"
+              sx={{ flex: 1, fontSize: isMobile ? "14px" : "24px" }}
+            >
               {item.text}
             </Typography>
           </Box>
@@ -353,10 +363,11 @@ const Comments = () => {
                 alignItems: "center",
                 gap: "10px",
                 minWidth: "100px",
+                cursor: 'pointer'
               }}
-                onClick={() => {
-              navigate("/profile", { state: { userId:item.user_id } })
-            }}
+              onClick={() => {
+                navigate("/profile", { state: { userId: item.user_id } });
+              }}
             >
               <Avatar
                 sx={{ width: "36px", height: "36px" }}

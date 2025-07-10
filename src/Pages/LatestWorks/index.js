@@ -281,6 +281,7 @@ const Work = ({ setUserDetails, setProfilePic }) => {
                     marginLeft: "5px",
                     boxShadow: "0 6px 10px rgba(0, 0, 0, 0.1)",
                     width: "97%",
+                    cursor: 'pointer'
                   }}
                   onClick={() => {
                     navigate("/profile", { state: { userId: item.user_id } });

@@ -1,6 +1,6 @@
 import Works from "../../Pages/Works/index";
 import ApiCall from "../API/api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, } from "react";
 import {
   Typography,
   Box,
@@ -14,6 +14,7 @@ import {
 import Loader from "../Loader/loader";
 import ClearCDNbtn from "../../asserts/clearCdn.png";
 import clearJsonBtn from "../../asserts/clearJson.png";
+import { useNavigate } from "react-router-dom";
 
 const DeletePost = () => {
   const {
@@ -24,6 +25,7 @@ const DeletePost = () => {
     deletedUserS3Post,
     deletedUserPostJson,
   } = ApiCall();
+  const navigate = useNavigate();
   const [deleteType, setDeleteType] = useState("");
   const [data, setData] = useState([]);
   const [nextPage, setNextPage] = useState(1);
