@@ -33,8 +33,9 @@ const QuestWorks = () => {
   const transformedData = async (post, userData, result) => {
     if (post) {
       const data = post.map((post) => {
-        const user = userData.find((user) => user.uid === post.user_id);
-        const entry = result.data.find((item) => item.user_id === post.user_id);
+        const user = userData.find((user) => user.uid === post.user_id.split("_")[0]);
+        
+        const entry = result.data.find((item) => item.user_id === post.user_id.split("_")[0]);
         return {
           postId: post.post_id,
           filename: post?.files[0]?.name,
@@ -61,7 +62,7 @@ const QuestWorks = () => {
         const ids = result.data
           .map((item) => (item.work_id ? item.work_id : item.work_ids[0]))
           .join(",");
-        const userIds = result.data.map((item) => item.user_id).join(",");
+        const userIds = result.data.map((item) => item.user_id.split("_")[0]).join(",");
         let users = await getUserDetails(userIds);
         let res = await getPost(ids);
         const entries = await transformedData(res.data, users, result);
@@ -116,14 +117,16 @@ const QuestWorks = () => {
   };
 
   const handleClick = async (index, type) => {
+    
     const resultBD = await addBadges(
       entriesData[index].userID,
       entriesData[index].postId,
       type,
       entriesData[index].isPortrait,
       true,
-      contestId
+      contestId,
     );
+
     if (resultBD.statusCode === 200) {
       let requestbody = {
         ids: [
