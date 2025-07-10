@@ -126,8 +126,8 @@ const Header = () => {
                 Achievements
               </MenuItem>
               <MenuItem onClick={() => handleClick("events")}>Events</MenuItem>
-              <MenuItem onClick={() => handleClick("createContest/Quest")}>
-                Create Contest / Quest
+              <MenuItem onClick={() => handleClick("createQuest")}>
+                Create Quest
               </MenuItem>
             </Menu>
           </Box>
