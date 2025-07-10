@@ -58,7 +58,6 @@ const Works = () => {
         res = await getPost(ids);
         const formatData = transformedData(result.data);
         const badgesData = await getBadges(formatData);
-        console.log("badgesData", badgesData.data);
 
         const reorderedPostData = result.data
           .map((feedItem) => {

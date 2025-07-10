@@ -52,7 +52,6 @@ const CreateQuest = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    console.log("file", file);
     if (file) {
       setPreview(URL.createObjectURL(file));
       setSelectedFile(file);
@@ -61,22 +60,8 @@ const CreateQuest = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({
-      ...formData,
-      winning_points:
-        formData.winning_points && parseInt(formData.winning_points, 10),
-      difficulty_level: level && parseInt(level, 10),
-      tags: tags.map((tag) => ({ name: tag })),
-      difficulty_level: level,
-      sponsors: selectedSponsors,
-      image: preview,
-      type: "MICRO_CONTEST",
-      work_type: "POST",
-      l_age: 0,
-      h_age: formData.h_age,
-    });
+   
 
-    console.log("selectedSponsors", selectedSponsors);
     const data = {
       ...formData,
       winning_points:
@@ -159,8 +144,6 @@ const CreateQuest = () => {
         avatar: sponsor.sponsor_avatar,
       }));
 
-    console.log("selectedCodes", selectedCodes);
-    console.log("sponsors", sponsors);
     setSelectedSponsors(sponsors);
   };
 
@@ -182,7 +165,6 @@ const CreateQuest = () => {
     fetchSponsors();
   }, []);
 
-  console.log("sponsoroptions", sponsorOptions);
   const handleAddTag = (e) => {
     if (e.key === "Enter" && inputValue.trim()) {
       if (tags.length < 5) {
@@ -192,7 +174,6 @@ const CreateQuest = () => {
     }
   };
   const handleChange = (event) => {
-    console.log("event.target.value", event.target.value);
     setLevel(event.target.value);
   };
 

@@ -151,7 +151,6 @@ const CreateContest = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("allSponsors", formData.sponsors);
     const getSponsorAvatar = (code) => {
       const sponsor = allSponsors.find((s) => s.sponsor_code === code);
       return sponsor && sponsor.sponsor_avatar;

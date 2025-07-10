@@ -116,7 +116,6 @@ const QuestWorks = () => {
   };
 
   const handleClick = async (index, type) => {
-    console.log("badges - click");
     const resultBD = await addBadges(
       entriesData[index].userID,
       entriesData[index].postId,
@@ -125,9 +124,7 @@ const QuestWorks = () => {
       true,
       contestId
     );
-    console.log("resultBD", resultBD);
     if (resultBD.statusCode === 200) {
-      console.log("getBadges", getBadges);
       let requestbody = {
         ids: [
           {
@@ -150,7 +147,6 @@ const QuestWorks = () => {
         }
         return item;
       });
-      console.log("updatedData", updatedData);
       setEntriesData(updatedData);
     }
   };

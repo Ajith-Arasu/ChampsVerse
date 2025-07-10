@@ -73,7 +73,6 @@ const Work = ({ setUserDetails, setProfilePic }) => {
           setPageKey(null);
         }
 
-        console.log("userData", userData);
         let res = await getPost(ids);
         const formatData = transformedData(result.data);
         const badgesData = await getBadges(formatData);
@@ -103,7 +102,6 @@ const Work = ({ setUserDetails, setProfilePic }) => {
   };
 
   const Card = ({ data, handleClick, handleClickProfile, botWorks }) => {
-    console.log("data0001", data);
     return (
       <>
         <Typography
@@ -256,7 +254,6 @@ const Work = ({ setUserDetails, setProfilePic }) => {
         post.defaultAvatar = foundItem.defaultAvatar;
         post.firstname = foundItem.firstname;
       }
-      console.log("post", post);
       return post;
     });
   };
@@ -344,7 +341,6 @@ const Work = ({ setUserDetails, setProfilePic }) => {
     }
   };
 
-  console.log("data", data);
   return (
     <>
       <Card

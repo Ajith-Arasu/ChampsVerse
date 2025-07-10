@@ -40,12 +40,10 @@ const Profile = () => {
     try {
       if (pageKey !== null) {
         const userDetails = await getUserDetails(userId);
-        console.log("userdetails", userDetails);
         setUserData(userDetails);
         let postIds = await getPostByUserId(userId);
         const ids = postIds.map((item) => item.post_id).join(",");
         let res = await getPost(ids);
-        console.log("res", res.data);
 
         const formatData = transformedData(postIds);
         const badgesData = await getBadges(formatData);
@@ -69,7 +67,6 @@ const Profile = () => {
           })
           .filter((post) => post !== undefined);
 
-        console.log("reorderedPostData", reorderedPostData);
         setPostDetails(reorderedPostData);
       }
     } catch (error) {
