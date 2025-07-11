@@ -139,7 +139,7 @@ const Contest = () => {
           data.map((item, index) => {
             console.log(
               "ct banner",
-              `https://dcp5pbxslacdh.cloudfront.net/CONTESTS/${item.contest_id}/IMAGES/medium/${item.ct_banner}`
+              `${process.env.REACT_APP_CDN_URL}/CONTESTS/${item.contest_id}/IMAGES/medium/${item.ct_banner}`
             );
             return (
               <Box
@@ -167,7 +167,7 @@ const Contest = () => {
                       height: "100%",
                       objectFit: "cover",
                     }}
-                    src={`https://dcp5pbxslacdh.cloudfront.net/CONTESTS/${item.contest_id}/IMAGES/medium/${item.ct_banner}`}
+                    src={`${process.env.REACT_APP_CDN_URL}/CONTESTS/${item.contest_id}/IMAGES/medium/${item.ct_banner}`}
                     alt="contest banner"
                   />
                 </Box>
