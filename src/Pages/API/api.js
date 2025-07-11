@@ -145,7 +145,7 @@ const ApiCall = () => {
   };
 
   const getBooksById = async (requestBody) => {
-    const url = `${BASE_URL}/api/v1/books&${
+    const url = `${BASE_URL}/api/v1/books?${
       pageId ? `&page_id=${pageId}` : ""
     }`;
     const options = {
