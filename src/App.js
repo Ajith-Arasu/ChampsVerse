@@ -13,7 +13,7 @@ import Profile from "./Pages/profile/index";
 import Books from "./Pages/Books/books";
 import Detail from "./Pages/Books/detail";
 import StorageConsumption from "./Pages/StorageConsumption/storageConsumption";
-import Contests from "./Pages/Contests/contests";
+import Contests from "./Pages/Contests/index";
 import ContestDetail from "./Pages/Contests/contestDetail";
 import { useState } from "react";
 import DeletedUser from "./Pages/DeletedUser/index";
@@ -63,6 +63,7 @@ const AppContent = ({
   const isCreateQuest = location.pathname === "/createQuest";
   const isDeletedPost = location.pathname === "/deletedpost";
   const isevents = location.pathname === '/events';
+  const isContests = location.pathname === "/contests";
 
   const ConditionalComponent = () => {
     const isMobile = useMediaQuery("(max-width:600px)");
@@ -83,6 +84,7 @@ const AppContent = ({
         !isCreateQuest &&
         !isDeletedPost&&
         !isevents&&
+        !isContests &&
         (
           <Header userDetails={userDetails} profilePic={profilePic} />
         )}
@@ -119,7 +121,7 @@ const AppContent = ({
           <Route path="/books" element={<Books />} />
           <Route path="/booksdetail/:userId/:bookId" element={<Detail />} />
           <Route path="/storage-consumption" element={<StorageConsumption />} />
-          <Route path="/contests" element={<Contests />} />
+          <Route path="/contests" element={<Home />} />
           <Route path="/contestdetail" element={<ContestDetail />} />
           <Route path="/deletedpost" element={<Home />} />
           <Route path="/deleteduser" element={<DeletedUser />} />

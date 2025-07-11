@@ -20,7 +20,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import DashboardCards from "../../component/dashboardcards";
 import LatestWorks from "../LatestWorks/index";
 import Comments from "../comments/comments";
-// import Contests from "../../Pages/Contests/index";
+ import Contests from "../../Pages/Contests/index";
 import menuIcon from "../../asserts/menuIcon.png";
 import CreateQuest from "../../Pages/Creation/quest";
 import btnBg from "../../asserts/btnBg.png";
@@ -353,7 +353,7 @@ const Home = () => {
         {isComments && <Comments />}
         {isLatestWorks && <LatestWorks />}
         {isCreateQuest && <CreateQuest />}
-        {/*{isContests && <Contests />} */}
+        {isContests && <Contests />}
         {isDeletedPost && <DeletedPost />}
       </Box>
     </Box>
