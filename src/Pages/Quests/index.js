@@ -21,6 +21,7 @@ import ApiCall from "../API/api";
 import { useEffect, useState } from "react";
 import threeDotsIcon from "../../asserts/icons8-three-dots-30.png";
 import synBg from "../../asserts/tabSwitch.png";
+import { setCookie, getCookie } from "../../helper/cookies";
 
 const Quests = () => {
   const location = useLocation();
@@ -38,6 +39,8 @@ const Quests = () => {
   const [contestId, setContestId] = useState("");
   const [openSyncConfirm, setOpenSyncConfirm] = useState(false);
   const [menuState, setMenuState] = useState({ anchorEl: null, item: null });
+
+  const pageId = getCookie("pageId");
 
   const handleOpenMenu = (event, item) => {
     event.stopPropagation();

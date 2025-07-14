@@ -11,11 +11,13 @@ import approveBtn from "../../asserts/aprvBtn.png";
 import rejBtn from "../../asserts/rejBtn.png";
 import approvedImg from "../../asserts/approvedImg.png";
 import { useNavigate } from "react-router-dom";
+import { setCookie, getCookie } from "../../helper/cookies";
 
 const QuestWorks = () => {
   const [isLoading, setIsLoading] = useState(false);
   const isMobile = useMediaQuery("(max-width:600px)");
   const [pageKey, setPageKey] = useState("");
+
   const {
     getContestEntries,
     getUserDetails,
@@ -28,14 +30,19 @@ const QuestWorks = () => {
   const location = useLocation();
   const { contestId, title } = location.state || {};
   const isProfilePage = location.pathname === "/profile";
+  const pageId = getCookie("pageId");
   const navigate = useNavigate();
 
   const transformedData = async (post, userData, result) => {
     if (post) {
       const data = post.map((post) => {
-        const user = userData.find((user) => user.uid === post.user_id.split("_")[0]);
-        
-        const entry = result.data.find((item) => item.user_id === post.user_id.split("_")[0]);
+        const user = userData.find(
+          (user) => user.uid === post.user_id.split("_")[0]
+        );
+
+        const entry = result.data.find(
+          (item) => item.user_id === post.user_id.split("_")[0]
+        );
         return {
           postId: post.post_id,
           filename: post?.files[0]?.name,
@@ -62,7 +69,9 @@ const QuestWorks = () => {
         const ids = result.data
           .map((item) => (item.work_id ? item.work_id : item.work_ids[0]))
           .join(",");
-        const userIds = result.data.map((item) => item.user_id.split("_")[0]).join(",");
+        const userIds = result.data
+          .map((item) => item.user_id.split("_")[0])
+          .join(",");
         let users = await getUserDetails(userIds);
         let res = await getPost(ids);
         const entries = await transformedData(res.data, users, result);
@@ -93,7 +102,6 @@ const QuestWorks = () => {
         } else {
           setPageKey(null);
         }
-
       }
     } finally {
       setIsLoading(false);
@@ -117,14 +125,13 @@ const QuestWorks = () => {
   };
 
   const handleClick = async (index, type) => {
-    
     const resultBD = await addBadges(
       entriesData[index].userID,
       entriesData[index].postId,
       type,
       entriesData[index].isPortrait,
       true,
-      contestId,
+      contestId
     );
 
     if (resultBD.statusCode === 200) {
@@ -154,6 +161,8 @@ const QuestWorks = () => {
     }
   };
 
+  console.log("entriesData", entriesData);
+
   return (
     <div style={{ marginLeft: "5%", marginTop: isMobile ? "10%" : "3%" }}>
       <Typography
@@ -169,7 +178,17 @@ const QuestWorks = () => {
       {isLoading && <Loader />}
 
       {entriesData.length === 0 ? (
-        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '10%'}}> No Entries</div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: "10%",
+          }}
+        >
+          {" "}
+          No Entries
+        </div>
       ) : (
         <div
           style={{
@@ -209,7 +228,11 @@ const QuestWorks = () => {
                     objectFit: "cover",
                     borderRadius: "20px 20px 0 0",
                   }}
-                  src={`${process.env.REACT_APP_CDN_URL}/${item.userID}/WORKS/IMAGES/medium/${item.filename}`}
+                  src={
+                    pageId
+                      ? `${process.env.REACT_APP_CDN_URL}/${item.userID}_${pageId}/WORKS/IMAGES/medium/${item.filename}`
+                      : `${process.env.REACT_APP_CDN_URL}/${item.userID}/WORKS/IMAGES/medium/${item.filename}`
+                  }
                 ></img>
 
                 <Box

@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Loader from "../Loader/loader";
 import scoreIcon from "../../asserts/QuestCoinsIcon.png";
 import ApiCall from "../API/api";
+import { setCookie, getCookie } from "../../helper/cookies";
 
 const Quests = () => {
   const CDN_URL = process.env.REACT_APP_CDN_URL;
@@ -15,7 +16,9 @@ const Quests = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
   const [pageKey, setPageKey] = useState("");
-  const { getQuestList, triggerActivityApi, syncQuests } = ApiCall();
+  const pageId = getCookie("pageId");
+  console.log("shree - pageID==>", pageId);
+  const { getQuestList } = ApiCall();
   const Easy =
     "radial-gradient(67.32% 67.32% at 50% 50%, #27B807 0%, #27D101 100%)";
   const Moderate =
@@ -52,13 +55,15 @@ const Quests = () => {
     fetchQuest();
   }, []);
 
+  console.log("data===>", data);
+
   return (
     <>
       <div
         style={{
-          width: isMobile ? "100vw" : "100%", // ✅ doesn't include scrollbar width
+          width: isMobile ? "100vw" : "100%",
           overflowX: "hidden",
-          overflowY: "hidden", // ✅ if you want to hide vertical scrollbar
+          overflowY: "hidden",
           boxSizing: "border-box",
         }}
       >
@@ -114,7 +119,7 @@ const Quests = () => {
               const diffInMilliseconds = now.getTime() - createdAt.getTime();
               const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
               const isLessThan7DaysOld = diffInDays < 8;
-            
+
               return (
                 <div
                   key={index}
@@ -176,7 +181,11 @@ const Quests = () => {
                         borderRadius: "14px 14px 0 0",
                         zIndex: 0,
                       }}
-                      src={`${process.env.REACT_APP_CDN_URL}/MICRO_CONTESTS/${item.contest_id}/IMAGES/medium/${item.ct_banner}`}
+                      src={
+                        pageId
+                          ? `{${process.env.REACT_APP_CDN_URL}/${item.created_by}/PAGES/MICRO_CONTESTS/IMAGES/medium/${item.ct_banner}}`
+                          : `${process.env.REACT_APP_CDN_URL}/MICRO_CONTESTS/${item.contest_id}/IMAGES/medium/${item.ct_banner}`
+                      }
                       alt="Quest"
                     />
                     {isLessThan7DaysOld && (
