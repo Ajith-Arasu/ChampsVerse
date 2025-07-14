@@ -165,9 +165,7 @@ const Home = () => {
                 <MenuItem onClick={() => handleClick("events")}>
                   Events
                 </MenuItem>
-                <MenuItem onClick={() => handleClick("createContest/Quest")}>
-                  Create Contest / Quest
-                </MenuItem>
+               
               </Menu>
             </Box>
             <Box

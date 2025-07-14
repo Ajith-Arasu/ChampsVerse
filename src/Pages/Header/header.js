@@ -178,29 +178,31 @@ const Header = ({ userDetails }) => {
                 "aria-labelledby": "basic-button",
               }}
             >
-              {isMobile && [
+              {isMobile && <>
+            
                 <MenuItem key="work" onClick={() => handleClick("works")}>
                   Works
-                </MenuItem>,
+                </MenuItem>
                 <MenuItem key="books" onClick={() => handleClick("books")}>
                   Books
-                </MenuItem>,
+                </MenuItem>
                 <MenuItem
                   key="contests"
                   onClick={() => handleClick("contests")}
                 >
                   Contests
-                </MenuItem>,
+                </MenuItem>
                 <MenuItem key="quests" onClick={() => handleClick("quests")}>
                   Quest
-                </MenuItem>,
+                </MenuItem>
                 <MenuItem
                   key="storage"
                   onClick={() => handleClick("storage-consumption")}
                 >
                   Storage consumption
-                </MenuItem>,
-              ]}
+                </MenuItem>
+                  </>
+              }
 
               <MenuItem onClick={() => handleClick("deleteduser")}>
                 Deleted User
@@ -218,9 +220,7 @@ const Header = ({ userDetails }) => {
                 Achievements
               </MenuItem>
               <MenuItem onClick={() => handleClick("events")}>Events</MenuItem>
-              <MenuItem onClick={() => handleClick("createContest/Quest")}>
-                Create Contest / Quest
-              </MenuItem>
+              
             </Menu>
           </Toolbar>
         </AppBar>
