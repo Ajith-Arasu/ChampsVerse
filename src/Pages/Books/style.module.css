@@ -32,13 +32,14 @@
 
 .grid-item-mob {
   display: flex;
-  height: 135px;
+  height: 134px;
   width: 164px;
   flex-direction: row;
   padding: 10px;
 }
 
 .book-image {
+  position: relative;
   width: 60%;
   border-radius: 12%;
   display: flex;
@@ -257,4 +258,9 @@
 
 .value-Details {
   font-size: 10px;
+}
+.button-group{
+    display:flex;
+    justify-content: space-between;
+     
 }
