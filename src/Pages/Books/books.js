@@ -8,6 +8,8 @@ import Box from '@mui/material/Box';
 import Loader from "../Loader/loader";
 
 const Books = () => {
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [isAllSelected, setIsAllSelected] = useState(false);
   const navigate = useNavigate();
   const { getBooksList, getBooksById } = ApiCall();
   const [nextPage, setNextPage] = useState(1);
@@ -83,35 +85,99 @@ const Books = () => {
     navigate(`/booksdetail/${userId}/${bookId}`, { state: { data, userId: userId, bookId: bookId } })
 
   }
+const handleSelect = (id) => {
+  setSelectedItems((prev) =>
+    prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+  );
+};
+  const handleSelectAllToggle = () => {
+    if (isAllSelected) {
+      // unselect all
+      setSelectedItems([]);
+      setIsAllSelected(false);
+    } else {
+      // select all items by their IDs or keys
+      const allItemKeys = data.map(
+        (item, index) => item.id || `${item.user_id}-${item.files[0]?.name || index}`
+      );
+      setSelectedItems(allItemKeys);
+      setIsAllSelected(true);
+    }
+  };
+
 
 
   return (
     <>
       {isLoading && <Loader />}
-      <Typography
-        variant="h6"
-        style={{
-          paddingLeft: '30px',
-          fontFamily: 'Baloo2',
-          fontWeight: '800',
-          paddingTop: '103px',
-          color: '#FFFFFF',
-          fontSize: isMobile ? '18px' : '32px',
+      <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '103px', }}>
+        <div>
+          <Typography
+            variant="h6"
+            style={{
+              paddingLeft: '30px',
+              fontFamily: 'Baloo2',
+              fontWeight: '800',
 
-        }}
-      >
-        BOOKS{" "}
-        <Typography
-          component="span"
+              color: '#FFFFFF',
+              fontSize: isMobile ? '18px' : '32px',
+
+            }}
+          >
+            BOOKS{" "}
+            <Typography
+              component="span"
+              style={{
+                fontSize: isMobile ? '16px' : '24px',
+                fontWeight: '500',
+                color: '#FFFFFF',
+              }}
+            >
+              ({data.length})
+            </Typography>
+          </Typography>
+        </div>
+        <div
+
+          onClick={handleSelectAllToggle}
           style={{
-            fontSize: isMobile ? '16px' : '24px',
-            fontWeight: '500',
-            color: '#FFFFFF',
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            paddingRight: '50px',
+            cursor: "pointer",
+
           }}
         >
-          ({data.length})
-        </Typography>
-      </Typography>
+          {/* Round Checkbox */}
+          <div
+            style={{
+              height: isMobile ? "16px" : "24px",
+              width: isMobile ? "16px" : "24px",
+              borderRadius: "20px",
+              border: "1.5px solid #1F1D3A",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+          </div>
+          <Typography
+            sx={{
+              fontFamily: "Baloo2",
+              fontWeight: "800",
+              fontSize: isMobile ? "13px" : "15px",
+              alignItems: "center",
+              lineHeight: "100%",
+              background: "linear-gradient(to right, #ffdd01, #ffb82a)",
+              boxShadow: "0px 2.22px 2.22px 0px rgba(158, 22, 53, 0.25)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent"
+            }}
+          >Select All</Typography>
+        </div>
+      </div>
+
       {data ? <div className={style[isMobile ? 'grid-container-mob' : "grid-container"]}>
         {data.map((item) => {
           return (
@@ -119,14 +185,47 @@ const Books = () => {
               <div className={style["book-image"]}
                 onClick={() => handleClick(item, item.user_id, item.book_id)}>
                 <img src={`${CDN_URL}/${item.user_id}/BOOKS/IMAGES/medium/${item.cover[0].name}`}></img>
-                <div className={style[isMobile ? 'title-card-mob':"title-card"]}>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                     handleSelect(item.id); 
+                  }}
+                  style={{
+                    position: "absolute",
+                    top: isMobile ? "6px" : "8px",
+                    right: isMobile ? "6px" : "8px",
+                    height: isMobile ? "21px" : "32px",
+                    width: isMobile ? "21px" : "32px",
+                    border: isMobile ? "2px solid #FFFFFF" : "3px solid #FFFFFF",
+                    background: "transparent",
+                    borderRadius: isMobile ? "13px" : "50%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                  title="Select"
+                >
+
+                  {selectedItems.includes(item.id) && (
+                    <span
+                      style={{
+                        height: isMobile ? "6px" : "16px",
+                        width: isMobile ? "6px" : "16px",
+                        borderRadius: isMobile ? "6px" : "10px",
+                        background: "linear-gradient(135deg, #FFDD01, #FFB828)",
+                      }}
+                    />
+                  )}
+                </button>
+                <div className={style[isMobile ? 'title-card-mob' : "title-card"]}>
                   <Typography className={style[isMobile ? 'book-title-mob' : "book-title"]} >{item.title} </Typography>
                 </div>
               </div>
               <div className={style["book-details"]}>
                 <div className={style["author"]}>
                   <div className={style["title"]}>
-                    <Typography style={{ fontSize: isMobile ?'6.5px' :'15px' }}>Author</Typography>
+                    <Typography style={{ fontSize: isMobile ? '6.5px' : '15px' }}>Author</Typography>
                   </div>
                   <div className={style["value"]}>
                     <Typography style={{ fontSize: isMobile ? '7.5px' : "13px" }}>{item.author}</Typography>
@@ -135,7 +234,7 @@ const Books = () => {
                 <div className={style["author"]}>
                   <div className={style["title"]}>
                     <Typography style={{
-                      fontSize: isMobile?'6.5px':'13px',
+                      fontSize: isMobile ? '6.5px' : '13px',
                       whiteSpace: 'nowrap',
                     }}>Date of Publication</Typography>
                   </div>
@@ -145,7 +244,7 @@ const Books = () => {
                 </div>
                 <div className={style["author"]}>
                   <div className={style["title"]}>
-                    <Typography style={{ fontSize: isMobile?'6.5px':'15px' }}>Genre</Typography>
+                    <Typography style={{ fontSize: isMobile ? '6.5px' : '15px' }}>Genre</Typography>
                   </div>
                   <div className={style["value"]}>
                     <Typography style={{ fontSize: isMobile ? '7.5px' : "13px" }}>{item.category}</Typography>
@@ -159,10 +258,10 @@ const Books = () => {
           <Typography>{item.pages.length}</Typography>
         </div>
       </div> */}
-      
+
                 <div className={style["author"]}>
                   <div className={style["title"]}>
-                    <Typography style={{ fontSize: isMobile?'6.5px': '15px' }}>Status</Typography>
+                    <Typography style={{ fontSize: isMobile ? '6.5px' : '15px' }}>Status</Typography>
                   </div>
                   <div className={style["value"]}>
                     <Typography style={{ fontSize: isMobile ? '7.5px' : "13px" }}>{item.status}</Typography>
