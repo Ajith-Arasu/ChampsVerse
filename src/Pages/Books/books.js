@@ -85,11 +85,11 @@ const Books = () => {
     navigate(`/booksdetail/${userId}/${bookId}`, { state: { data, userId: userId, bookId: bookId } })
 
   }
-const handleSelect = (id) => {
-  setSelectedItems((prev) =>
-    prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-  );
-};
+  const handleSelect = (id) => {
+    setSelectedItems((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
   const handleSelectAllToggle = () => {
     if (isAllSelected) {
       // unselect all
@@ -104,8 +104,6 @@ const handleSelect = (id) => {
       setIsAllSelected(true);
     }
   };
-
-
 
   return (
     <>
@@ -188,7 +186,7 @@ const handleSelect = (id) => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                     handleSelect(item.id); 
+                    handleSelect(item.id);
                   }}
                   style={{
                     position: "absolute",
