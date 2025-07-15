@@ -109,11 +109,11 @@
   background: #00000033;
   backdrop-filter: blur(28px);
   z-index: 12;
-  width: 131px;
-  height: 72px;
+  width: 176px;
+  height: 61px;
   padding: 0 10px;
   position: absolute;
-  border-radius: 5px;
+  border-radius: 9px;
   text-align: center;
   white-space: normal;
 }
