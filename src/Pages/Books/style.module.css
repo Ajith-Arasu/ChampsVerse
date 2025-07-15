@@ -33,7 +33,7 @@
 .grid-item-mob {
   display: flex;
   height: 134px;
-  width: 164px;
+  width: 184px;
   flex-direction: row;
   padding: 10px;
 }
@@ -71,9 +71,6 @@
   display: flex;
   width: 100%;
   flex-direction: column;
-
-
-
 }
 
 .title {
@@ -105,27 +102,27 @@
 }
 
 .title-card {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   /* Centers vertically */
   justify-content: center;
   background: #00000033;
   backdrop-filter: blur(28px);
   z-index: 12;
-  height: 10%;
-  width: 10%;
+  width: 131px;
+  height: 72px;
+  padding: 0 10px;
   position: absolute;
-  border-radius: 15px;
+  border-radius: 5px;
   text-align: center;
-
+  white-space: normal;
 }
 
 .title-card-mob {
   border-radius: 5px;
-  font-size: 9px;
-  height: 8%;
-  width: 8%;
-  display: flex;
+  height: 32px;
+  width: 91px;
+  display: inline-flex;
   align-items: center;
   /* Centers vertically */
   justify-content: center;
@@ -133,20 +130,22 @@
   backdrop-filter: blur(28px);
   z-index: 12;
   position: absolute;
-  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 
 .book-title {
-  padding: 5px;
   color: white;
-  font-size: 18px;
+  font-size: 9px;
+  letter-spacing: 0px;
 }
 
 .book-title-mob {
-  padding: 5px;
   color: white;
-  font-size: 9px;
+  font-size: 3px;
+  letter-spacing: 0px;
 }
 
 .user-Detail {
@@ -259,8 +258,9 @@
 .value-Details {
   font-size: 10px;
 }
-.button-group{
-    display:flex;
-    justify-content: space-between;
-     
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+
 }
