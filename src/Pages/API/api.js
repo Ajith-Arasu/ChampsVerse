@@ -53,13 +53,13 @@ const ApiCall = () => {
       requestBody = {
         special_badge: valuable,
         isPortrait: true,
-        page_id: pageId
+       ...(pageId && { page_id: pageId }),
       };
     } else {
       requestBody = {
         valuable: valuable,
         isPortrait: portrait,
-        page_id: pageId
+        ...(pageId && { page_id: pageId }),
       };
     }
 
@@ -68,7 +68,7 @@ const ApiCall = () => {
         ...requestBody,
         contest_id: questId,
         contest_type: "MICRO_CONTEST",
-        page_id: pageId
+        ...(pageId && { page_id: pageId }),
       };
     }
 
