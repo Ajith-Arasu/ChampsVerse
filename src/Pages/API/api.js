@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { getCookie, setCookie } from "../../helper/cookies";
+
 import fetchWithInterceptor from "./interceptor";
-import { setCookie, getCookie } from "../../helper/cookies";
+import { useState } from "react";
 
 const ApiCall = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -11,7 +12,6 @@ const ApiCall = () => {
 
   const token = getCookie("accessToken");
   const pageId = getCookie("pageId");
-  console.log("pageId", pageId);
 
   const data = async (pageKey, count) => {
     const url = `${BASE_URL}/api/v1/posts/list?feed_id=${currentMonth}_${currentYear}&count=${count}&page=${pageKey}&${
