@@ -1,7 +1,6 @@
 import { getCookie, setCookie } from "../../helper/cookies";
 
 import fetchWithInterceptor from "./interceptor";
-import { useState } from "react";
 
 const ApiCall = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
